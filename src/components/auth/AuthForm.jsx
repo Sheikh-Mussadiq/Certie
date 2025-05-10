@@ -143,7 +143,7 @@ export default function AuthForm({ onAuthenticated }) {
   }
 
   return (
-    <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl backdrop-blur-lg bg-opacity-90">
+    <div className="w-full max-w-md p-8">
       <motion.div
         className="mb-8 text-center"
         initial={{ opacity: 0, y: -20 }}
@@ -159,14 +159,14 @@ export default function AuthForm({ onAuthenticated }) {
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-16 h-16 bg-gradient-to-br from-primary-orange to-primary-black rounded-full flex items-center justify-center mx-auto shadow-lg"
+            className="w-16 h-16 bg-primary-orange rounded-full flex items-center justify-center mx-auto"
           >
             <User className="w-8 h-8 text-white" />
           </motion.div>
         </motion.div>
 
         <motion.h2
-          className="text-3xl font-bold bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent mb-2"
+          className="text-3xl font-bold text-primary-black mb-2"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -188,8 +188,8 @@ export default function AuthForm({ onAuthenticated }) {
         onClick={handleGoogleSignIn}
         disabled={loading}
         className="w-full mb-6 flex items-center justify-center py-3 px-4 rounded-lg
-          bg-white border-2 border-grey-outline hover:border-primary-orange hover:bg-gray-50
-          transition duration-150 ease-in-out shadow-md relative overflow-hidden group"
+          bg-white border border-grey-outline hover:border-primary-orange hover:bg-gray-50
+          transition duration-150 ease-in-out relative overflow-hidden group"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -200,7 +200,7 @@ export default function AuthForm({ onAuthenticated }) {
           transition={{ duration: 1 }}
         />
         <Chrome className="w-5 h-5 mr-3 text-primary-black" />
-        <p className="bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent font-bold">
+        <p className="text-primary-black font-bold">
           Continue with Google
         </p>
       </motion.button>
@@ -395,13 +395,12 @@ export default function AuthForm({ onAuthenticated }) {
             type="submit"
             disabled={loading || (!isLogin && formData.password !== formData.confirmPassword)}
             whileHover={{
-              scale: 1.02,
-              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+              scale: 1.02
             }}
             whileTap={{ scale: 0.98 }}
             className={`w-full flex items-center justify-center py-3 px-4 rounded-lg text-white
-              bg-gradient-to-r from-primary-black to-primary-orange hover:from-primary-black hover:to-primary-orange
-              focus:ring-4 focus:ring-primary-orange/30 transition duration-150 ease-in-out shadow-lg
+              bg-primary-black hover:bg-primary-black/90
+              focus:ring-4 focus:ring-primary-orange/30 transition duration-150 ease-in-out
               ${loading || (!isLogin && formData.password !== formData.confirmPassword) ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {loading ? (

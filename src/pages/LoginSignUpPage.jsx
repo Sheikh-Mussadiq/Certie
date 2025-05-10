@@ -90,10 +90,10 @@ const LoginSignUpPage = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="hidden lg:block lg:w-1/2 min-h-screen relative"
+          className="hidden lg:block lg:w-1/2 lg:fixed lg:right-0 lg:top-0 lg:bottom-0"
         >
           <img
-            src="/src/assets/LoginBG.png"
+            src="/src/assets/LoginBG_black.png"
             alt="Login background"
             className="absolute inset-0 w-full h-full object-cover"
           />
