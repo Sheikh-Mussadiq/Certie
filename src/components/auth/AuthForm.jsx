@@ -159,14 +159,14 @@ export default function AuthForm({ onAuthenticated }) {
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto shadow-lg"
+            className="w-16 h-16 bg-gradient-to-br from-primary-orange to-primary-black rounded-full flex items-center justify-center mx-auto shadow-lg"
           >
             <User className="w-8 h-8 text-white" />
           </motion.div>
         </motion.div>
 
         <motion.h2
-          className="text-3xl font-bold bg-gradient-to-r from-primary-700 to-primary-500 bg-clip-text text-transparent mb-2"
+          className="text-3xl font-bold bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent mb-2"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -174,12 +174,12 @@ export default function AuthForm({ onAuthenticated }) {
           {isLogin ? "Welcome Back" : "Create Account"}
         </motion.h2>
         <motion.p
-          className="text-primary-600 text-center"
+          className="text-primary-grey text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          {isLogin ? "Welcome back! Let’s grow your plant journey together" : "Join us and start giving your plants the care they deserve"}
+          {isLogin ? "Welcome back! Let's grow your plant journey together" : "Join us and start giving your plants the care they deserve"}
         </motion.p>
       </motion.div>
 
@@ -188,19 +188,19 @@ export default function AuthForm({ onAuthenticated }) {
         onClick={handleGoogleSignIn}
         disabled={loading}
         className="w-full mb-6 flex items-center justify-center py-3 px-4 rounded-lg
-          bg-white border-2 border-gray-200 hover:border-primary-300 hover:bg-gray-50
+          bg-white border-2 border-grey-outline hover:border-primary-orange hover:bg-gray-50
           transition duration-150 ease-in-out shadow-md relative overflow-hidden group"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-primary-50 to-transparent opacity-0 group-hover:opacity-100"
+          className="absolute inset-0 bg-gradient-to-r from-grey-fill to-transparent opacity-0 group-hover:opacity-100"
           initial={{ x: "-100%" }}
           whileHover={{ x: "100%" }}
           transition={{ duration: 1 }}
         />
-        <Chrome className="w-5 h-5 mr-3 text-primary-800" />
-        <p className="bg-gradient-to-r from-green-700 to-green-400 bg-clip-text text-transparent font-bold">
+        <Chrome className="w-5 h-5 mr-3 text-primary-black" />
+        <p className="bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent font-bold">
           Continue with Google
         </p>
       </motion.button>
@@ -233,19 +233,19 @@ export default function AuthForm({ onAuthenticated }) {
             >
               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <div className="mt-1 relative group">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
                 <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                  focus:border-primary-500 focus:ring-primary-500 bg-white bg-opacity-80 backdrop-blur-sm 
-                  transition-all duration-200 group-hover:border-primary-300"
+                  focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                  transition-all duration-200 group-hover:border-primary-orange"
                   required
                 />
                 <motion.span
-                  className="absolute bottom-0 left-0 h-0.5 bg-primary-500"
+                  className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
                   initial={{ width: 0 }}
                   whileHover={{ width: "100%" }}
                   transition={{ duration: 0.3 }}
@@ -257,19 +257,19 @@ export default function AuthForm({ onAuthenticated }) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div className="mt-1 relative group">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                focus:border-primary-500 focus:ring-primary-500 bg-white bg-opacity-80 backdrop-blur-sm 
-                transition-all duration-200 group-hover:border-primary-300"
+                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                transition-all duration-200 group-hover:border-primary-orange"
                 required
               />
               <motion.span
-                className="absolute bottom-0 left-0 h-0.5 bg-primary-500"
+                className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
                 initial={{ width: 0 }}
                 whileHover={{ width: "100%" }}
                 transition={{ duration: 0.3 }}
@@ -280,26 +280,26 @@ export default function AuthForm({ onAuthenticated }) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <div className="mt-1 relative group">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
                 className="pl-10 pr-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                focus:border-primary-500 focus:ring-primary-500 bg-white bg-opacity-80 backdrop-blur-sm 
-                transition-all duration-200 group-hover:border-primary-300"
+                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                transition-all duration-200 group-hover:border-primary-orange"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 transition-colors"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-orange transition-colors"
               >
                 {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
               <motion.span
-                className="absolute bottom-0 left-0 h-0.5 bg-primary-500"
+                className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
                 initial={{ width: 0 }}
                 whileHover={{ width: "100%" }}
                 transition={{ duration: 0.3 }}
@@ -400,8 +400,8 @@ export default function AuthForm({ onAuthenticated }) {
             }}
             whileTap={{ scale: 0.98 }}
             className={`w-full flex items-center justify-center py-3 px-4 rounded-lg text-white
-              bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600
-              focus:ring-4 focus:ring-primary-300 transition duration-150 ease-in-out shadow-lg
+              bg-gradient-to-r from-primary-black to-primary-orange hover:from-primary-black hover:to-primary-orange
+              focus:ring-4 focus:ring-primary-orange/30 transition duration-150 ease-in-out shadow-lg
               ${loading || (!isLogin && formData.password !== formData.confirmPassword) ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {loading ? (
@@ -427,7 +427,7 @@ export default function AuthForm({ onAuthenticated }) {
                   setError(null)
                   setSuccess(null)
                 }}
-                className="text-primary-600 hover:text-primary-500 font-medium transition-colors duration-200"
+                className="text-primary-orange hover:text-primary-black font-medium transition-colors duration-200"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -440,4 +440,3 @@ export default function AuthForm({ onAuthenticated }) {
     </div>
   )
 }
-

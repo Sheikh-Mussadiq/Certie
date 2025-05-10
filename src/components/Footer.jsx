@@ -49,10 +49,10 @@ const Footer = () => {
           {/* Column 1: About */}
           <div>
             <div className="flex items-center mb-4">
-              <Leaf className="h-8 w-8 text-primary-600 mr-2" />
-              <span className="text-2xl font-bold text-primary-700">FloraSense</span>
+              <Leaf className="h-8 w-8 text-primary-orange mr-2" />
+              <span className="text-2xl font-bold text-primary-black">FloraSense</span>
             </div>
-            <p className="text-primary-600 mb-6">
+            <p className="text-primary-grey mb-6">
               Your ultimate plant companion for identifying, tracking, and nurturing your green friends.
             </p>
             <div className="flex space-x-4">
@@ -65,10 +65,10 @@ const Footer = () => {
                 <a
                   key={name}
                   href="#"
-                  className="text-primary-500 hover:text-primary-700 transition-colors"
+                  className="text-primary-orange hover:text-primary-black transition-colors"
                   aria-label={`Visit our ${name} page`}
                 >
-                  <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center hover:bg-primary-200 transition-colors">
+                  <div className="w-9 h-9 rounded-full bg-grey-fill flex items-center justify-center hover:bg-grey-outline transition-colors">
                     <Icon className="w-4 h-4" />
                   </div>
                 </a>
@@ -78,7 +78,7 @@ const Footer = () => {
 
           {/* Column 2: Explore */}
           <div>
-            <h3 className="font-semibold text-lg mb-5 text-primary-700">Explore</h3>
+            <h3 className="font-semibold text-lg mb-5 text-primary-black">Explore</h3>
             <ul className="space-y-3">
               {[
                 { name: "Plant Identification", path: "/search" },
@@ -90,7 +90,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-primary-600 hover:text-primary-800 hover:underline transition-colors inline-flex items-center group"
+                    className="text-primary-grey hover:text-primary-black hover:underline transition-colors inline-flex items-center group"
                   >
                     <ArrowRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
@@ -102,7 +102,7 @@ const Footer = () => {
 
           {/* Column 3: Resources */}
           <div>
-            <h3 className="font-semibold text-lg mb-5 text-primary-700">Resources</h3>
+            <h3 className="font-semibold text-lg mb-5 text-primary-black">Resources</h3>
             <ul className="space-y-3">
               {[
                 { name: "Plant Care Blog", path: "/blog" },
@@ -114,7 +114,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-primary-600 hover:text-primary-800 hover:underline  transition-colors inline-flex items-center group"
+                    className="text-primary-grey hover:text-primary-black hover:underline  transition-colors inline-flex items-center group"
                   >
                     <ArrowRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.name}
@@ -126,24 +126,24 @@ const Footer = () => {
 
           {/* Column 4: Contact */}
           <div>
-            <h3 className="font-semibold text-lg mb-5 text-primary-700">Contact Us</h3>
+            <h3 className="font-semibold text-lg mb-5 text-primary-black">Contact Us</h3>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <MapPin className="w-5 h-5 text-primary-600 mr-3 mt-0.5 flex-shrink-0" />
-                <span className="text-primary-600">123 Green Street, Plant City, Earth 98765</span>
+                <MapPin className="w-5 h-5 text-primary-orange mr-3 mt-0.5 flex-shrink-0" />
+                <span className="text-primary-grey">123 Green Street, Plant City, Earth 98765</span>
               </li>
               <li className="flex items-center">
-                <Phone className="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" />
-                <span className="text-primary-600">(555) 123-4567</span>
+                <Phone className="w-5 h-5 text-primary-orange mr-3 flex-shrink-0" />
+                <span className="text-primary-grey">(555) 123-4567</span>
               </li>
               <li className="flex items-center">
-                <Mail className="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" />
-                <span className="text-primary-600">hello@florasense.com</span>
+                <Mail className="w-5 h-5 text-primary-orange mr-3 flex-shrink-0" />
+                <span className="text-primary-grey">hello@florasense.com</span>
               </li>
               <li className="pt-4">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center px-4 py-2 bg-primary-100 hover:bg-primary-700 hover:text-primary-300  text-primary-700 rounded-lg transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-grey-fill hover:bg-primary-black hover:text-white text-primary-black rounded-lg transition-colors"
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Send us a message
@@ -155,7 +155,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-primary-100 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-primary-500 text-sm mb-4 md:mb-0">
+          <p className="text-primary-grey text-sm mb-4 md:mb-0">
             &copy; {currentYear} FloraSense. All rights reserved. Made with{" "}
             <Heart className="w-3 h-3 inline text-red-500 mx-1" /> for plant lovers.
           </p>
@@ -163,13 +163,13 @@ const Footer = () => {
             <Link to="/privacy" className="text-primary-500 hover:text-primary-700 text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-primary-500 hover:text-primary-700 text-sm transition-colors">
+            <Link to="/terms" className="text-primary-grey hover:text-primary-black text-sm transition-colors">
               Terms of Service
             </Link>
-            <Link to="/accessibility" className="text-primary-500 hover:text-primary-700 text-sm transition-colors">
+            <Link to="/accessibility" className="text-primary-grey hover:text-primary-black text-sm transition-colors">
               Accessibility
             </Link>
-            <Link to="/sitemap" className="text-primary-500 hover:text-primary-700 text-sm transition-colors">
+            <Link to="/sitemap" className="text-primary-grey hover:text-primary-black text-sm transition-colors">
               Sitemap
             </Link>
           </div>
