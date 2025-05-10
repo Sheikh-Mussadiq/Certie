@@ -80,7 +80,7 @@ const LoginSignUpPage = () => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6"
+          className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-8"
         >
           <AuthForm onAuthenticated={() => setIsAuthenticated(true)} />
         </motion.div>
@@ -90,13 +90,15 @@ const LoginSignUpPage = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="hidden lg:block lg:w-1/2 lg:fixed lg:right-0 lg:top-0 lg:bottom-0"
+          className="hidden lg:block lg:w-1/2 lg:fixed lg:right-0 lg:top-0 lg:bottom-0 p-8"
         >
-          <img
-            src="/src/assets/LoginBG_black.png"
-            alt="Login background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <div className="relative w-full h-full rounded-2xl overflow-hidden">
+            <img
+              src="/src/assets/LoginBG_black.png"
+              alt="Login background"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </motion.div>
       </div>
     </div>
