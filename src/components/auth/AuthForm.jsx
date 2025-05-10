@@ -278,32 +278,64 @@ export default function AuthForm({ onAuthenticated }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <div className="mt-1 relative group">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                className="pl-10 pr-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
-                transition-all duration-200 group-hover:border-primary-orange"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-orange transition-colors"
-              >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
-              <motion.span
-                className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
-                initial={{ width: 0 }}
-                whileHover={{ width: "100%" }}
-                transition={{ duration: 0.3 }}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div className="mt-1 relative group">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="pl-10 pr-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
+                    focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                    transition-all duration-200 group-hover:border-primary-orange"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-orange transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                  <motion.span
+                    className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
+                    initial={{ width: 0 }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+              </div>
+              
+              {!isLogin && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                  <div className="mt-1 relative group">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
+                      focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                      transition-all duration-200 group-hover:border-primary-orange"
+                      required
+                    />
+                    <motion.span
+                      className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
+                      initial={{ width: 0 }}
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </div>
+                  {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Password strength indicator (only for signup) */}
@@ -331,39 +363,6 @@ export default function AuthForm({ onAuthenticated }) {
               </div>
             )}
           </div>
-
-          {!isLogin && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-              <div className="mt-1 relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                  focus:border-primary-500 focus:ring-primary-500 bg-white bg-opacity-80 backdrop-blur-sm 
-                  transition-all duration-200 group-hover:border-primary-300"
-                  required
-                />
-                <motion.span
-                  className="absolute bottom-0 left-0 h-0.5 bg-primary-500"
-                  initial={{ width: 0 }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
-              {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
-              )}
-            </motion.div>
-          )}
 
           <AnimatePresence>
             {error && (
