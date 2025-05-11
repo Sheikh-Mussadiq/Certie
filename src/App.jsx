@@ -1,12 +1,19 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginSignUpPage from "./pages/LoginSignUpPage";
-import LandingPage from './pages/LandingPage';
-import MainLayout from './layouts/MainLayout';
+import LandingPage from "./pages/LandingPage";
+import MainLayout from "./layouts/MainLayout";
+import ContractorWorkflow from "./pages/ContractorWorkflow";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -14,7 +21,7 @@ const ScrollToTop = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }, [pathname]);
 
@@ -28,9 +35,7 @@ const LoadingSpinner = () => (
 );
 
 const ProtectedLayout = ({ children }) => (
-  <ProtectedRoute>
-   {children}
-  </ProtectedRoute>
+  <ProtectedRoute>{children}</ProtectedRoute>
 );
 
 const ProtectedLoginRoute = () => {
@@ -44,7 +49,7 @@ const ProtectedLoginRoute = () => {
     return <Navigate to="/home" replace />;
   }
 
-  return <LoginSignUpPage />
+  return <LoginSignUpPage />;
 };
 
 const AuthenticatedRoutes = () => {
@@ -67,11 +72,12 @@ const AuthenticatedRoutes = () => {
           path="/home"
           element={
             <ProtectedLayout>
-              <LandingPage />
+              {/* <LandingPage /> */}
+              <ContractorWorkflow />
             </ProtectedLayout>
           }
         />
-       
+
         <Route
           path="*"
           element={
