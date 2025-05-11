@@ -1,4 +1,3 @@
-
 "use client"
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
@@ -51,9 +50,9 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/home" className="flex items-center group hover:scale-105 transition-transform duration-300">
               <motion.div whileHover={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 0.5 }}>
-                <SiOverleaf className="h-8 w-8 text-primary-600 mr-2 group-hover:text-primary-500 transition-colors" />
+                <SiOverleaf className="h-8 w-8 text-primary-orange mr-2 group-hover:text-primary-black transition-colors" />
               </motion.div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent group-hover:from-primary-500 group-hover:to-primary-300 transition-all">
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent group-hover:from-primary-black group-hover:to-primary-orange transition-all">
                 FloraSense
               </span>
             </Link>
@@ -64,7 +63,7 @@ const Navbar = () => {
                 <Link key={link.path} to={link.path} className="relative group">
                   <motion.span
                     className={`inline-flex items-center px-1 pt-1 text-sm font-medium capitalize ${
-                      isActive(link.path) ? "text-primary-600" : "text-gray-500 hover:text-gray-700"
+                      isActive(link.path) ? "text-primary-orange" : "text-gray-500 hover:text-gray-700"
                     }`}
                     whileHover={{ y: -2 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -74,12 +73,12 @@ const Navbar = () => {
                   {isActive(link.path) && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-orange"
                       initial={false}
                     />
                   )}
                   <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-400 scale-x-0 group-hover:scale-x-100 transition-transform"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-orange scale-x-0 group-hover:scale-x-100 transition-transform"
                     style={{ originX: 0 }}
                   />
                 </Link>
@@ -138,4 +137,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-
