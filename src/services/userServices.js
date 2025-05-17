@@ -1,16 +1,13 @@
 import { supabase } from '../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
-export const createUserProfile = async (userId, email, fullName, avatarUrl = null) => {
+export const createUserProfile = async (fullName, avatarUrl = null) => {
   try {
-    console.log('Creating user profile:', { userId, email, fullName, avatarUrl });
     
     const { data, error } = await supabase
       .from('users')
       .insert([
         {
-          id: userId,
-          email,
           full_name: fullName,
           avatar_url: avatarUrl,
         }
@@ -139,8 +136,6 @@ export const handleAuthUser = async (session) => {
 
     // Create new profile if doesn't exist
     const userData = {
-      id: authUser.id,
-      email: authUser.email,
       fullName: authUser.user_metadata?.full_name || 
                 authUser.raw_user_meta_data?.full_name ||
                 authUser.user_metadata?.name ||
@@ -153,8 +148,6 @@ export const handleAuthUser = async (session) => {
     console.log('Creating new profile with data:', userData);
     
     const newProfile = await createUserProfile(
-      userData.id,
-      userData.email,
       userData.fullName,
       userData.avatarUrl
     );
