@@ -12,6 +12,17 @@ const Properties = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [searchTerm, setSearchTerm] = useState("")
 
+  // Filter properties based on search term
+  const filteredProperties = mockProperties.filter(property =>
+    property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    property.responsiblePerson.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentProperties = filteredProperties.slice(indexOfFirstItem, indexOfLastItem)
+
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
@@ -42,12 +53,12 @@ const Properties = () => {
           onViewChange={() => {}}
         />
         <PropertyTable
-          properties={mockProperties}
+          properties={currentProperties}
           selectedProperties={selectedProperties}
           onSelectProperty={setSelectedProperties}
         />
         <TableFooter
-          totalItems={mockProperties.length}
+          totalItems={filteredProperties.length}
           itemsPerPage={itemsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
