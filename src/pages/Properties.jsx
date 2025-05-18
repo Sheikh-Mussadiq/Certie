@@ -4,33 +4,7 @@ import { useState } from "react"
 import TableHeader from "../components/properties/TableHeader"
 import TableFooter from "../components/properties/TableFooter"
 import PropertyTable from "../components/properties/PropertyTable"
-
-const mockProperties = [
-  {
-    id: 1,
-    address: "1234 Innovation Drive, 94103, United States",
-    complianceScore: 85,
-    trainingScore: 92,
-    contactNumber: "+1 (555) 123-4567",
-    responsiblePerson: "John Smith",
-  },
-  {
-    id: 2,
-    address: "567 Tech Park Avenue, 94104, United States",
-    complianceScore: 78,
-    trainingScore: 88,
-    contactNumber: "+1 (555) 987-6543",
-    responsiblePerson: "Sarah Johnson",
-  },
-  {
-    id: 3,
-    address: "890 Enterprise Road, 94105, United States",
-    complianceScore: 92,
-    trainingScore: 95,
-    contactNumber: "+1 (555) 456-7890",
-    responsiblePerson: "Michael Brown",
-  },
-]
+import { mockProperties } from "../data/mockProperties"
 
 const Properties = () => {
   const [selectedProperties, setSelectedProperties] = useState([])
