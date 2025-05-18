@@ -1,11 +1,11 @@
 import { motion } from "framer-motion"
-import { Download, Upload, Plus } from "lucide-react"
+import { Download, Upload, Plus, Building2 } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import TableHeader from "../components/properties/TableHeader"
 import TableFooter from "../components/properties/TableFooter"
 import PropertyTable from "../components/properties/PropertyTable"
 import PropertyListView from "../components/properties/PropertyListView"
-import AddPropertyModal from "../components/properties/AddPropertyModal"
 import { mockProperties } from "../data/mockProperties"
 
 const applyFilters = (properties, filters) => {
@@ -69,7 +69,7 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState("table") // "table" or "list"
   const [currentSort, setCurrentSort] = useState(null)
   const [currentFilters, setCurrentFilters] = useState(null)
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   // Filter properties based on search term
   let filteredProperties = mockProperties.filter(property =>
@@ -124,7 +124,7 @@ const Properties = () => {
             </button>
           </div>
           <button 
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => navigate('/properties/add')}
             className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -164,11 +164,6 @@ const Properties = () => {
           onItemsPerPageChange={setItemsPerPage}
         />
       </div>
-      <AddPropertyModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddProperty}
-      />
     </div>
   )
 }

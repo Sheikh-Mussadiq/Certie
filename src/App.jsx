@@ -14,6 +14,7 @@ import LoginSignUpPage from "./pages/LoginSignUpPage";
 import LandingPage from "./pages/LandingPage";
 import MainLayout from "./layouts/MainLayout";
 import Properties from "./pages/Properties";
+import AddProperty from "./pages/AddProperty";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 
 const ScrollToTop = () => {
@@ -82,6 +83,14 @@ const AuthenticatedRoutes = () => {
           element={
             <ProtectedLayout>
               <Properties />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/properties/add"
+          element={
+            <ProtectedLayout>
+              <AddProperty />
             </ProtectedLayout>
           }
         />
