@@ -63,7 +63,7 @@ const AddProperty = () => {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-primary-black">Add a Property</h1>
@@ -85,7 +85,7 @@ const AddProperty = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-grey-outline p-6">
+      <div className="p-6">
         <div className="mb-8">
           <h3 className="text-sm font-medium mb-2">Upload Property Image</h3>
           <p className="text-xs text-primary-grey mb-4">
