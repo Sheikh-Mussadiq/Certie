@@ -39,3 +39,5 @@ const DayView = ({ currentDate }) => {
     </div>
   )
 }
+
+export default DayView

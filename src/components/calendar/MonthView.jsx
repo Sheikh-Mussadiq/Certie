@@ -89,3 +89,5 @@ const MonthView = ({ currentDate }) => {
     </div>
   )
 }
+
+export default MonthView

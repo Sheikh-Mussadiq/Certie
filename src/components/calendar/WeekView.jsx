@@ -64,3 +64,5 @@ const WeekView = ({ currentDate }) => {
     </div>
   )
 }
+
+export default WeekView

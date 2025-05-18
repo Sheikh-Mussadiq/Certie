@@ -56,3 +56,5 @@ const CalendarHeader = ({ currentDate, view, onViewChange, onPrevious, onNext, o
     </div>
   )
 }
+
+export default CalendarHeader
