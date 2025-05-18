@@ -4,6 +4,7 @@ import { useState } from "react"
 import TableHeader from "../components/properties/TableHeader"
 import TableFooter from "../components/properties/TableFooter"
 import PropertyTable from "../components/properties/PropertyTable"
+import PropertyListView from "../components/properties/PropertyListView"
 import { mockProperties } from "../data/mockProperties"
 
 const Properties = () => {
@@ -11,6 +12,7 @@ const Properties = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [searchTerm, setSearchTerm] = useState("")
+  const [viewMode, setViewMode] = useState("table") // "table" or "list"
 
   // Filter properties based on search term
   const filteredProperties = mockProperties.filter(property =>
@@ -50,13 +52,22 @@ const Properties = () => {
           onSearch={setSearchTerm}
           onSort={() => {}}
           onFilter={() => {}}
-          onViewChange={() => {}}
+          onViewChange={setViewMode}
+          viewMode={viewMode}
         />
-        <PropertyTable
-          properties={currentProperties}
-          selectedProperties={selectedProperties}
-          onSelectProperty={setSelectedProperties}
-        />
+        {viewMode === "table" ? (
+          <PropertyTable
+            properties={currentProperties}
+            selectedProperties={selectedProperties}
+            onSelectProperty={setSelectedProperties}
+          />
+        ) : (
+          <PropertyListView
+            properties={currentProperties}
+            selectedProperties={selectedProperties}
+            onSelectProperty={setSelectedProperties}
+          />
+        )}
         <TableFooter
           totalItems={filteredProperties.length}
           itemsPerPage={itemsPerPage}

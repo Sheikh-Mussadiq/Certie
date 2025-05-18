@@ -1,6 +1,6 @@
 import { Search, SlidersHorizontal, List, ArrowUpDown } from "lucide-react"
 
-const TableHeader = ({ onSearch, onSort, onFilter, onViewChange }) => {
+const TableHeader = ({ onSearch, onSort, onFilter, onViewChange, viewMode }) => {
   return (
     <div className="flex justify-between items-center p-4 border-b border-grey-outline">
       <div className="flex items-center gap-4">
@@ -12,7 +12,12 @@ const TableHeader = ({ onSearch, onSort, onFilter, onViewChange }) => {
           <SlidersHorizontal className="w-4 h-4" />
           Filter
         </button>
-        <button className="flex items-center gap-2 text-sm text-primary-black hover:text-primary-orange">
+        <button 
+          onClick={() => onViewChange(viewMode === "table" ? "list" : "table")}
+          className={`flex items-center gap-2 text-sm transition-colors ${
+            viewMode === "list" ? "text-primary-orange" : "text-primary-black hover:text-primary-orange"
+          }`}
+        >
           <List className="w-4 h-4" />
           List view
         </button>
