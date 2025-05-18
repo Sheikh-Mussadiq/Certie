@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom"
-import { motion } from "framer-motion"
+import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   LayoutGrid,
   Building2,
@@ -9,15 +9,15 @@ import {
   FileText,
   Calendar,
   Settings,
-} from "lucide-react"
-import { SiOverleaf } from "react-icons/si"
+} from "lucide-react";
+import { SiOverleaf } from "react-icons/si";
 
 const Sidebar = () => {
-  const location = useLocation()
+  const location = useLocation();
 
   const isPathActive = (path) => {
-    return location.pathname.startsWith(path)
-  }
+    return location.pathname.startsWith(path);
+  };
 
   const menuItems = [
     { icon: LayoutGrid, label: "Overview", path: "/overview" },
@@ -28,7 +28,7 @@ const Sidebar = () => {
     { icon: FileText, label: "Documents", path: "/documents" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
     { icon: Settings, label: "Settings", path: "/settings" },
-  ]
+  ];
 
   return (
     <div className="w-64 bg-primary-black min-h-screen p-4 flex flex-col">
@@ -40,15 +40,15 @@ const Sidebar = () => {
       <nav className="flex-1">
         <ul className="space-y-2">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path
+            const isActive = location.pathname === item.path;
             return (
               <li key={item.path}>
                 <Link
                   to={item.path}
-                    isActive
-                      ? "bg-primary-orange text-white"
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative ${
-                    isPathActive(item.path) ? "bg-primary-orange text-white" : "text-gray-400 hover:text-white"
+                    isPathActive(item.path)
+                      ? "bg-primary-orange text-white"
+                      : "text-gray-400 hover:text-white"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -72,7 +72,7 @@ const Sidebar = () => {
                   )}
                 </Link>
               </li>
-            )
+            );
           })}
         </ul>
       </nav>
@@ -92,7 +92,7 @@ const Sidebar = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
