@@ -5,6 +5,7 @@ import TableHeader from "../components/properties/TableHeader"
 import TableFooter from "../components/properties/TableFooter"
 import PropertyTable from "../components/properties/PropertyTable"
 import PropertyListView from "../components/properties/PropertyListView"
+import AddPropertyModal from "../components/properties/AddPropertyModal"
 import { mockProperties } from "../data/mockProperties"
 
 const applyFilters = (properties, filters) => {
@@ -68,6 +69,7 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState("table") // "table" or "list"
   const [currentSort, setCurrentSort] = useState(null)
   const [currentFilters, setCurrentFilters] = useState(null)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
   // Filter properties based on search term
   let filteredProperties = mockProperties.filter(property =>
@@ -100,6 +102,12 @@ const Properties = () => {
     }))
   }
 
+  const handleAddProperty = (propertyData) => {
+    console.log('New property:', propertyData)
+    // TODO: Implement property creation logic
+    setIsAddModalOpen(false)
+  }
+
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
@@ -115,7 +123,10 @@ const Properties = () => {
               Export
             </button>
           </div>
-          <button className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Add Property
           </button>
@@ -153,6 +164,11 @@ const Properties = () => {
           onItemsPerPageChange={setItemsPerPage}
         />
       </div>
+      <AddPropertyModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddProperty}
+      />
     </div>
   )
 }
