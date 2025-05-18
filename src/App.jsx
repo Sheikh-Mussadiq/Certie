@@ -15,6 +15,7 @@ import LandingPage from "./pages/LandingPage";
 import MainLayout from "./layouts/MainLayout";
 import Properties from "./pages/Properties";
 import AddProperty from "./pages/AddProperty";
+import PropertyDetails from "./pages/PropertyDetails";
 import Calendar from "./pages/Calendar";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 
@@ -92,6 +93,14 @@ const AuthenticatedRoutes = () => {
           element={
             <ProtectedLayout>
               <AddProperty />
+            </ProtectedLayout>
+          }
+        />
+        <Route
+          path="/properties/:id"
+          element={
+            <ProtectedLayout>
+              <PropertyDetails />
             </ProtectedLayout>
           }
         />

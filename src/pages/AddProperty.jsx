@@ -75,7 +75,7 @@ const AddProperty = () => {
     e.preventDefault()
     // TODO: Implement property creation
     console.log('Property data:', formData)
-    navigate('/properties')
+    navigate(`/properties/${1}`) // Navigate to property details page after creation
   }
 
   return (
