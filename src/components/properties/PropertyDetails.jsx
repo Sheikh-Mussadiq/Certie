@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Edit2 } from 'lucide-react'
 import AssessmentsTab from './AssessmentsTab'
+import LogBooksTab from './LogBooksTab'
 
 const PropertyDetails = ({ property }) => {
   const [activeTab, setActiveTab] = useState('overview')
@@ -198,6 +199,7 @@ const PropertyDetails = ({ property }) => {
             </div>
           )}
           {activeTab === 'assessments' && <AssessmentsTab />}
+          {activeTab === 'logbooks' && <LogBooksTab />}
         </div>
       </div>
     </div>
