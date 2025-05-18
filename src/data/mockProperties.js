@@ -9,7 +9,7 @@ export const mockProperties = [
     propertyType: "Commercial",
     floors: 12,
     units: 48,
-    lastInspection: "2024-02-15"
+    lastInspection: "2024-02-15",
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const mockProperties = [
     propertyType: "Residential",
     floors: 8,
     units: 32,
-    lastInspection: "2024-01-20"
+    lastInspection: "2024-01-20",
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ export const mockProperties = [
     propertyType: "Mixed-Use",
     floors: 15,
     units: 60,
-    lastInspection: "2024-02-28"
+    lastInspection: "2024-02-28",
   },
   {
     id: 4,
@@ -45,7 +45,7 @@ export const mockProperties = [
     propertyType: "Commercial",
     floors: 20,
     units: 80,
-    lastInspection: "2024-02-10"
+    lastInspection: "2024-02-10",
   },
   {
     id: 5,
@@ -57,7 +57,7 @@ export const mockProperties = [
     propertyType: "Residential",
     floors: 6,
     units: 24,
-    lastInspection: "2024-01-30"
+    lastInspection: "2024-01-30",
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ export const mockProperties = [
     propertyType: "Mixed-Use",
     floors: 10,
     units: 40,
-    lastInspection: "2024-02-05"
+    lastInspection: "2024-02-05",
   },
   {
     id: 7,
@@ -81,7 +81,7 @@ export const mockProperties = [
     propertyType: "Commercial",
     floors: 18,
     units: 72,
-    lastInspection: "2024-02-20"
+    lastInspection: "2024-02-20",
   },
   {
     id: 8,
@@ -93,6 +93,90 @@ export const mockProperties = [
     propertyType: "Residential",
     floors: 4,
     units: 16,
-    lastInspection: "2024-01-25"
-  }
-]
+    lastInspection: "2024-01-25",
+  },
+  {
+    id: 9,
+    address: "135 Bayfront Avenue, 94111, United States",
+    complianceScore: 91,
+    trainingScore: 94,
+    contactNumber: "+1 (555) 789-0123",
+    responsiblePerson: "William Garcia",
+    propertyType: "Mixed-Use",
+    floors: 14,
+    units: 56,
+    lastInspection: "2024-02-12",
+  },
+  {
+    id: 10,
+    address: "246 Oceanview Lane, 94112, United States",
+    complianceScore: 84,
+    trainingScore: 89,
+    contactNumber: "+1 (555) 890-1234",
+    responsiblePerson: "Elizabeth Hernandez",
+    propertyType: "Commercial",
+    floors: 22,
+    units: 88,
+    lastInspection: "2024-02-18",
+  },
+  {
+    id: 11,
+    address: "357 Mountain Peak Road, 94113, United States",
+    complianceScore: 87,
+    trainingScore: 92,
+    contactNumber: "+1 (555) 901-2345",
+    responsiblePerson: "James Wilson",
+    propertyType: "Residential",
+    floors: 5,
+    units: 20,
+    lastInspection: "2024-01-15",
+  },
+  {
+    id: 12,
+    address: "468 Valley View Drive, 94114, United States",
+    complianceScore: 89,
+    trainingScore: 90,
+    contactNumber: "+1 (555) 012-3456",
+    responsiblePerson: "Patricia Lopez",
+    propertyType: "Mixed-Use",
+    floors: 11,
+    units: 44,
+    lastInspection: "2024-02-08",
+  },
+  {
+    id: 13,
+    address: "579 Forest Hill Road, 94115, United States",
+    complianceScore: 93,
+    trainingScore: 96,
+    contactNumber: "+1 (555) 123-4567",
+    responsiblePerson: "Charles Gonzalez",
+    propertyType: "Commercial",
+    floors: 19,
+    units: 76,
+    lastInspection: "2024-02-25",
+  },
+  {
+    id: 14,
+    address: "680 Sunset Boulevard, 94116, United States",
+    complianceScore: 85,
+    trainingScore: 88,
+    contactNumber: "+1 (555) 234-5678",
+    responsiblePerson: "Barbara Martinez",
+    propertyType: "Residential",
+    floors: 7,
+    units: 28,
+    lastInspection: "2024-01-22",
+  },
+  {
+    id: 15,
+    address: "791 City Center Drive, 94117, United States",
+    complianceScore: 90,
+    trainingScore: 91,
+    contactNumber: "+1 (555) 345-6789",
+    responsiblePerson: "Christopher Rodriguez",
+    propertyType: "Mixed-Use",
+    floors: 13,
+    units: 52,
+    lastInspection: "2024-02-14",
+  },
+];
