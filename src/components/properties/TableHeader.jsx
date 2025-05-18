@@ -1,17 +1,73 @@
 import { Search, SlidersHorizontal, List, ArrowUpDown } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import SortMenu from "./SortMenu"
+import FilterMenu from "./FilterMenu"
 
-const TableHeader = ({ onSearch, onSort, onFilter, onViewChange, viewMode }) => {
+const TableHeader = ({
+  onSearch,
+  onSort,
+  onFilter,
+  onViewChange,
+  viewMode,
+  currentSort,
+  currentFilters,
+}) => {
+  const [isSortOpen, setIsSortOpen] = useState(false)
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const sortRef = useRef(null)
+  const filterRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sortRef.current && !sortRef.current.contains(event.target)) {
+        setIsSortOpen(false)
+      }
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsFilterOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   return (
     <div className="flex justify-between items-center p-4 border-b border-grey-outline">
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 text-sm text-primary-black hover:text-primary-orange">
+        <div ref={sortRef} className="relative">
+          <button
+            onClick={() => setIsSortOpen(!isSortOpen)}
+            className={`flex items-center gap-2 text-sm ${
+              currentSort ? "text-primary-orange" : "text-primary-black hover:text-primary-orange"
+            }`}
+          >
           <ArrowUpDown className="w-4 h-4" />
           Sort by
-        </button>
-        <button className="flex items-center gap-2 text-sm text-primary-black hover:text-primary-orange">
+          </button>
+          <SortMenu
+            isOpen={isSortOpen}
+            onClose={() => setIsSortOpen(false)}
+            onSort={onSort}
+            currentSort={currentSort}
+          />
+        </div>
+        <div ref={filterRef} className="relative">
+          <button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className={`flex items-center gap-2 text-sm ${
+              currentFilters ? "text-primary-orange" : "text-primary-black hover:text-primary-orange"
+            }`}
+          >
           <SlidersHorizontal className="w-4 h-4" />
           Filter
-        </button>
+          </button>
+          <FilterMenu
+            isOpen={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
+            onFilter={onFilter}
+            currentFilters={currentFilters}
+          />
+        </div>
         <button 
           onClick={() => onViewChange(viewMode === "table" ? "list" : "table")}
           className={`flex items-center gap-2 text-sm transition-colors ${

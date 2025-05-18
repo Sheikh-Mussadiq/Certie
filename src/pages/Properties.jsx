@@ -7,23 +7,98 @@ import PropertyTable from "../components/properties/PropertyTable"
 import PropertyListView from "../components/properties/PropertyListView"
 import { mockProperties } from "../data/mockProperties"
 
+const applyFilters = (properties, filters) => {
+  if (!filters) return properties
+  
+  return properties.filter(property => {
+    let matches = true
+    
+    if (filters.propertyType) {
+      matches = matches && property.propertyType === filters.propertyType
+    }
+    
+    if (filters.complianceScore) {
+      const score = property.complianceScore
+      if (filters.complianceScore === "Above 90%") {
+        matches = matches && score > 90
+      } else if (filters.complianceScore === "70-90%") {
+        matches = matches && score >= 70 && score <= 90
+      } else if (filters.complianceScore === "Below 70%") {
+        matches = matches && score < 70
+      }
+    }
+    
+    if (filters.trainingScore) {
+      const score = property.trainingScore
+      if (filters.trainingScore === "Above 90%") {
+        matches = matches && score > 90
+      } else if (filters.trainingScore === "70-90%") {
+        matches = matches && score >= 70 && score <= 90
+      } else if (filters.trainingScore === "Below 70%") {
+        matches = matches && score < 70
+      }
+    }
+    
+    return matches
+  })
+}
+
+const applySorting = (properties, sort) => {
+  if (!sort?.field) return properties
+  
+  return [...properties].sort((a, b) => {
+    const aValue = a[sort.field]
+    const bValue = b[sort.field]
+    
+    if (typeof aValue === "string") {
+      return sort.direction === "asc" 
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue)
+    }
+    
+    return sort.direction === "asc" ? aValue - bValue : bValue - aValue
+  })
+}
+
 const Properties = () => {
   const [selectedProperties, setSelectedProperties] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [searchTerm, setSearchTerm] = useState("")
   const [viewMode, setViewMode] = useState("table") // "table" or "list"
+  const [currentSort, setCurrentSort] = useState(null)
+  const [currentFilters, setCurrentFilters] = useState(null)
 
   // Filter properties based on search term
-  const filteredProperties = mockProperties.filter(property =>
+  let filteredProperties = mockProperties.filter(property =>
     property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
     property.responsiblePerson.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  // Apply filters
+  filteredProperties = applyFilters(filteredProperties, currentFilters)
+
+  // Apply sorting
+  filteredProperties = applySorting(filteredProperties, currentSort)
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentProperties = filteredProperties.slice(indexOfFirstItem, indexOfLastItem)
+
+  const handleSort = (field) => {
+    setCurrentSort(prev => ({
+      field,
+      direction: prev?.field === field && prev?.direction === "asc" ? "desc" : "asc"
+    }))
+  }
+
+  const handleFilter = (field, value) => {
+    setCurrentFilters(prev => ({
+      ...prev,
+      [field]: prev?.[field] === value ? null : value
+    }))
+  }
 
   return (
     <div className="p-8">
@@ -50,8 +125,10 @@ const Properties = () => {
       <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
         <TableHeader
           onSearch={setSearchTerm}
-          onSort={() => {}}
-          onFilter={() => {}}
+          onSort={handleSort}
+          onFilter={handleFilter}
+          currentSort={currentSort}
+          currentFilters={currentFilters}
           onViewChange={setViewMode}
           viewMode={viewMode}
         />
