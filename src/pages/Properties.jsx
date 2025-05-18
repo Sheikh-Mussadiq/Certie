@@ -1,5 +1,9 @@
 import { motion } from "framer-motion"
 import { Download, Upload, Plus } from "lucide-react"
+import { useState } from "react"
+import TableHeader from "../components/properties/TableHeader"
+import TableFooter from "../components/properties/TableFooter"
+import PropertyTable from "../components/properties/PropertyTable"
 
 const mockProperties = [
   {
@@ -29,6 +33,11 @@ const mockProperties = [
 ]
 
 const Properties = () => {
+  const [selectedProperties, setSelectedProperties] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [searchTerm, setSearchTerm] = useState("")
+
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
@@ -52,60 +61,24 @@ const Properties = () => {
       </div>
 
       <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-grey-fill">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">Address</th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">Compliance Score</th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">Training Score</th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">Contact Number</th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">Responsible Person</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-grey-outline">
-            {mockProperties.map((property) => (
-              <motion.tr
-                key={property.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="hover:bg-grey-fill/50 cursor-pointer"
-              >
-                <td className="px-6 py-4">
-                  <div className="text-sm text-primary-black">{property.address}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-green-500 rounded-full"
-                        style={{ width: `${property.complianceScore}%` }}
-                      />
-                    </div>
-                    <span className="text-sm text-primary-black">{property.complianceScore}%</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-12 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-500 rounded-full"
-                        style={{ width: `${property.trainingScore}%` }}
-                      />
-                    </div>
-                    <span className="text-sm text-primary-black">{property.trainingScore}%</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-primary-black">{property.contactNumber}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-primary-black">{property.responsiblePerson}</div>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+        <TableHeader
+          onSearch={setSearchTerm}
+          onSort={() => {}}
+          onFilter={() => {}}
+          onViewChange={() => {}}
+        />
+        <PropertyTable
+          properties={mockProperties}
+          selectedProperties={selectedProperties}
+          onSelectProperty={setSelectedProperties}
+        />
+        <TableFooter
+          totalItems={mockProperties.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
+        />
       </div>
     </div>
   )
