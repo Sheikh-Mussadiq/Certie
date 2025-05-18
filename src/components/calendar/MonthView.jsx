@@ -59,11 +59,11 @@ const MonthView = ({ currentDate }) => {
         ))}
       </div>
       
-      <div className="grid grid-cols-7 grid-rows-6 h-[calc(100vh-13rem)]">
+      <div className="grid grid-cols-7 grid-rows-6 h-[calc(100vh-16rem)]">
         {days.map((day, index) => (
           <div
             key={index}
-            className={`border-b border-r border-grey-outline p-2 ${
+            className={`border-b border-r border-grey-outline p-2 overflow-auto ${
               day.isCurrentMonth ? 'bg-white' : 'bg-grey-fill/50'
             }`}
           >
@@ -77,7 +77,7 @@ const MonthView = ({ currentDate }) => {
               {day.events.map((event, eventIndex) => (
                 <div
                   key={eventIndex}
-                  className="text-xs p-1 rounded bg-blue-100 text-blue-800 truncate"
+                  className="text-xs p-1 rounded bg-blue-100 text-blue-800 truncate hover:bg-blue-200 cursor-pointer transition-colors"
                 >
                   {event.title}
                 </div>
