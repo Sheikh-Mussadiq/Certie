@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Plus, ChevronDown, Download } from 'lucide-react'
+import CreateFolderModal from './CreateFolderModal'
+import UploadDocumentModal from './UploadDocumentModal'
 
 const DocumentsTab = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedFolders, setExpandedFolders] = useState(['Fire Risk Assessments'])
+  const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false)
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
   const documents = {
     'Fire Risk Assessments': [
@@ -36,6 +40,24 @@ const DocumentsTab = () => {
     )
   }
 
+  const handleCreateFolder = async (folderName) => {
+    try {
+      // TODO: Implement folder creation
+      console.log('Creating folder:', folderName)
+    } catch (error) {
+      console.error('Error creating folder:', error)
+    }
+  }
+
+  const handleUploadDocuments = async ({ files, folderId }) => {
+    try {
+      // TODO: Implement document upload
+      console.log('Uploading files:', files, 'to folder:', folderId)
+    } catch (error) {
+      console.error('Error uploading documents:', error)
+    }
+  }
+
   const getFileIcon = (type) => {
     switch (type) {
       case 'pdf':
@@ -63,11 +85,17 @@ const DocumentsTab = () => {
           />
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2">
+          <button
+            onClick={() => setIsCreateFolderModalOpen(true)}
+            className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Create folder
           </button>
-          <button className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2">
+          <button
+            onClick={() => setIsUploadModalOpen(true)}
+            className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Upload Document
           </button>
@@ -119,6 +147,19 @@ const DocumentsTab = () => {
           </div>
         ))}
       </div>
+      
+      <CreateFolderModal
+        isOpen={isCreateFolderModalOpen}
+        onClose={() => setIsCreateFolderModalOpen(false)}
+        onSubmit={handleCreateFolder}
+      />
+      
+      <UploadDocumentModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onSubmit={handleUploadDocuments}
+        folders={Object.keys(documents).map((name, id) => ({ id, name }))}
+      />
     </div>
   )
 }
