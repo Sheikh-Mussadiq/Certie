@@ -15,6 +15,10 @@ import { SiOverleaf } from "react-icons/si"
 const Sidebar = () => {
   const location = useLocation()
 
+  const isPathActive = (path) => {
+    return location.pathname.startsWith(path)
+  }
+
   const menuItems = [
     { icon: LayoutGrid, label: "Overview", path: "/overview" },
     { icon: Building2, label: "Properties", path: "/properties" },
@@ -41,10 +45,10 @@ const Sidebar = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative ${
                     isActive
                       ? "bg-primary-orange text-white"
-                      : "text-gray-400 hover:text-white"
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative ${
+                    isPathActive(item.path) ? "bg-primary-orange text-white" : "text-gray-400 hover:text-white"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -54,7 +58,7 @@ const Sidebar = () => {
                       {item.badge}
                     </span>
                   )}
-                  {isActive && (
+                  {isPathActive(item.path) && (
                     <motion.div
                       layoutId="sidebar-active"
                       className="absolute inset-0 bg-primary-orange rounded-lg -z-10"
