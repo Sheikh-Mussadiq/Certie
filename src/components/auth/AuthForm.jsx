@@ -1,97 +1,111 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { supabase } from "../../lib/supabase"
-import { Mail, Lock, User, ArrowRight, Chrome, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
-import { handleAuthUser } from "../../services/userServices"
-import LoadingSpinner from "../LoadingSpinner"
-import { useAuth } from "../../context/AuthContext"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "../../lib/supabase";
+import {
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Chrome,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
+import Logo from "../../assets/Logo.png";
+import { handleAuthUser } from "../../services/userServices";
+import LoadingSpinner from "../LoadingSpinner";
+import { useAuth } from "../../context/AuthContext";
+
 export default function AuthForm({ onAuthenticated }) {
-  const [isLogin, setIsLogin] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const { setCurrentUser } = useAuth()
-  const [success, setSuccess] = useState(null)
-  const [showPassword, setShowPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(0)
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { setCurrentUser } = useAuth();
+  const [success, setSuccess] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     fullName: "",
-  })
+  });
 
   // Password strength checker
   useEffect(() => {
     if (!formData.password) {
-      setPasswordStrength(0)
-      return
+      setPasswordStrength(0);
+      return;
     }
 
-    let strength = 0
+    let strength = 0;
     // Length check
-    if (formData.password.length >= 8) strength += 1
+    if (formData.password.length >= 8) strength += 1;
     // Contains number
-    if (/\d/.test(formData.password)) strength += 1
+    if (/\d/.test(formData.password)) strength += 1;
     // Contains special char
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) strength += 1
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) strength += 1;
     // Contains uppercase
-    if (/[A-Z]/.test(formData.password)) strength += 1
+    if (/[A-Z]/.test(formData.password)) strength += 1;
 
-    setPasswordStrength(strength)
-  }, [formData.password])
+    setPasswordStrength(strength);
+  }, [formData.password]);
 
   const handleGoogleSignIn = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: window.location.origin,
         },
-      })
-      if (error) throw error
+      });
+      if (error) throw error;
       // Handle user profile after OAuth
       if (data?.session) {
-        await handleAuthUser(data.session)
-        onAuthenticated()
+        await handleAuthUser(data.session);
+        onAuthenticated();
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError(null)
-    setSuccess(null)
-    setLoading(true)
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
 
     try {
       if (isLogin) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
-        })
-        if (error) throw error
-        const UserData = await handleAuthUser(data.session)
-        setCurrentUser(UserData)
-        onAuthenticated()
+        });
+        if (error) throw error;
+        const UserData = await handleAuthUser(data.session);
+        setCurrentUser(UserData);
+        onAuthenticated();
       } else {
         if (formData.password !== formData.confirmPassword) {
-          throw new Error("Passwords do not match")
+          throw new Error("Passwords do not match");
         }
 
         // Password strength validation
         if (passwordStrength < 3 && formData.password.length > 0) {
-          throw new Error("Please use a stronger password")
+          throw new Error("Please use a stronger password");
         }
 
-        const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.fullName)}&background=random`
+        const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          formData.fullName
+        )}&background=random`;
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
@@ -101,46 +115,46 @@ export default function AuthForm({ onAuthenticated }) {
               avatar_url: defaultAvatar,
             },
           },
-        })
-        if (error) throw error
+        });
+        if (error) throw error;
         if (data.session) {
-         const UserData = await handleAuthUser(data.session)
-          setCurrentUser(UserData)
-          onAuthenticated()
+          const UserData = await handleAuthUser(data.session);
+          setCurrentUser(UserData);
+          onAuthenticated();
         } else {
           // Email confirmation required
-          setSuccess("Please check your email to confirm your account")
+          setSuccess("Please check your email to confirm your account");
         }
       }
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const getPasswordStrengthColor = () => {
-    if (passwordStrength === 0) return "bg-gray-200"
-    if (passwordStrength === 1) return "bg-red-500"
-    if (passwordStrength === 2) return "bg-yellow-500"
-    if (passwordStrength === 3) return "bg-blue-500"
-    return "bg-green-500"
-  }
+    if (passwordStrength === 0) return "bg-gray-200";
+    if (passwordStrength === 1) return "bg-red-500";
+    if (passwordStrength === 2) return "bg-yellow-500";
+    if (passwordStrength === 3) return "bg-blue-500";
+    return "bg-green-500";
+  };
 
   const getPasswordStrengthText = () => {
-    if (!formData.password) return ""
-    if (passwordStrength === 1) return "Weak"
-    if (passwordStrength === 2) return "Fair"
-    if (passwordStrength === 3) return "Good"
-    return "Strong"
-  }
+    if (!formData.password) return "";
+    if (passwordStrength === 1) return "Weak";
+    if (passwordStrength === 2) return "Fair";
+    if (passwordStrength === 3) return "Good";
+    return "Strong";
+  };
 
   return (
     <div className="w-full max-w-md p-8">
@@ -155,14 +169,15 @@ export default function AuthForm({ onAuthenticated }) {
           whileHover={{ rotate: [0, -10, 10, -10, 0] }}
           transition={{ duration: 0.5 }}
         >
-          <motion.div
+          {/* <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="w-16 h-16 bg-primary-orange rounded-full flex items-center justify-center mx-auto"
           >
             <User className="w-8 h-8 text-white" />
-          </motion.div>
+          </motion.div> */}
+          <img src={Logo} alt="Logo" className="w-16 h-16 mx-auto mb-2" />
         </motion.div>
 
         <motion.h2
@@ -171,7 +186,8 @@ export default function AuthForm({ onAuthenticated }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {isLogin ? "Welcome Back" : "Create Account"}
+          {isLogin ? "Welcome Back to" : "Create Account"}{" "}
+          <span className="text-primary-orange">Certie</span>
         </motion.h2>
         <motion.p
           className="text-primary-grey text-center"
@@ -179,7 +195,9 @@ export default function AuthForm({ onAuthenticated }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          {isLogin ? "Welcome back! Let's grow your plant journey together" : "Join us and start giving your plants the care they deserve"}
+          {isLogin
+            ? "Login with your email and passowrd you have been created before, or you can create account if you don't have a certie account"
+            : "Join us and start giving your plants the care they deserve"}
         </motion.p>
       </motion.div>
 
@@ -200,9 +218,7 @@ export default function AuthForm({ onAuthenticated }) {
           transition={{ duration: 1 }}
         />
         <Chrome className="w-5 h-5 mr-3 text-primary-black" />
-        <p className="text-primary-black font-bold">
-          Continue with Google
-        </p>
+        <p className="text-primary-black font-bold">Continue with Google</p>
       </motion.button>
 
       <div className="relative mb-6">
@@ -210,7 +226,9 @@ export default function AuthForm({ onAuthenticated }) {
           <div className="w-full border-t border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or continue with email</span>
+          <span className="px-2 bg-white text-gray-500">
+            Or continue with email
+          </span>
         </div>
       </div>
 
@@ -231,7 +249,9 @@ export default function AuthForm({ onAuthenticated }) {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
               <div className="mt-1 relative group">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
                 <input
@@ -255,7 +275,9 @@ export default function AuthForm({ onAuthenticated }) {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <div className="mt-1 relative group">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
               <input
@@ -278,7 +300,9 @@ export default function AuthForm({ onAuthenticated }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <div className="mt-1 relative group">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-orange h-5 w-5 transition-colors group-hover:text-primary-black" />
               <input
@@ -296,7 +320,11 @@ export default function AuthForm({ onAuthenticated }) {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary-orange transition-colors"
               >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
               <motion.span
                 className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
@@ -311,7 +339,13 @@ export default function AuthForm({ onAuthenticated }) {
               <div className="mt-2">
                 <div className="flex justify-between items-center mb-1">
                   <div className="text-xs text-gray-500">Password strength</div>
-                  <div className={`text-xs ${passwordStrength >= 3 ? "text-green-600" : "text-yellow-600"}`}>
+                  <div
+                    className={`text-xs ${
+                      passwordStrength >= 3
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
                     {getPasswordStrengthText()}
                   </div>
                 </div>
@@ -339,7 +373,9 @@ export default function AuthForm({ onAuthenticated }) {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm Password
+              </label>
               <div className="mt-1 relative group">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
                 <input
@@ -359,9 +395,12 @@ export default function AuthForm({ onAuthenticated }) {
                   transition={{ duration: 0.3 }}
                 />
               </div>
-              {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
-              )}
+              {formData.confirmPassword &&
+                formData.password !== formData.confirmPassword && (
+                  <p className="text-red-500 text-xs mt-1">
+                    Passwords do not match
+                  </p>
+                )}
             </motion.div>
           )}
 
@@ -393,15 +432,23 @@ export default function AuthForm({ onAuthenticated }) {
 
           <motion.button
             type="submit"
-            disabled={loading || (!isLogin && formData.password !== formData.confirmPassword)}
+            disabled={
+              loading ||
+              (!isLogin && formData.password !== formData.confirmPassword)
+            }
             whileHover={{
-              scale: 1.02
+              scale: 1.02,
             }}
             whileTap={{ scale: 0.98 }}
             className={`w-full flex items-center justify-center py-3 px-4 rounded-lg text-white
               bg-primary-black hover:bg-primary-black/90
               focus:ring-4 focus:ring-primary-orange/30 transition duration-150 ease-in-out
-              ${loading || (!isLogin && formData.password !== formData.confirmPassword) ? "opacity-70 cursor-not-allowed" : ""}`}
+              ${
+                loading ||
+                (!isLogin && formData.password !== formData.confirmPassword)
+                  ? "opacity-70 cursor-not-allowed"
+                  : ""
+              }`}
           >
             {loading ? (
               <div className="flex items-center space-x-2">
@@ -410,7 +457,7 @@ export default function AuthForm({ onAuthenticated }) {
               </div>
             ) : (
               <div className="flex items-center">
-                <span>{isLogin ? "Sign In" : "Create Account"}</span>
+                <span>{isLogin ? "Login now" : "Create Account"}</span>
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </div>
             )}
@@ -418,24 +465,26 @@ export default function AuthForm({ onAuthenticated }) {
 
           <div className="pt-2">
             <p className="text-center text-sm text-gray-600">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              {isLogin
+                ? "Don't have an account? "
+                : "Already have an account? "}
               <motion.button
                 type="button"
                 onClick={() => {
-                  setIsLogin(!isLogin)
-                  setError(null)
-                  setSuccess(null)
+                  setIsLogin(!isLogin);
+                  setError(null);
+                  setSuccess(null);
                 }}
                 className="text-primary-orange hover:text-primary-black font-medium transition-colors duration-200"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {isLogin ? "Sign up" : "Sign in"}
+                {isLogin ? "Create account" : "Login"}
               </motion.button>
             </p>
           </div>
         </motion.form>
       </AnimatePresence>
     </div>
-  )
+  );
 }

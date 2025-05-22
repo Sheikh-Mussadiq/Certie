@@ -50,7 +50,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link
+            {/* <Link
               to="/home"
               className="flex items-center group hover:scale-105 transition-transform duration-300"
             >
@@ -63,10 +63,10 @@ const Navbar = () => {
               <span className="text-2xl font-bold bg-gradient-to-r from-primary-black to-primary-orange bg-clip-text text-transparent group-hover:from-primary-black group-hover:to-primary-orange transition-all">
                 Certie
               </span>
-            </Link>
+            </Link> */}
 
             {/* Desktop Navigation */}
-            <div className="hidden sm:ml-8 sm:flex sm:space-x-8">
+            {/* <div className="hidden sm:ml-8 sm:flex sm:space-x-8">
               {navLinks.map((link) => (
                 <Link key={link.path} to={link.path} className="relative group">
                   <motion.span
@@ -93,7 +93,7 @@ const Navbar = () => {
                   />
                 </Link>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center space-x-4">

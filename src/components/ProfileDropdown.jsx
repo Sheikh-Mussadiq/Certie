@@ -96,19 +96,18 @@
 
 // export default ProfileDropdown;
 
+"use client";
 
-"use client"
-
-import { Fragment, useState } from "react"
-import { Link } from "react-router-dom"
-import { Menu, Transition } from "@headlessui/react"
-import { ChevronDown, User, Leaf, LogOut, Settings } from "lucide-react"
-import { useAuth } from "../context/AuthContext"
-import { motion } from "framer-motion"
+import { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDown, User, Leaf, LogOut, Settings } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
 
 const ProfileDropdown = () => {
-  const { currentUser, logout } = useAuth()
-  const [isHovering, setIsHovering] = useState(false)
+  const { currentUser, logout } = useAuth();
+  const [isHovering, setIsHovering] = useState(false);
 
   const getInitials = (name) => {
     return (
@@ -117,8 +116,8 @@ const ProfileDropdown = () => {
         .map((n) => n[0])
         .join("")
         .toUpperCase() || "?"
-    )
-  }
+    );
+  };
 
   return (
     <Menu as="div" className="relative">
@@ -141,12 +140,19 @@ const ProfileDropdown = () => {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-primary-700 font-medium">{getInitials(currentUser?.full_name)}</span>
+                <span className="text-primary-700 font-medium">
+                  {getInitials(currentUser?.full_name)}
+                </span>
               )}
             </motion.div>
-            <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <motion.div
+              animate={{ rotate: open ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <ChevronDown
-                className={`h-4 w-4 ${isHovering || open ? "text-primary-500" : "text-gray-500"} transition-colors`}
+                className={`h-4 w-4 ${
+                  isHovering || open ? "text-primary-500" : "text-gray-500"
+                } transition-colors`}
               />
             </motion.div>
           </Menu.Button>
@@ -163,21 +169,25 @@ const ProfileDropdown = () => {
             <Menu.Items className="absolute right-0 mt-2 w-56 rounded-xl bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
               <div className="px-4 py-3 border-b border-gray-100">
                 <p className="text-sm text-gray-500">Signed in as</p>
-                <p className="text-sm font-medium text-gray-900 truncate">{currentUser?.email}</p>
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {currentUser?.email}
+                </p>
               </div>
-              
+
               <Menu.Item>
                 {({ active }) => (
                   <Link
                     to="/user"
-                    className={`${active ? "bg-gray-100" : ""} flex items-center px-4 py-3 text-sm text-gray-700 transition-colors`}
+                    className={`${
+                      active ? "bg-gray-100" : ""
+                    } flex items-center px-4 py-3 text-sm text-gray-700 transition-colors`}
                   >
                     <User className="mr-3 h-5 w-5 text-primary-500" />
                     Profile
                   </Link>
                 )}
               </Menu.Item>
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <Link
                     to="/user/plants"
@@ -187,7 +197,7 @@ const ProfileDropdown = () => {
                     My Plants
                   </Link>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
               {/* <Menu.Item>
                 {({ active }) => (
                   <Link
@@ -206,7 +216,9 @@ const ProfileDropdown = () => {
                 {({ active }) => (
                   <button
                     onClick={logout}
-                    className={`${active ? "bg-gray-100" : ""} flex w-full items-center px-4 py-3 text-sm text-red-600 transition-colors`}
+                    className={`${
+                      active ? "bg-gray-100" : ""
+                    } flex w-full items-center px-4 py-3 text-sm text-red-600 transition-colors`}
                   >
                     <LogOut className="mr-3 h-5 w-5 text-red-500" />
                     Logout
@@ -218,8 +230,7 @@ const ProfileDropdown = () => {
         </>
       )}
     </Menu>
-  )
-}
+  );
+};
 
-export default ProfileDropdown
-
+export default ProfileDropdown;

@@ -28,13 +28,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22c55e;
+  background: #ff5436;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #16a34a;
-}
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #f0644b;
+} */
 
 ::selection {
   background-color: rgba(var(--color-primary-600), 0.2);
@@ -42,7 +42,7 @@ body {
 }
 
 .nav-link::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
