@@ -1,24 +1,18 @@
 -- Check User Role
 CREATE OR REPLACE FUNCTION is_user_role(role_name TEXT)
-RETURNS BOOLEAN AS $$
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO public
+AS $$
 BEGIN
   RETURN EXISTS (
     SELECT 1 FROM users 
     WHERE id = auth.uid() AND role = role_name
   );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
--- Check Property Manager Status
-CREATE OR REPLACE FUNCTION is_property_manager(pid UUID)
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM property_managers 
-    WHERE property_id = pid AND user_id = auth.uid()
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 -- Auto-assign owner when property created

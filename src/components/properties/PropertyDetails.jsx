@@ -148,7 +148,7 @@ const PropertyDetails = ({ property }) => {
                         Property Type
                       </span>
                       <span className="text-sm font-medium">
-                        {property?.propertyType}
+                        {property?.property_type}
                       </span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-grey-outline">

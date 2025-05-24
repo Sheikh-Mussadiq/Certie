@@ -2,8 +2,7 @@
 -- Properties Table
 CREATE TABLE properties (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  owner_id UUID REFERENCES users(id),
+  owner_id UUID REFERENCES users(id) default auth.uid(),
   name TEXT NOT NULL,
   address JSONB,
   image text,
@@ -23,7 +22,8 @@ CREATE TABLE properties (
   fire_strategy text,
   evacuation_policy text,
   emergency_contact text,
-  contactor_hours text
+  contactor_hours text,
+   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Property Managers Junction Table
@@ -51,104 +51,98 @@ ALTER TABLE properties ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Property Insert Access" ON properties
 FOR INSERT
 TO authenticated
-WITH CHECK (
-  owner_id = auth.uid()
-);
+WITH CHECK (owner_id = auth.uid());
 
--- Property Read Access
 CREATE POLICY "Property Read Access" ON properties
 FOR SELECT
 TO authenticated
-USING (
-  owner_id = auth.uid() AND
-  is_user_role('property_owner')
-);
+USING (owner_id = auth.uid() );
 
--- Property Delete Access
 CREATE POLICY "Property Delete Access" ON properties
 FOR DELETE
 TO authenticated
-USING (
-  owner_id = auth.uid() AND
-  is_user_role('property_owner')
-);
-
+USING (owner_id = auth.uid());
 
 CREATE POLICY "Property Update Access" ON properties
 FOR UPDATE
 TO authenticated
-USING (
-  owner_id = auth.uid() AND
-  is_user_role('property_owner')
-)
-WITH CHECK (
-  owner_id = auth.uid() AND
-  is_user_role('property_owner')
-);
+USING (owner_id = auth.uid())
+WITH CHECK (owner_id = auth.uid() );
 
 
 -- Add trigger to upgrade user role after property creation
-CREATE OR REPLACE FUNCTION upgrade_to_property_owner()
-RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION upgrade_to_property_owner() 
+RETURNS TRIGGER 
+LANGUAGE plpgsql 
+SECURITY DEFINER 
+SET search_path TO public
+AS $$
 BEGIN
   UPDATE users
   SET role = 'property_owner'
   WHERE id = NEW.owner_id
-  AND role != 'super_admin'
-  AND role != 'property_owner';
+    AND role NOT IN ('super_admin');
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 CREATE TRIGGER property_creation_trigger
 AFTER INSERT ON properties
 FOR EACH ROW EXECUTE FUNCTION upgrade_to_property_owner();
 
--- 1. SELECT: Property managers can read the properties they manage
-CREATE POLICY "Property Manager Select Properties"
-  ON properties
+-------------------------------------------------------------------
+
+
+/*
+  # Property Images Storage
+
+  1. Storage
+    - Create property_images bucket for storing property images
+    - Set up storage policies for secure access
+
+  2. Security
+    - Enable public access for viewing images
+    - Restrict upload/delete to property owners
+*/
+
+-- Create property_images bucket
+DO $$
+BEGIN
+  INSERT INTO storage.buckets (id, name, public)
+  VALUES ('property_images', 'property_images', true)
+  ON CONFLICT (id) DO NOTHING;
+END $$;
+
+-- Storage Policies
+CREATE POLICY "Property images are publicly accessible"
+  ON storage.objects
   FOR SELECT
-    TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1
-        FROM property_managers
-       WHERE property_id = properties.id
-         AND user_id = auth.uid()
-    )
+  TO public
+  USING (bucket_id = 'property_images');
+
+CREATE POLICY "Property owners can upload images"
+  ON storage.objects
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    bucket_id = 'property_images' AND
+    auth.uid()::text = (storage.foldername(name))[1]
   );
 
-
--- 2. UPDATE: Property managers can update the properties they manage
-CREATE POLICY "Property Manager Update Properties"
-  ON properties
+CREATE POLICY "Property owners can update their images"
+  ON storage.objects
   FOR UPDATE
   TO authenticated
   USING (
-    EXISTS (
-      SELECT 1
-        FROM property_managers
-       WHERE property_id = properties.id
-         AND user_id = auth.uid()
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1
-        FROM property_managers
-       WHERE property_id = properties.id
-         AND user_id = auth.uid()
-    )
+    bucket_id = 'property_images' AND
+    auth.uid()::text = (storage.foldername(name))[1]
   );
 
--- Site User Access
-CREATE POLICY "Site User Access" ON properties
-FOR SELECT 
-TO authenticated
-USING (
-  EXISTS (SELECT 1 FROM property_site_users 
-         WHERE property_id = properties.id 
-         AND user_id = auth.uid())
-);
-
--------------------------------------------------------------------
+CREATE POLICY "Property owners can delete their images"
+  ON storage.objects
+  FOR DELETE
+  TO authenticated
+  USING (
+    bucket_id = 'property_images' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );

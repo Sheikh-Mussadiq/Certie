@@ -14,8 +14,8 @@ const applyFilters = (properties, filters) => {
   return properties.filter((property) => {
     let matches = true;
 
-    if (filters.propertyType) {
-      matches = matches && property.propertyType === filters.propertyType;
+    if (filters.property_type) {
+      matches = matches && property.property_type === filters.property_type;
     }
 
     if (filters.complianceScore) {

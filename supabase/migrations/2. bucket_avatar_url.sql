@@ -1,8 +1,8 @@
 -- Create avatars bucket for avatars if it doesn't exist, We keep this Bucket Public as avatars can be accessed publically
 DO $$
 BEGIN
-  INSERT INTO storage.buckets (id, name)
-  VALUES ('avatars', 'avatars')
+  INSERT INTO storage.buckets (id, name, public)
+  VALUES ('avatars', 'avatars', true)
   ON CONFLICT (id) DO NOTHING;
 END $$;
 
@@ -40,23 +40,4 @@ CREATE POLICY "Avatar images are publicly accessible"
   TO public
   USING (bucket_id = 'avatars');
 
--- Add avatar_url validation
--- ALTER TABLE public.users
---   ADD CONSTRAINT valid_avatar_url CHECK (
---     avatar_url IS NULL OR 
---     avatar_url ~* '^https?://.*\.(png|jpg|jpeg)$'
---   );
-
-ALTER TABLE public.users
-  ADD CONSTRAINT valid_avatar_url CHECK (
-    avatar_url IS NULL OR 
-    avatar_url ~* '^https?://(.*\.(png|jpg|jpeg)(\?.*)?|ui-avatars\.com/.*|.*\.googleusercontent\.com/.*)$'
-  );
-
--- Update RLS policies for profile updates
-CREATE POLICY "Users can update their own profile"
-  ON public.users
-  FOR UPDATE
-  TO authenticated
-  USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id);
+------------------------------------------

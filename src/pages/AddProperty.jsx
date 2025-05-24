@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Building2 } from "lucide-react";
+import { Building2, Loader2 } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { createProperty } from "../services/propertiesServices";
+import { toast } from "react-hot-toast";
+import {useAuth} from "../context/AuthContext";
 
 const AddProperty = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     address: {
@@ -14,19 +19,20 @@ const AddProperty = () => {
       postcode: "",
       country: "",
     },
-    propertyType: "",
+    property_type: "Residential",
     image: null,
+    owner_id: currentUser.id,
     compliance_score: 0,
     manager: "",
     assistant_manager: "",
-    square_ft: "",
-    construction_year: "",
-    tenure: "",
+    square_ft: 0,
+    construction_year: 100,
+    tenure: "Leasehold",
     insurance_provider: "",
     contact_phone: "",
     email: "",
-    floors: "",
-    occupants: "",
+    floors: 0,
+    occupants: 0,
     local_fire_brigade: "",
     fire_strategy: "",
     evacuation_policy: "",
@@ -50,7 +56,7 @@ const AddProperty = () => {
     },
   });
 
-  const propertyTypes = ["Residential", "Commercial", "Mixed-Use"];
+  const property_types = ["Residential", "Commercial", "Mixed-Use"];
 
   const tenureTypes = ["Leasehold", "Freehold"];
 
@@ -64,11 +70,19 @@ const AddProperty = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement property creation
-    console.log("Property data:", formData);
-    navigate(`/properties/${1}`); // Navigate to property details page after creation
+    try {
+      setIsSubmitting(true);
+      const property = await createProperty(formData, currentUser.id);
+      toast.success("Property created successfully!");
+      navigate(`/properties/${property.id}`);
+    } catch (error) {
+      console.error("Error creating property:", error);
+      toast.error(error.message || "Failed to create property");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -85,15 +99,24 @@ const AddProperty = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/properties")}
+            disabled={isSubmitting}
             className="px-4 py-2 text-primary-black hover:bg-grey-fill rounded-lg transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
+            disabled={isSubmitting}
+            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-50 flex items-center gap-2"
           >
-            Save Property
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Property"
+            )}
           </button>
         </div>
       </div>
@@ -226,17 +249,17 @@ const AddProperty = () => {
               Property Type
             </label>
             <select
-              value={formData.propertyType}
+              value={formData.property_type}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  propertyType: e.target.value,
+                  property_type: e.target.value,
                 }))
               }
               className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
             >
               <option value="">Select property type</option>
-              {propertyTypes.map((type) => (
+              {property_types.map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>

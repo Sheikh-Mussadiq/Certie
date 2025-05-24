@@ -17,7 +17,7 @@ const PropertyDetails = () => {
     manager: "John Smith",
     assistant_manager: "Sarah Clark",
     square_ft: "850 sqft",
-    propertyType: "Residential",
+    property_type: "Residential",
     construction_year: "2001",
     tenure: "Leasehold",
     insurance_provider: "Acme Insurance",

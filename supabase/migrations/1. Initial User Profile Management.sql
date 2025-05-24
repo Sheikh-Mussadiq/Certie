@@ -17,10 +17,6 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Super Admin Select Access" ON users
 FOR SELECT TO authenticated USING (is_user_role('super_admin'));
 
--- Super Admin Insert Access
-CREATE POLICY "Super Admin Insert Access" ON users
-FOR INSERT TO authenticated WITH CHECK (is_user_role('super_admin'));
-
 -- Super Admin Update Access
 CREATE POLICY "Super Admin Update Access" ON users
 FOR UPDATE TO authenticated USING (is_user_role('super_admin'))
@@ -33,24 +29,31 @@ FOR DELETE TO authenticated USING (is_user_role('super_admin'));
 
 -- Users can read their own profile
 CREATE POLICY "User Read Access" ON users
-FOR SELECT TO authenticated USING (id = auth.uid());
+FOR SELECT TO authenticated USING (id = (select auth.uid()));
 
 -- Users can update their own profile (except role)
 CREATE POLICY "User Update Access" ON users
-FOR UPDATE TO authenticated USING (id = auth.uid())
-WITH CHECK (id = auth.uid());
+FOR UPDATE TO authenticated USING (id = (select auth.uid()))
+WITH CHECK (id = (select auth.uid()));
 
 
 -- Users can insert their own profile with auto defaults
 CREATE POLICY "Users can insert own profile" ON users
 FOR INSERT 
 To authenticated
-WITH CHECK (auth.uid() = id);
+WITH CHECK ((select auth.uid()) = id);
 
 
 CREATE OR REPLACE FUNCTION prevent_email_role_id_change()
-RETURNS trigger AS $$
+RETURNS trigger 
+SET search_path TO public
+AS $$
 BEGIN
+  -- Allow internal system calls to bypass
+  IF current_setting('app.allow_role_update', true) IS NOT NULL THEN
+    RETURN NEW;
+  END IF;
+
   IF NEW.email IS DISTINCT FROM OLD.email OR
      NEW.role IS DISTINCT FROM OLD.role OR
      NEW.id IS DISTINCT FROM OLD.id THEN
@@ -72,7 +75,8 @@ EXECUTE FUNCTION prevent_email_role_id_change();
 create or replace function public.set_user_email_and_role()
   returns trigger
   language plpgsql
-  security definer  -- runs with function owner’s rights
+  security definer 
+  SET search_path TO public  -- runs with function owner’s rights
 as $$
 begin
   -- pull the email from the JWT claims that PostgREST / Supabase makes available
