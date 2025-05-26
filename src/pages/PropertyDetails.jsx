@@ -1,38 +1,75 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import PropertyDetailsComponent from "../components/properties/PropertyDetails";
+import { getPropertyById } from "../services/propertiesServices";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [property, setProperty] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // TODO: Fetch property details from API using id
-  const mockProperty = {
-    id: "01",
-    name: "Eiffel Tower",
-    address: {
-      street: "Champ de Mars",
-      city: "5 Avenue Anatole France",
-      postcode: "75007 Paris",
-      country: "France",
-    },
-    manager: "John Smith",
-    assistant_manager: "Sarah Clark",
-    square_ft: "850 sqft",
-    property_type: "Residential",
-    construction_year: "2001",
-    tenure: "Leasehold",
-    insurance_provider: "Acme Insurance",
-    contact_phone: "020 1234 56789",
-    email: "flat2@acre.com",
-    floors: "2",
-    occupants: "4",
-    local_fire_brigade: "London Fire Brigade",
-    fire_strategy: "Stay in Place",
-    evacuation_policy: "Immediate Evacuation",
-    emergency_contact: "07890 123456",
-    contactor_hours: "08:00 - 17:00, Mon-Fri",
-  };
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        const data = await getPropertyById(id);
+        setProperty(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching property:", err);
+        setError("Failed to load property details");
+        setLoading(false);
+      }
+    };
 
-  return <PropertyDetailsComponent property={mockProperty} />;
+    if (id) {
+      fetchProperty();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          {error}
+          <button 
+            onClick={() => navigate('/properties')} 
+            className="ml-4 underline"
+          >
+            Back to Properties
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="p-8">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
+          Property not found
+          <button 
+            onClick={() => navigate('/properties')} 
+            className="ml-4 underline"
+          >
+            Back to Properties
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <PropertyDetailsComponent property={property} />;
 };
 
 export default PropertyDetails;

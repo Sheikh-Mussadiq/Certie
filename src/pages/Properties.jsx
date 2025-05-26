@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { Download, Upload, Plus, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TableHeader from "../components/properties/TableHeader";
 import TableFooter from "../components/properties/TableFooter";
 import PropertyTable from "../components/properties/PropertyTable";
 import PropertyListView from "../components/properties/PropertyListView";
-import { mockProperties } from "../data/mockProperties";
+import { getProperties } from "../services/propertiesServices";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const applyFilters = (properties, filters) => {
   if (!filters) return properties;
@@ -69,15 +70,32 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState("table"); // "table" or "list"
   const [currentSort, setCurrentSort] = useState(null);
   const [currentFilters, setCurrentFilters] = useState(null);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const data = await getProperties();
+        setProperties(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching properties:", err);
+        setError("Failed to load properties");
+        setLoading(false);
+      }
+    };
+    
+    fetchProperties();
+  }, []);
 
   // Filter properties based on search term
-  let filteredProperties = mockProperties.filter(
+  let filteredProperties = properties.filter(
     (property) =>
-      property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.responsiblePerson
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      (property.address && JSON.stringify(property.address).toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (property.manager && property.manager.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   // Apply filters
@@ -142,37 +160,47 @@ const Properties = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
-        <TableHeader
-          onSearch={setSearchTerm}
-          onSort={handleSort}
-          onFilter={handleFilter}
-          currentSort={currentSort}
-          currentFilters={currentFilters}
-          onViewChange={setViewMode}
-          viewMode={viewMode}
-        />
-        {viewMode === "table" ? (
-          <PropertyTable
-            properties={currentProperties}
-            selectedProperties={selectedProperties}
-            onSelectProperty={setSelectedProperties}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <LoadingSpinner />
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          {error}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
+          <TableHeader
+            onSearch={setSearchTerm}
+            onSort={handleSort}
+            onFilter={handleFilter}
+            currentSort={currentSort}
+            currentFilters={currentFilters}
+            onViewChange={setViewMode}
+            viewMode={viewMode}
           />
-        ) : (
-          <PropertyListView
-            properties={currentProperties}
-            selectedProperties={selectedProperties}
-            onSelectProperty={setSelectedProperties}
+          {viewMode === "table" ? (
+            <PropertyTable
+              properties={currentProperties}
+              selectedProperties={selectedProperties}
+              onSelectProperty={setSelectedProperties}
+            />
+          ) : (
+            <PropertyListView
+              properties={currentProperties}
+              selectedProperties={selectedProperties}
+              onSelectProperty={setSelectedProperties}
+            />
+          )}
+          <TableFooter
+            totalItems={filteredProperties.length}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
           />
-        )}
-        <TableFooter
-          totalItems={filteredProperties.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          onItemsPerPageChange={setItemsPerPage}
-        />
-      </div>
+        </div>
+      )}
     </div>
   );
 };

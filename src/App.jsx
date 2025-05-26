@@ -18,6 +18,7 @@ import AddProperty from "./pages/AddProperty";
 import PropertyDetails from "./pages/PropertyDetails";
 import Calendar from "./pages/Calendar";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
+import Logo from "./assets/Logo.png";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -33,9 +34,27 @@ const ScrollToTop = () => {
 };
 
 const LoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
-  </div>
+  <motion.div
+    className="fixed inset-0 bg-white z-50 flex items-center justify-center"
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.6 }}
+  >
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 1.2, opacity: 0 }}
+      transition={{ duration: 0.5, repeat: 1, repeatType: "reverse" }}
+      className="flex flex-col items-center"
+    >
+      <img src={Logo} className="h-16 w-16 text-primary-500" />
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: 200 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="h-1 bg-primary-500 mt-4 rounded-full"
+      />
+    </motion.div>
+  </motion.div>
 );
 
 const ProtectedLayout = ({ children }) => (

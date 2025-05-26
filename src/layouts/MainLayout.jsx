@@ -34,7 +34,8 @@ const MainLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      {/* Add left margin equal to sidebar width */}
+      <div className="flex-1 flex flex-col ml-64">
         <Navbar />
         <main className="flex-grow">
           <AnimatePresence mode="wait">{children}</AnimatePresence>

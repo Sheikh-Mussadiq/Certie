@@ -4,9 +4,12 @@ import { Edit2 } from "lucide-react";
 import AssessmentsTab from "./AssessmentsTab";
 import LogBooksTab from "./LogBooksTab";
 import DocumentsTab from "./DocumentsTab";
+import EditPropertyForm from "./EditPropertyForm";
 
 const PropertyDetails = ({ property }) => {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const tabs = [
     { id: "overview", label: "Overview" },
@@ -50,7 +53,10 @@ const PropertyDetails = ({ property }) => {
             {property?.address?.postcode}
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 text-primary-black hover:bg-grey-fill rounded-lg transition-colors">
+        <button 
+          onClick={() => setIsEditModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 text-primary-black hover:bg-grey-fill rounded-lg transition-colors"
+        >
           <Edit2 className="w-4 h-4" />
           Edit Property
         </button>
@@ -89,7 +95,7 @@ const PropertyDetails = ({ property }) => {
                 <div className="aspect-[21/9] rounded-lg overflow-hidden">
                   {property?.image ? (
                     <img
-                      src={URL.createObjectURL(property.image)}
+                      src={property.image}
                       alt={property.name}
                       className="w-full h-full object-cover"
                     />
@@ -282,6 +288,20 @@ const PropertyDetails = ({ property }) => {
           {activeTab === "documents" && <DocumentsTab />}
         </div>
       </div>
+
+      {isEditModalOpen && (
+        <EditPropertyForm 
+          property={property} 
+          onClose={() => setIsEditModalOpen(false)} 
+          onSuccess={() => {
+            setIsEditModalOpen(false);
+            // Force a refresh of the component by changing the key
+            setRefreshKey(prev => prev + 1);
+            // Reload the page to get updated property data
+            window.location.reload();
+          }} 
+        />
+      )}
     </div>
   );
 };

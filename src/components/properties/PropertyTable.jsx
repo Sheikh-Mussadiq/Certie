@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PropertyTable = ({
   properties,
   selectedProperties,
   onSelectProperty,
 }) => {
+  const navigate = useNavigate();
   return (
     <table className="w-full border-collapse">
       <thead className="bg-grey-fill">
@@ -25,19 +27,19 @@ const PropertyTable = ({
             />
           </th>
           <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
+            Property Name
+          </th>
+          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
             Address
           </th>
           <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
             Compliance Score
           </th>
           <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
-            Training Score
-          </th>
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
-            Contact Number
+            Property Type
           </th>
           <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">
-            Responsible Person
+            Manager
           </th>
         </tr>
       </thead>
@@ -49,8 +51,9 @@ const PropertyTable = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
             className="hover:bg-grey-fill/50 cursor-pointer"
+            onClick={() => navigate(`/properties/${property.id}`)}
           >
-            <td className="px-6 py-4 border-r border-grey-outline">
+            <td className="px-6 py-4 border-r border-grey-outline" onClick={(e) => e.stopPropagation()}>
               <input
                 type="checkbox"
                 className="rounded border-grey-outline text-primary-orange focus:ring-primary-orange"
@@ -68,7 +71,15 @@ const PropertyTable = ({
             </td>
             <td className="px-6 py-4 border-r border-grey-outline">
               <div className="text-sm text-primary-black">
-                {property.address}
+                {property.name}
+              </div>
+            </td>
+            <td className="px-6 py-4 border-r border-grey-outline">
+              <div className="text-sm text-primary-black">
+                {property.address ? (
+                  typeof property.address === 'string' ? property.address : 
+                  `${property.address.street || ''}, ${property.address.city || ''}, ${property.address.postcode || ''}`
+                ) : 'N/A'}
               </div>
             </td>
             <td className="px-6 py-4 border-r border-grey-outline">
@@ -76,35 +87,22 @@ const PropertyTable = ({
                 <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-green-500 rounded-full"
-                    style={{ width: `${property.complianceScore}%` }}
+                    style={{ width: `${property.compliance_score || 0}%` }}
                   />
                 </div>
                 <span className="text-sm text-primary-black">
-                  {property.complianceScore}%
-                </span>
-              </div>
-            </td>
-            <td className="px-6 py-4 border-r border-grey-outline">
-              <div className="flex items-center gap-2">
-                <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-blue-500 rounded-full"
-                    style={{ width: `${property.trainingScore}%` }}
-                  />
-                </div>
-                <span className="text-sm text-primary-black">
-                  {property.trainingScore}%
+                  {property.compliance_score || 0}%
                 </span>
               </div>
             </td>
             <td className="px-6 py-4 border-r border-grey-outline">
               <div className="text-sm text-primary-black">
-                {property.contactNumber}
+                {property.property_type || 'N/A'}
               </div>
             </td>
             <td className="px-6 py-4">
               <div className="text-sm text-primary-black">
-                {property.responsiblePerson}
+                {property.manager || 'N/A'}
               </div>
             </td>
           </motion.tr>
