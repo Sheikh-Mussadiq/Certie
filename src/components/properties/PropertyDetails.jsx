@@ -6,7 +6,7 @@ import LogBooksTab from "./LogBooksTab";
 import DocumentsTab from "./DocumentsTab";
 import EditPropertyForm from "./EditPropertyForm";
 
-const PropertyDetails = ({ property }) => {
+const PropertyDetails = ({ property, setProperty }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -91,7 +91,7 @@ const PropertyDetails = ({ property }) => {
           {activeTab === "overview" && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-lg font-semibold mb-4">Property Name</h2>
+                <h2 className="text-lg font-semibold mb-4">Property Name : {property?.name}</h2>
                 <div className="aspect-[21/9] rounded-lg overflow-hidden">
                   {property?.image ? (
                     <img
@@ -115,17 +115,12 @@ const PropertyDetails = ({ property }) => {
                     Property Information
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between py-2 border-b border-grey-outline">
-                      <span className="text-sm text-primary-grey">
-                        Property Id
-                      </span>
-                      <span className="text-sm font-medium">01</span>
-                    </div>
+                   
                     <div className="flex justify-between py-2 border-b border-grey-outline">
                       <span className="text-sm text-primary-grey">
                         Compliance Score
                       </span>
-                      <span className="text-sm font-medium">93</span>
+                      <span className="text-sm font-medium">{property?.compliance_score}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-grey-outline">
                       <span className="text-sm text-primary-grey">Manager</span>
@@ -133,14 +128,7 @@ const PropertyDetails = ({ property }) => {
                         {property?.manager}
                       </span>
                     </div>
-                    <div className="flex justify-between py-2 border-b border-grey-outline">
-                      <span className="text-sm text-primary-grey">
-                        Assistant Manager
-                      </span>
-                      <span className="text-sm font-medium">
-                        {property?.assistant_manager}
-                      </span>
-                    </div>
+                    
                     <div className="flex justify-between py-2 border-b border-grey-outline">
                       <span className="text-sm text-primary-grey">
                         Square Ft
@@ -292,13 +280,14 @@ const PropertyDetails = ({ property }) => {
       {isEditModalOpen && (
         <EditPropertyForm 
           property={property} 
+          setProperty={setProperty}
           onClose={() => setIsEditModalOpen(false)} 
           onSuccess={() => {
             setIsEditModalOpen(false);
             // Force a refresh of the component by changing the key
-            setRefreshKey(prev => prev + 1);
+            // setRefreshKey(prev => prev + 1);
             // Reload the page to get updated property data
-            window.location.reload();
+            // window.location.reload();
           }} 
         />
       )}

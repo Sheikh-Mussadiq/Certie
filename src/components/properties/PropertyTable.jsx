@@ -101,9 +101,21 @@ const PropertyTable = ({
               </div>
             </td>
             <td className="px-6 py-4">
-              <div className="text-sm text-primary-black">
+              {/* <div className="text-sm text-primary-black">
                 {property.manager || 'N/A'}
-              </div>
+              </div> */}
+                <div className="flex flex-wrap gap-2">
+                  {property.managers && property.managers.length > 0 ? (
+                    property.managers.map((manager, index) => (
+                      <div key={index} className="text-sm text-primary-black bg-grey-fill px-2 py-1 rounded">
+                        {manager.full_name || 'N/A'}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-primary-black">No managers</div>
+                  )}
+                </div>
+
             </td>
           </motion.tr>
         ))}

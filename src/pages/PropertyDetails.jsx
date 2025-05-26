@@ -69,7 +69,7 @@ const PropertyDetails = () => {
     );
   }
 
-  return <PropertyDetailsComponent property={property} />;
+  return <PropertyDetailsComponent property={property} setProperty={setProperty} />;
 };
 
 export default PropertyDetails;

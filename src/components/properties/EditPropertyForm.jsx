@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { updateProperty } from "../../services/propertiesServices";
+import { removeSiteUser, updateProperty, addPropertySiteUser, addPropertyManager, removePropertyManager } from "../../services/propertiesServices";
 import { X, Upload, Image, Trash2 } from "lucide-react";
+import {useAuth} from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
-const EditPropertyForm = ({ property, onClose, onSuccess }) => {
+const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     address: {},
-    manager: "",
-    assistant_manager: "",
+    site_users: [],
+    managers: [],
     square_ft: "",
     property_type: "",
     construction_year: "",
@@ -26,6 +29,10 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [newSiteUserEmail, setNewSiteUserEmail] = useState("");
+  const [newManagerEmail, setNewManagerEmail] = useState("");
+  const [removedSiteUsers, setRemovedSiteUsers] = useState([]);
+  const [removedManagers, setRemovedManagers] = useState([]);
 
   useEffect(() => {
     if (property) {
@@ -46,17 +53,17 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
       setFormData({
         name: property.name || "",
         address: addressFields,
-        manager: property.manager || "",
-        assistant_manager: property.assistant_manager || "",
-        square_ft: property.square_ft || "",
+        site_users: property.site_users || [],
+        managers: property.managers || [],
+        square_ft: property.square_ft || 0,
         property_type: property.property_type || "",
-        construction_year: property.construction_year || "",
+        construction_year: property.construction_year || 0,
         tenure: property.tenure || "",
         insurance_provider: property.insurance_provider || "",
         contact_phone: property.contact_phone || "",
         email: property.email || "",
-        floors: property.floors || "",
-        occupants: property.occupants || "",
+        floors: property.floors || 0,
+        occupants: property.occupants || 0,
         local_fire_brigade: property.local_fire_brigade || "",
         fire_strategy: property.fire_strategy || "",
         evacuation_policy: property.evacuation_policy || "",
@@ -85,6 +92,73 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
         [name]: value,
       }));
     }
+  };
+
+  const handleAddSiteUser = async () => {
+    if (!newSiteUserEmail) return;
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newSiteUserEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    
+ 
+      const response = await addPropertySiteUser(property.id, newSiteUserEmail);
+      setFormData(prev => ({
+        ...prev,
+        site_users: [...prev.site_users, response]
+      }));
+      setNewSiteUserEmail("");
+      toast.success("Site user added successfully");
+    
+  };
+
+  const handleAddManager = async () => {
+    if (!newManagerEmail) return;
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newManagerEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    
+      const response = await addPropertyManager(property.id, newManagerEmail);
+      setFormData(prev => ({
+        ...prev,
+        managers: [...prev.managers, response]
+      }));
+      setNewManagerEmail("");
+      toast.success("Manager added successfully");
+    
+  };
+
+  const handleRemoveSiteUser = async (userId) => {
+    const response = await removeSiteUser(property.id, userId);
+    if (!response) {
+      toast.error("Failed to remove site user");
+      return;
+    }
+    setFormData(prev => ({
+      ...prev,
+      site_users: prev.site_users.filter(user => user.user_id !== userId)
+    }));
+    setRemovedSiteUsers(prev => [...prev, userId]);
+  };
+
+  const handleRemoveManager = async (userId) => {
+    const response = await removePropertyManager(property.id, userId);
+    if (!response) {
+      toast.error("Failed to remove manager");
+      return;
+    }
+    setFormData(prev => ({
+      ...prev,
+      managers: prev.managers.filter(manager => manager.user_id !== userId)
+    }));
+    setRemovedManagers(prev => [...prev, userId]);
   };
 
   const fileInputRef = useRef(null);
@@ -116,10 +190,21 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    
     try {
-      await updateProperty(property.id, formData);
+      // Handle removed site users
+      for (const userId of removedSiteUsers) {
+        await removeSiteUser(property.id, userId);
+      }
+
+      // Handle removed managers
+      for (const userId of removedManagers) {
+        await removePropertyManager(property.id, userId);
+      }
+
+      const response = await updateProperty(property.id, formData, currentUser.id);
       setLoading(false);
+      setProperty(response); // Clear the property state to trigger re-fetch
       onSuccess();
     } catch (err) {
       console.error("Error updating property:", err);
@@ -144,7 +229,6 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
         </div>
 
         <div className="overflow-y-auto flex-1 pr-6">
-          {/* Added pb-24 for padding at bottom to prevent content from overlapping with buttons */}
           <form onSubmit={handleSubmit} className="p-6 space-y-8 pb-24">
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
@@ -343,38 +427,96 @@ const EditPropertyForm = ({ property, onClose, onSuccess }) => {
               Management & Contact Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="manager"
-                  className="block text-sm font-medium text-primary-grey mb-1"
-                >
-                  Manager
-                </label>
-                <input
-                  type="text"
-                  id="manager"
-                  name="manager"
-                  value={formData.manager}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
-                />
+              <div className="md:col-span-2">
+                <h3 className="text-lg font-medium mb-4">Managers</h3>
+                <div className="space-y-4">
+                  { currentUser.role === "property_owner" && <div className="flex gap-3">
+                    <input
+                      type="email"
+                      value={newManagerEmail}
+                      onChange={(e) => setNewManagerEmail(e.target.value)}
+                      placeholder="Enter manager's email"
+                      className="flex-1 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddManager}
+                      disabled={!newManagerEmail}
+                      className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-50"
+                    >
+                      Add Manager
+                    </button>
+                  </div>
+                  }
+                  <div className="space-y-2">
+                    {formData.managers.map((manager, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-grey-fill rounded-lg"
+                      >
+                        <div>
+                          <p className="font-medium">{manager.full_name}</p>
+                          <p className="text-sm text-primary-grey">{manager.email}</p>
+                        </div>
+                        { currentUser.role === "property_owner" && <button
+                          type="button"
+                          onClick={() => handleRemoveManager(manager.user_id)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="assistant_manager"
-                  className="block text-sm font-medium text-primary-grey mb-1"
-                >
-                  Assistant Manager
-                </label>
-                <input
-                  type="text"
-                  id="assistant_manager"
-                  name="assistant_manager"
-                  value={formData.assistant_manager}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
-                />
+              <div className="md:col-span-2">
+                <h3 className="text-lg font-medium mb-4">Site Users</h3>
+                <div className="space-y-4">
+                  { currentUser.role === "property_owner" && <div className="flex gap-3">
+                    <input
+                      type="email"
+                      value={newSiteUserEmail}
+                      onChange={(e) => setNewSiteUserEmail(e.target.value)}
+                      placeholder="Enter site user's email"
+                      className="flex-1 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddSiteUser}
+                      disabled={!newSiteUserEmail}
+                      className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-50"
+                    >
+                      Add Site User
+                    </button>
+                  </div>
+}
+                  <div className="space-y-2">
+                    {formData.site_users.map((user) => (
+                      <div
+                        key={user.user_id}
+                        className="flex items-center justify-between p-3 bg-grey-fill rounded-lg"
+                      >
+                        <div>
+                          <p className="font-medium">{user.full_name}</p>
+                          <p className="text-sm text-primary-grey">{user.email}</p>
+                        </div>
+                       { currentUser.role === "property_owner" && <button
+                          type="button"
+                          onClick={() => handleRemoveSiteUser(user.user_id)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <h3 className="text-lg font-medium mb-4">Safety & Emergency Details</h3>
               </div>
 
               <div>

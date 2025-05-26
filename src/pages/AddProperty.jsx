@@ -414,23 +414,6 @@ const AddProperty = () => {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Assistant Manager
-            </label>
-            <input
-              type="text"
-              value={formData.assistant_manager}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  assistant_manager: e.target.value,
-                }))
-              }
-              placeholder="Enter assistant manager name"
-              className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-            />
-          </div>
 
           <div className="md:col-span-2">
             <h3 className="text-lg font-medium mb-4">

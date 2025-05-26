@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -53,12 +54,37 @@ const filePath = `${userId}/${fileName}`;
 
 export const getProperties = async () => {
   try {
-    const { data, error } = await supabase
+    const { data: properties, error } = await supabase
       .from('properties')
       .select('*');
 
     if (error) throw error;
-    return data;
+
+    // Fetch site users for each property
+    const propertiesWithUsers = await Promise.all(properties.map(async (property) => {
+      const { data: siteUsers, error: siteUsersError } = await supabase
+        .from('property_site_users')
+        .select('*')
+        .eq('property_id', property.id);
+
+      if (siteUsersError) throw siteUsersError;
+
+      const { data: managers, error: managersError } = await supabase
+      .from('property_managers')
+      .select('*')
+      .eq('property_id', property.id);
+
+    if (managersError) throw managersError;
+
+
+      return {
+        ...property,
+        site_users: siteUsers || [],
+        managers: managers || []
+      };
+    }));
+
+    return propertiesWithUsers;
   } catch (error) {
     console.error('Error fetching properties:', error);
     throw error;
@@ -67,13 +93,36 @@ export const getProperties = async () => {
 
 export const getPropertyById = async (id) => {
   try {
-    const { data, error } = await supabase
+    const { data: property, error } = await supabase
       .from('properties')
       .select('*')
       .eq('id', id)
       .single();
 
     if (error) throw error;
+
+    // Fetch site users for the property
+    const { data: siteUsers, error: siteUsersError } = await supabase
+      .from('property_site_users')
+      .select('*')
+      .eq('property_id', id);
+
+    if (siteUsersError) throw siteUsersError;
+    
+    // Fetch managers for the property
+    const { data: managers, error: managersError } = await supabase
+      .from('property_managers')
+      .select('*')
+      .eq('property_id', id);
+
+    if (managersError) throw managersError;
+    
+    const data = {
+      ...property,
+      site_users: siteUsers || [],
+      managers: managers || []
+    };
+
     return data;
   } catch (error) {
     console.error('Error fetching property:', error);
@@ -81,12 +130,16 @@ export const getPropertyById = async (id) => {
   }
 };
 
-export const updateProperty = async (id, propertyData) => {
+export const updateProperty = async (id, propertyData, userId) => {
   try {
     let imageUrl = propertyData.image;
 
+    const { managers, site_users, ...updatedPropertyData } = propertyData;
+    
+    propertyData = updatedPropertyData;
+    
     if (propertyData.image instanceof File) {
-      const { url, error: uploadError } = await uploadPropertyImage(propertyData.image);
+      const { url, error: uploadError } = await uploadPropertyImage(propertyData.image, userId);
       if (uploadError) throw uploadError;
       imageUrl = url;
     }
@@ -108,6 +161,83 @@ export const updateProperty = async (id, propertyData) => {
     throw error;
   }
 };
+
+export const addPropertyManager = async (propertyId, email) => {
+  try {
+    const { data, error } = await supabase
+      .rpc('add_property_manager', {
+        property_id: propertyId,
+        user_email: email
+      });
+
+    if (error) 
+      {
+        error.code === '23505'
+          ? toast.error('This user is already a manager for this property.')
+          : toast.error('An error occurred while adding the property manager.');
+      throw error;
+      }
+    return data;
+  } catch (error) {
+    console.error('Error adding property manager:', error);
+    throw error;
+  }
+};
+
+export const removePropertyManager = async (propertyId, userId) => {
+  try {
+    const { error } = await supabase
+      .from('property_managers')
+      .delete()
+      .match({ property_id: propertyId, user_id: userId });
+
+    if (error) throw error;
+
+    return true;
+  } catch (error) {
+    console.error('Error removing property manager:', error);
+    throw error;
+  }
+};
+
+export const addPropertySiteUser = async (propertyId, email) => {
+  try {
+    const { data, error } = await supabase
+      .rpc('add_site_user', {
+        property_id: propertyId,
+        user_email: email
+      });
+
+   if (error) 
+      {
+        error.code === '23505'
+          ? toast.error('This user is already a site user for this property.')
+          : toast.error('An error occurred while adding the site user.');
+      throw error;
+      }
+    return data;
+  } catch (error) {
+    console.error('Error adding site user:', error);
+    throw error;
+  }
+};
+
+export const removeSiteUser = async (propertyId, userId) => {
+  try {
+    const { error } = await supabase
+      .from('property_site_users')
+      .delete()
+      .match({ property_id: propertyId, user_id: userId });
+
+    if (error) throw error;
+
+    return true;
+  } catch (error) {
+    console.error('Error removing site user:', error);
+    throw error;
+  }
+};
+
 
 export const deleteProperty = async (id) => {
   try {
