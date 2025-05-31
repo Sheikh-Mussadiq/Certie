@@ -50,7 +50,6 @@ CREATE TABLE documents (
   folder_id UUID REFERENCES document_folders(id) ON DELETE CASCADE,
   property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
   file_path TEXT NOT NULL,
-  file_size BIGINT NOT NULL,
   file_type TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now(),
   created_by UUID REFERENCES auth.users(id)
@@ -60,47 +59,172 @@ CREATE TABLE documents (
 ALTER TABLE document_folders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
--- Document Folders Policies
-CREATE POLICY "Property owners can manage folders"
-  ON document_folders
+-- -- Document Folders Policies
+-- CREATE POLICY "Property owners can manage folders"
+--   ON document_folders
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM properties
+--       WHERE id = property_id
+--       AND owner_id = auth.uid()
+--     )
+--   );
+
+-- CREATE POLICY "Property managers can manage folders"
+--   ON document_folders
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM property_managers
+--       WHERE property_id = document_folders.property_id
+--       AND user_id = auth.uid()
+--     )
+--   );
+
+-- -- Documents Policies
+-- CREATE POLICY "Property owners can manage documents"
+--   ON documents
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM properties
+--       WHERE id = property_id
+--       AND owner_id = auth.uid()
+--     )
+--   );
+
+-- CREATE POLICY "Property managers can manage documents"
+--   ON documents
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM property_managers
+--       WHERE property_id = documents.property_id
+--       AND user_id = auth.uid()
+--     )
+--   );
+
+--   CREATE POLICY "Site users can see documents"
+--   ON documents
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM property_site_users
+--       WHERE property_id = documents.property_id
+--       AND user_id = auth.uid()
+--     )
+--   );
+
+-- CREATE POLICY "Site users can see folders"
+--   ON document_folders
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM property_site_users
+--       WHERE property_id = document_folders.property_id
+--       AND user_id = auth.uid()
+--     )
+--   );
+
+
+CREATE POLICY "Owners can view folders"
+  ON document_folders FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM properties
-      WHERE id = property_id
-      AND owner_id = auth.uid()
+      WHERE id = property_id AND owner_id = auth.uid()
     )
   );
 
-CREATE POLICY "Property managers can manage folders"
-  ON document_folders
+CREATE POLICY "Managers can view folders"
+  ON document_folders FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM property_managers
-      WHERE property_id = document_folders.property_id
-      AND user_id = auth.uid()
+      WHERE property_id = document_folders.property_id AND user_id = auth.uid()
     )
   );
 
--- Documents Policies
-CREATE POLICY "Property owners can manage documents"
-  ON documents
+CREATE POLICY "Site users can view folders"
+  ON document_folders FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM property_site_users
+      WHERE property_id = document_folders.property_id AND user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Super admins can view folders"
+  ON document_folders FOR SELECT
+  USING (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Super admins can insert folders"
+  ON document_folders FOR INSERT
+  WITH CHECK (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Super admins can update folders"
+  ON document_folders FOR UPDATE
+  USING (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Super admins can delete folders"
+  ON document_folders FOR DELETE
+  USING (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Owners can view documents"
+  ON documents FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM properties
-      WHERE id = property_id
-      AND owner_id = auth.uid()
+      WHERE id = property_id AND owner_id = auth.uid()
     )
   );
 
-CREATE POLICY "Property managers can manage documents"
-  ON documents
+CREATE POLICY "Managers can view documents"
+  ON documents FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM property_managers
-      WHERE property_id = documents.property_id
-      AND user_id = auth.uid()
+      WHERE property_id = documents.property_id AND user_id = auth.uid()
     )
   );
+
+CREATE POLICY "Site users can view documents"
+  ON documents FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM property_site_users
+      WHERE property_id = documents.property_id AND user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Super admins can view documents"
+  ON documents FOR SELECT
+  USING (
+    is_user_role('super_admin')
+  );
+
+
+CREATE POLICY "Super admins can insert documents"
+  ON documents FOR INSERT
+  WITH CHECK (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Super admins can update documents"
+  ON documents FOR UPDATE
+  USING (
+    is_user_role('super_admin')
+  );
+
+CREATE POLICY "Super admins can delete documents"
+  ON documents FOR DELETE
+  USING (
+    is_user_role('super_admin')
+  );
+
 
 -- Storage Policies
 CREATE POLICY "Users can upload property documents"

@@ -39,7 +39,7 @@ BEGIN
        NOT EXISTS (SELECT 1 FROM properties 
                   WHERE id = NEW.property_id 
                   AND owner_id = auth.uid()) THEN
-      RAISE EXCEPTION 'Only owner or super admin can approve bookings';
+      RAISE EXCEPTION 'Only owner or admin can approve bookings';
     END IF;
   END IF;
   RETURN NEW;
