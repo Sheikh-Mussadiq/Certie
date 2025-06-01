@@ -51,23 +51,23 @@ ALTER TABLE properties ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Property Insert Access" ON properties
 FOR INSERT
 TO authenticated
-WITH CHECK (owner_id = auth.uid());
+WITH CHECK (owner_id = (select auth.uid()));
 
 CREATE POLICY "Property Read Access" ON properties
 FOR SELECT
 TO authenticated
-USING (owner_id = auth.uid() );
+USING (owner_id = (select auth.uid()) );
 
 CREATE POLICY "Property Delete Access" ON properties
 FOR DELETE
 TO authenticated
-USING (owner_id = auth.uid());
+USING (owner_id = (select auth.uid()));
 
 CREATE POLICY "Property Update Access" ON properties
 FOR UPDATE
 TO authenticated
-USING (owner_id = auth.uid())
-WITH CHECK (owner_id = auth.uid() );
+USING (owner_id = (select auth.uid()))
+WITH CHECK (owner_id = (select auth.uid()) );
 
 
 -- Add trigger to upgrade user role after property creation
@@ -126,7 +126,7 @@ CREATE POLICY "Property owners can upload images"
   TO authenticated
   WITH CHECK (
     bucket_id = 'property_images' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Property owners can update their images"
@@ -135,7 +135,7 @@ CREATE POLICY "Property owners can update their images"
   TO authenticated
   USING (
     bucket_id = 'property_images' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Property owners can delete their images"
@@ -144,5 +144,5 @@ CREATE POLICY "Property owners can delete their images"
   TO authenticated
   USING (
     bucket_id = 'property_images' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );

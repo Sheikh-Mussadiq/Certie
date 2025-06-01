@@ -59,75 +59,12 @@ CREATE TABLE documents (
 ALTER TABLE document_folders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
--- -- Document Folders Policies
--- CREATE POLICY "Property owners can manage folders"
---   ON document_folders
---   USING (
---     EXISTS (
---       SELECT 1 FROM properties
---       WHERE id = property_id
---       AND owner_id = auth.uid()
---     )
---   );
-
--- CREATE POLICY "Property managers can manage folders"
---   ON document_folders
---   USING (
---     EXISTS (
---       SELECT 1 FROM property_managers
---       WHERE property_id = document_folders.property_id
---       AND user_id = auth.uid()
---     )
---   );
-
--- -- Documents Policies
--- CREATE POLICY "Property owners can manage documents"
---   ON documents
---   USING (
---     EXISTS (
---       SELECT 1 FROM properties
---       WHERE id = property_id
---       AND owner_id = auth.uid()
---     )
---   );
-
--- CREATE POLICY "Property managers can manage documents"
---   ON documents
---   USING (
---     EXISTS (
---       SELECT 1 FROM property_managers
---       WHERE property_id = documents.property_id
---       AND user_id = auth.uid()
---     )
---   );
-
---   CREATE POLICY "Site users can see documents"
---   ON documents
---   USING (
---     EXISTS (
---       SELECT 1 FROM property_site_users
---       WHERE property_id = documents.property_id
---       AND user_id = auth.uid()
---     )
---   );
-
--- CREATE POLICY "Site users can see folders"
---   ON document_folders
---   USING (
---     EXISTS (
---       SELECT 1 FROM property_site_users
---       WHERE property_id = document_folders.property_id
---       AND user_id = auth.uid()
---     )
---   );
-
-
 CREATE POLICY "Owners can view folders"
   ON document_folders FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM properties
-      WHERE id = property_id AND owner_id = auth.uid()
+      WHERE id = property_id AND owner_id = (select auth.uid())
     )
   );
 
@@ -136,7 +73,7 @@ CREATE POLICY "Managers can view folders"
   USING (
     EXISTS (
       SELECT 1 FROM property_managers
-      WHERE property_id = document_folders.property_id AND user_id = auth.uid()
+      WHERE property_id = document_folders.property_id AND user_id = (select auth.uid())
     )
   );
 
@@ -145,7 +82,7 @@ CREATE POLICY "Site users can view folders"
   USING (
     EXISTS (
       SELECT 1 FROM property_site_users
-      WHERE property_id = document_folders.property_id AND user_id = auth.uid()
+      WHERE property_id = document_folders.property_id AND user_id = (select auth.uid())
     )
   );
 
@@ -178,7 +115,7 @@ CREATE POLICY "Owners can view documents"
   USING (
     EXISTS (
       SELECT 1 FROM properties
-      WHERE id = property_id AND owner_id = auth.uid()
+      WHERE id = property_id AND owner_id = (select auth.uid())
     )
   );
 
@@ -187,7 +124,7 @@ CREATE POLICY "Managers can view documents"
   USING (
     EXISTS (
       SELECT 1 FROM property_managers
-      WHERE property_id = documents.property_id AND user_id = auth.uid()
+      WHERE property_id = documents.property_id AND user_id = (select auth.uid())
     )
   );
 
@@ -196,7 +133,7 @@ CREATE POLICY "Site users can view documents"
   USING (
     EXISTS (
       SELECT 1 FROM property_site_users
-      WHERE property_id = documents.property_id AND user_id = auth.uid()
+      WHERE property_id = documents.property_id AND user_id = (select auth.uid())
     )
   );
 
@@ -233,7 +170,7 @@ CREATE POLICY "Users can upload property documents"
   TO authenticated
   WITH CHECK (
     bucket_id = 'documents' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Users can update property documents"
@@ -242,7 +179,7 @@ CREATE POLICY "Users can update property documents"
   TO authenticated
   USING (
     bucket_id = 'documents' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+    (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Users can delete property documents"
@@ -251,7 +188,7 @@ CREATE POLICY "Users can delete property documents"
   TO authenticated
   USING (
     bucket_id = 'documents' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+   (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Property documents are accessible to authorized users"

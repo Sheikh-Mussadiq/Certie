@@ -8,7 +8,7 @@ AS $$
 BEGIN
   RETURN EXISTS (
     SELECT 1 FROM users 
-    WHERE id = auth.uid() AND role = role_name
+    WHERE id = (select auth.uid()) AND role = role_name
   );
 END;
 $$;
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION set_property_owner()
 RETURNS TRIGGER AS $$
 BEGIN
   IF NOT is_user_role('super_admin') THEN
-    NEW.owner_id = auth.uid();
+    NEW.owner_id = (select auth.uid());
   END IF;
   RETURN NEW;
 END;
@@ -38,7 +38,7 @@ BEGIN
     IF NOT is_user_role('super_admin') AND
        NOT EXISTS (SELECT 1 FROM properties 
                   WHERE id = NEW.property_id 
-                  AND owner_id = auth.uid()) THEN
+                  AND owner_id = (select auth.uid())) THEN
       RAISE EXCEPTION 'Only owner or admin can approve bookings';
     END IF;
   END IF;

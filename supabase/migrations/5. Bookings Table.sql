@@ -24,17 +24,17 @@ CREATE POLICY "Owner Booking Access" ON bookings
 FOR ALL USING (
   EXISTS (SELECT 1 FROM properties 
          WHERE id = bookings.property_id 
-         AND owner_id = auth.uid())
+         AND owner_id = (select auth.uid()))
 );
 
 -- Super Admin Booking Access
 CREATE POLICY "Super Admin Booking Access" ON bookings
 FOR ALL USING (
   EXISTS (SELECT 1 FROM users 
-         WHERE id = auth.uid() AND role = 'super_admin')
+         WHERE id = (select auth.uid()) AND role = 'super_admin')
 );
 
--- -- Property Manager Booking Access
+-- Property Manager Booking Access
 -- CREATE POLICY "Manager Booking Access" ON bookings
 -- FOR INSERT, SELECT, UPDATE WITH CHECK (
 --   status = 'pending' AND
@@ -51,7 +51,7 @@ WITH CHECK (
   EXISTS (
     SELECT 1 FROM property_managers 
     WHERE property_id = bookings.property_id 
-      AND user_id = auth.uid()
+      AND user_id = (select auth.uid())
   )
 );
 
@@ -61,7 +61,7 @@ USING (
   EXISTS (
     SELECT 1 FROM property_managers 
     WHERE property_id = bookings.property_id 
-      AND user_id = auth.uid()
+      AND user_id = (select auth.uid())
   )
 );
 
@@ -70,11 +70,11 @@ CREATE POLICY "Manager Booking Update Access" ON bookings
 FOR UPDATE
 WITH CHECK (
   status = 'pending' AND
-  booked_by = auth.uid() AND
+  booked_by = (select auth.uid()) AND
   EXISTS (
     SELECT 1 FROM property_managers 
     WHERE property_id = bookings.property_id 
-      AND user_id = auth.uid()
+      AND user_id = (select auth.uid())
   )
 );
 
@@ -83,7 +83,5 @@ CREATE POLICY "Site User Booking Access" ON bookings
 FOR SELECT USING (
   EXISTS (SELECT 1 FROM property_site_users 
          WHERE property_id = bookings.property_id 
-         AND user_id = auth.uid())
+         AND user_id = (select auth.uid()))
 );
-
-

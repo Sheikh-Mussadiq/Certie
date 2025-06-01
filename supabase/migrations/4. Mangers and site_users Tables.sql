@@ -187,7 +187,7 @@ BEGIN
   -- Verify current user is the property owner
   IF NOT EXISTS (
     SELECT 1 FROM properties 
-    WHERE id = property_id AND owner_id = auth.uid()
+    WHERE id = property_id AND owner_id = (select auth.uid())
   ) THEN
     RAISE EXCEPTION 'Unauthorized: Not property owner';
   END IF;
@@ -233,7 +233,7 @@ BEGIN
   -- Verify current user is the property owner
   IF NOT EXISTS (
     SELECT 1 FROM properties 
-    WHERE id = property_id AND owner_id = auth.uid()
+    WHERE id = property_id AND owner_id = (select auth.uid())
   ) THEN
     RAISE EXCEPTION 'Unauthorized: Not property owner';
   END IF;
@@ -311,7 +311,7 @@ SECURITY DEFINER
 AS $$
   SELECT EXISTS (
     SELECT 1 FROM property_managers
-    WHERE property_id = pid AND user_id = auth.uid()
+    WHERE property_id = pid AND user_id = (select auth.uid())
   );
 $$;
 
@@ -323,7 +323,7 @@ SECURITY DEFINER
 AS $$
   SELECT EXISTS (
     SELECT 1 FROM property_site_users
-    WHERE property_id = pid AND user_id = auth.uid()
+    WHERE property_id = pid AND user_id = (select auth.uid())
   );
 $$;
 
@@ -355,7 +355,7 @@ BEGIN
   -- Verify current user is the property owner
   IF NOT EXISTS (
     SELECT 1 FROM properties 
-    WHERE id = property_id AND owner_id = auth.uid()
+    WHERE id = property_id AND owner_id = (select auth.uid())
   ) THEN
     RAISE EXCEPTION 'Unauthorized: Not property owner';
   END IF;
@@ -401,7 +401,7 @@ BEGIN
   -- Verify current user is the property owner
   IF NOT EXISTS (
     SELECT 1 FROM properties 
-    WHERE id = property_id AND owner_id = auth.uid()
+    WHERE id = property_id AND owner_id = (select auth.uid())
   ) THEN
     RAISE EXCEPTION 'Unauthorized: Not property owner';
   END IF;
