@@ -4,10 +4,11 @@ import CalendarHeader from "./CalendarHeader";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
 import DayView from "./DayView";
+import YearView from "./YearView";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState("month"); // 'month', 'week', 'day'
+  const [view, setView] = useState("month"); // 'month', 'week', 'day', 'year'
 
   const handlePrevious = () => {
     setCurrentDate((prev) => {
@@ -16,6 +17,8 @@ const Calendar = () => {
         newDate.setMonth(prev.getMonth() - 1);
       } else if (view === "week") {
         newDate.setDate(prev.getDate() - 7);
+      } else if (view === "year") {
+        newDate.setFullYear(prev.getFullYear() - 1);
       } else {
         newDate.setDate(prev.getDate() - 1);
       }
@@ -30,6 +33,8 @@ const Calendar = () => {
         newDate.setMonth(prev.getMonth() + 1);
       } else if (view === "week") {
         newDate.setDate(prev.getDate() + 7);
+      } else if (view === "year") {
+        newDate.setFullYear(prev.getFullYear() + 1);
       } else {
         newDate.setDate(prev.getDate() + 1);
       }
@@ -42,7 +47,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="h-full bg-white rounded-lg border border-grey-outline overflow-hidden">
+    <div className="flex flex-col h-full bg-white rounded-xl border border-grey-outline overflow-hidden">
       <CalendarHeader
         currentDate={currentDate}
         view={view}
@@ -52,9 +57,12 @@ const Calendar = () => {
         onToday={handleToday}
       />
 
-      {view === "month" && <MonthView currentDate={currentDate} />}
-      {view === "week" && <WeekView currentDate={currentDate} />}
-      {view === "day" && <DayView currentDate={currentDate} />}
+      <div className="flex-1 overflow-hidden">
+        {view === "month" && <MonthView currentDate={currentDate} />}
+        {view === "week" && <WeekView currentDate={currentDate} />}
+        {view === "day" && <DayView currentDate={currentDate} />}
+        {view === "year" && <YearView currentDate={currentDate} />}
+      </div>
     </div>
   );
 };

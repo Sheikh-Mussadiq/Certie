@@ -8,6 +8,9 @@ import PropertyTable from "../components/properties/PropertyTable";
 import PropertyListView from "../components/properties/PropertyListView";
 import { getProperties } from "../services/propertiesServices";
 import LoadingSpinner from "../components/LoadingSpinner";
+import PropertyShimmer from "../components/properties/Shimmers/PropertyShimmer";
+import PropertyListShimmer from "../components/properties/Shimmers/PropertyListShimmer";
+import TableHeaderShimmer from "../components/properties/Shimmers/TableHeaderShimmer";
 
 const applyFilters = (properties, filters) => {
   if (!filters) return properties;
@@ -74,7 +77,7 @@ const Properties = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchProperties = async () => {
       try {
@@ -87,15 +90,19 @@ const Properties = () => {
         setLoading(false);
       }
     };
-    
+
     fetchProperties();
   }, []);
 
   // Filter properties based on search term
   let filteredProperties = properties.filter(
     (property) =>
-      (property.address && JSON.stringify(property.address).toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (property.manager && property.manager.toLowerCase().includes(searchTerm.toLowerCase()))
+      (property.address &&
+        JSON.stringify(property.address)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())) ||
+      (property.manager &&
+        property.manager.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   // Apply filters
@@ -160,45 +167,65 @@ const Properties = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <LoadingSpinner />
-        </div>
-      ) : error ? (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+      {error ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative">
           {error}
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
-          <TableHeader
-            onSearch={setSearchTerm}
-            onSort={handleSort}
-            onFilter={handleFilter}
-            currentSort={currentSort}
-            currentFilters={currentFilters}
-            onViewChange={setViewMode}
-            viewMode={viewMode}
-          />
-          {viewMode === "table" ? (
-            <PropertyTable
-              properties={currentProperties}
-              selectedProperties={selectedProperties}
-              onSelectProperty={setSelectedProperties}
-            />
+          {loading ? (
+            <>
+              <TableHeaderShimmer />
+              {viewMode === "table" ? (
+                <PropertyShimmer count={itemsPerPage} />
+              ) : (
+                <PropertyListShimmer count={itemsPerPage} />
+              )}
+              <div className="p-4 border-t border-grey-outline relative overflow-hidden">
+                <div className="absolute inset-0 shimmer"></div>
+                <div className="flex justify-between items-center relative z-10">
+                  <div className="w-48 h-8 bg-grey-fill rounded"></div>
+                  <div className="flex gap-2">
+                    <div className="w-8 h-8 bg-grey-fill rounded"></div>
+                    <div className="w-8 h-8 bg-grey-fill rounded"></div>
+                    <div className="w-8 h-8 bg-grey-fill rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
-            <PropertyListView
-              properties={currentProperties}
-              selectedProperties={selectedProperties}
-              onSelectProperty={setSelectedProperties}
-            />
+            <>
+              <TableHeader
+                onSearch={setSearchTerm}
+                onSort={handleSort}
+                onFilter={handleFilter}
+                currentSort={currentSort}
+                currentFilters={currentFilters}
+                onViewChange={setViewMode}
+                viewMode={viewMode}
+              />
+              {viewMode === "table" ? (
+                <PropertyTable
+                  properties={currentProperties}
+                  selectedProperties={selectedProperties}
+                  onSelectProperty={setSelectedProperties}
+                />
+              ) : (
+                <PropertyListView
+                  properties={currentProperties}
+                  selectedProperties={selectedProperties}
+                  onSelectProperty={setSelectedProperties}
+                />
+              )}
+              <TableFooter
+                totalItems={filteredProperties.length}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={setItemsPerPage}
+              />
+            </>
           )}
-          <TableFooter
-            totalItems={filteredProperties.length}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
-          />
         </div>
       )}
     </div>

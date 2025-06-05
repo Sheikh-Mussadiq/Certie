@@ -7,6 +7,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  Outlet,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -89,60 +90,62 @@ const AuthenticatedRoutes = () => {
 
   return (
     <MainLayout>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedLayout>
-              {/* <LandingPage /> */}
-              {/* <ContractorWorkflow */}
-              <Properties />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/properties"
-          element={
-            <ProtectedLayout>
-              <Properties />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/properties/add"
-          element={
-            <ProtectedLayout>
-              <AddProperty />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/properties/:id"
-          element={
-            <ProtectedLayout>
-              <PropertyDetails />
-            </ProtectedLayout>
-          }
-        />
-        <Route
-          path="/calendar"
-          element={
-            <ProtectedLayout>
-              <Calendar />
-            </ProtectedLayout>
-          }
-        />
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedLayout>
+                {/* <LandingPage /> */}
+                {/* <ContractorWorkflow */}
+                <Properties />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/properties"
+            element={
+              <ProtectedLayout>
+                <Properties />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/properties/add"
+            element={
+              <ProtectedLayout>
+                <AddProperty />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/properties/:id"
+            element={
+              <ProtectedLayout>
+                <PropertyDetails />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedLayout>
+                <Calendar />
+              </ProtectedLayout>
+            }
+          />
 
-        <Route
-          path="*"
-          element={
-            <ProtectedLayout>
-              <Navigate to="/home" replace />
-            </ProtectedLayout>
-          }
-        />
-      </Routes>
+          <Route
+            path="*"
+            element={
+              <ProtectedLayout>
+                <Navigate to="/home" replace />
+              </ProtectedLayout>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
     </MainLayout>
   );
 };

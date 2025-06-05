@@ -17,48 +17,50 @@ const CalendarHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border-b border-grey-outline">
+    <div className="flex items-center justify-between p-4 ">
       <div className="flex items-center gap-4">
-        <h2 className="text-xl font-semibold">{formatDate()}</h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onPrevious}
-            className="p-1 hover:bg-grey-fill rounded-md transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={onNext}
-            className="p-1 hover:bg-grey-fill rounded-md transition-colors"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <button
-          onClick={onToday}
-          className="px-4 py-2 text-sm font-medium text-primary-black hover:bg-grey-fill rounded-lg transition-colors"
-        >
-          Today
-        </button>
-
-        <div className="flex rounded-lg border border-grey-outline overflow-hidden">
-          {["Month", "Week", "Day"].map((viewOption) => (
+        <div className="flex bg-grey-fill rounded-md p-1">
+          {["Day", "Week", "Month", "Year"].map((viewOption) => (
             <button
               key={viewOption}
               onClick={() => onViewChange(viewOption.toLowerCase())}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 view === viewOption.toLowerCase()
-                  ? "bg-primary-orange text-white"
-                  : "text-primary-black hover:bg-grey-fill"
+                  ? "bg-white text-primary-black shadow-sm"
+                  : "text-primary-grey hover:text-primary-black"
               }`}
             >
               {viewOption}
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <h2 className="text-lg font-semibold">{formatDate()}</h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onPrevious}
+            className="p-1 hover:bg-grey-fill rounded-md transition-colors"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={onNext}
+            className="p-1 hover:bg-grey-fill rounded-md transition-colors"
+            aria-label="Next"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        <button
+          onClick={onToday}
+          className="px-4 py-2 text-xs font-medium text-white bg-primary-black rounded-lg transition-colors hover:bg-gray-800"
+        >
+          Today
+        </button>
       </div>
     </div>
   );
