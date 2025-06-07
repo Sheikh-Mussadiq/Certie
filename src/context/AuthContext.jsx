@@ -30,11 +30,9 @@ export function AuthProvider({ children }) {
       }
       
       if (session?.user) {
-        console.log('Got session user:', session.user);
         setAuthUser(session.user);
         
         const userProfile = await handleAuthUser(session.user);
-        console.log('Got user profile:', userProfile);
         
         if (userProfile) {
           setCurrentUser(userProfile);
@@ -47,11 +45,9 @@ export function AuthProvider({ children }) {
       const { data: urlSession } = await supabase.auth.getSessionFromUrl();
       
       if (urlSession?.user) {
-        console.log('Got URL session user:', urlSession.user);
         setAuthUser(urlSession.user);
         
         const userProfile = await handleAuthUser(urlSession.user);
-        console.log('Got user profile from URL session:', userProfile);
         
         if (userProfile) {
           setCurrentUser(userProfile);

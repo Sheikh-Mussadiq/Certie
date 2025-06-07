@@ -435,8 +435,8 @@ const PropertyDetails = ({ property, setProperty }) => {
               </div>
             </>
           )}
-          {activeTab === "assessments" && <AssessmentsTab />}
-          {activeTab === "logbooks" && <LogBooksTab />}
+          {activeTab === "assessments" && <AssessmentsTab owner_id={property.owner_id} />}
+          {activeTab === "logbooks" && <LogBooksTab />} 
           {activeTab === "documents" && <DocumentsTab />}
         </div>
       </div>

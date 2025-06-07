@@ -37,7 +37,7 @@ END $$;
 CREATE TABLE document_folders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
-  property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
+  property_id UUID REFERENCES properties(id),
   created_at TIMESTAMPTZ DEFAULT now(),
   created_by UUID REFERENCES auth.users(id),
   UNIQUE(property_id, name)
@@ -48,7 +48,7 @@ CREATE TABLE documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   folder_id UUID REFERENCES document_folders(id) ON DELETE CASCADE,
-  property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
+  property_id UUID REFERENCES properties(id),
   file_path TEXT NOT NULL,
   file_type TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now(),

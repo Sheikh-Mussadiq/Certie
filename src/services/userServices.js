@@ -114,12 +114,10 @@ export const uploadAvatar = async (userId, file) => {
 
 export const handleAuthUser = async (session) => {
   try {
-    console.log('Handling auth user, session:', session);
     
     // Extract user from session correctly
     const authUser = session?.user || session;
     if (!authUser?.id) {
-      console.error('No valid user ID found in session');
       return null;
     }
 
@@ -127,11 +125,10 @@ export const handleAuthUser = async (session) => {
     try {
       const existingProfile = await getUserProfile(authUser.id);
       if (existingProfile) {
-        console.log('Found existing profile:', existingProfile);
         return existingProfile;
       }
     } catch (error) {
-      console.log('No existing profile found, creating new one');
+      
     }
 
     // Create new profile if doesn't exist
@@ -145,7 +142,6 @@ export const handleAuthUser = async (session) => {
                  authUser.raw_user_meta_data?.avatar_url
     };
 
-    console.log('Creating new profile with data:', userData);
     
     const newProfile = await createUserProfile(
       userData.fullName,
