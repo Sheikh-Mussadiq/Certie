@@ -1,4 +1,10 @@
-import { Search, SlidersHorizontal, List, ArrowUpDown } from "lucide-react";
+import {
+  Search,
+  SlidersHorizontal,
+  List,
+  ArrowUpDown,
+  ChevronDown,
+} from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import SortMenu from "./SortMenu";
 import FilterMenu from "./FilterMenu";
@@ -37,7 +43,7 @@ const TableHeader = ({
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setIsSortOpen(!isSortOpen)}
-            className={`flex items-center gap-2 text-sm ${
+            className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm ${
               currentSort
                 ? "text-primary-orange"
                 : "text-primary-black hover:text-primary-orange"
@@ -45,6 +51,7 @@ const TableHeader = ({
           >
             <ArrowUpDown className="w-4 h-4" />
             Sort by
+            <ChevronDown className="w-4 h-4" />
           </button>
           <SortMenu
             isOpen={isSortOpen}
@@ -56,7 +63,7 @@ const TableHeader = ({
         <div ref={filterRef} className="relative">
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`flex items-center gap-2 text-sm ${
+            className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm ${
               currentFilters
                 ? "text-primary-orange"
                 : "text-primary-black hover:text-primary-orange"
@@ -74,14 +81,15 @@ const TableHeader = ({
         </div>
         <button
           onClick={() => onViewChange(viewMode === "table" ? "list" : "table")}
-          className={`flex items-center gap-2 text-sm transition-colors ${
+          className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm transition-colors ${
             viewMode === "list"
               ? "text-primary-orange"
               : "text-primary-black hover:text-primary-orange"
           }`}
         >
           <List className="w-4 h-4" />
-          List view
+          {viewMode === "list" ? "Table view" : "List view"}
+          <ChevronDown className="w-4 h-4" />
         </button>
       </div>
 
