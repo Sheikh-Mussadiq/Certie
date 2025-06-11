@@ -12,6 +12,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
+import Shimmer from "../ui/Shimmer";
 import {
   getPropertyBookings,
   updateBookingStatus,
@@ -82,10 +83,7 @@ const AssessmentsTab = ({ owner_id }) => {
         }
 
         // Find the next upcoming due date
-        if (
-          nextDueDate > now &&
-          (!nextDue || nextDueDate < nextDue)
-        ) {
+        if (nextDueDate > now && (!nextDue || nextDueDate < nextDue)) {
           nextDue = nextDueDate;
         }
       }
@@ -102,10 +100,7 @@ const AssessmentsTab = ({ owner_id }) => {
           const nextDueDate = new Date(completedDate);
           nextDueDate.setFullYear(nextDueDate.getFullYear() + 1);
 
-          if (
-            nextDueDate >= now &&
-            nextDueDate <= thirtyDaysFromNow
-          ) {
+          if (nextDueDate >= now && nextDueDate <= thirtyDaysFromNow) {
             nextDueCount++;
           }
         }
@@ -143,9 +138,7 @@ const AssessmentsTab = ({ owner_id }) => {
 
     if (nextDue < now) {
       return "overdue";
-    } else if (
-      nextDue <= new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
-    ) {
+    } else if (nextDue <= new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)) {
       return "due soon";
     }
 
@@ -153,7 +146,9 @@ const AssessmentsTab = ({ owner_id }) => {
   };
 
   const isStatusDeletable = (status) => {
-    return statusOptions.some(option => option.value === status.toLowerCase());
+    return statusOptions.some(
+      (option) => option.value === status.toLowerCase()
+    );
   };
 
   const getStatusColor = (status) => {
@@ -250,8 +245,127 @@ const AssessmentsTab = ({ owner_id }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-orange"></div>
+      <div className="space-y-8">
+        {/* Stats Section Shimmer */}
+        <div className="grid grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-lg border border-grey-outline p-4"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <Shimmer className="h-4 w-32" />
+                <Shimmer className="h-5 w-5 rounded-full" />
+              </div>
+              <div className="flex items-end gap-3">
+                <Shimmer className="h-8 w-16" />
+                <Shimmer className="h-4 w-28" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions Bar Shimmer */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Shimmer className="h-9 w-24 rounded-lg" />
+            <Shimmer className="h-9 w-24 rounded-lg" />
+          </div>
+          <div className="flex items-center gap-3">
+            <Shimmer className="h-9 w-40 rounded-lg" />
+            <Shimmer className="h-9 w-40 rounded-lg" />
+          </div>
+        </div>
+
+        {/* Table Shimmer */}
+        <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-grey-fill border-b border-grey-outline">
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-32" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-28" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-24" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-20" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-28" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-24" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-36" />
+                </th>
+                <th className="text-left py-4 px-6">
+                  <Shimmer className="h-4 w-16" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <tr
+                  key={i}
+                  className="border-b border-grey-outline last:border-0"
+                >
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-5 w-36" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-5 w-28" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-5 w-24" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-6 w-20 rounded-full" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-2">
+                      <Shimmer className="h-8 w-8 rounded-full" />
+                      <div className="flex flex-col gap-1">
+                        <Shimmer className="h-4 w-28" />
+                        <Shimmer className="h-3 w-20" />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-5 w-28" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-5 w-36" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <Shimmer className="h-6 w-6 rounded" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Pagination Shimmer */}
+          <div className="flex justify-between items-center p-4 border-t border-grey-outline">
+            <div className="flex items-center gap-2">
+              <Shimmer className="h-4 w-12" />
+              <Shimmer className="h-8 w-16" />
+              <Shimmer className="h-4 w-12" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Shimmer className="h-8 w-8 rounded" />
+              <Shimmer className="h-8 w-8 rounded" />
+              <Shimmer className="h-8 w-8 rounded" />
+              <Shimmer className="h-8 w-8 rounded" />
+              <Shimmer className="h-8 w-8 rounded" />
+              <Shimmer className="h-8 w-8 rounded" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -374,7 +488,8 @@ const AssessmentsTab = ({ owner_id }) => {
                       {getNextDueDate(assessment.completed_at)}
                     </td>
                     <td className="py-4 px-6">
-                      {currentUser?.id === owner_id && (status === "pending" || status === "approved") ? (
+                      {currentUser?.id === owner_id &&
+                      (status === "pending" || status === "approved") ? (
                         <select
                           value={status}
                           onChange={(e) =>
@@ -427,7 +542,8 @@ const AssessmentsTab = ({ owner_id }) => {
                     </td>
                     <td className="py-4 px-6">
                       <button className="text-sm text-primary-orange hover:underline">
-                        {assessment.attachments && assessment.attachments.length > 0
+                        {assessment.attachments &&
+                        assessment.attachments.length > 0
                           ? "View Document"
                           : "Upload Document"}
                       </button>
@@ -439,7 +555,9 @@ const AssessmentsTab = ({ owner_id }) => {
                       <div className="flex items-center gap-2">
                         {isStatusDeletable(status) && (
                           <button
-                            onClick={() => handleDeleteAssessment(assessment.id)}
+                            onClick={() =>
+                              handleDeleteAssessment(assessment.id)
+                            }
                             className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
                             title="Cancel Assessment"
                           >
@@ -534,7 +652,9 @@ const AssessmentsTab = ({ owner_id }) => {
                 </>
               )}
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
               >

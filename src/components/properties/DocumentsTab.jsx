@@ -1,191 +1,21 @@
-// import { useState } from "react";
-// import { motion } from "framer-motion";
-// import { Search, Plus, ChevronDown, Download } from "lucide-react";
-// import CreateFolderModal from "./CreateFolderModal";
-// import UploadDocumentModal from "./UploadDocumentModal";
-
-// const DocumentsTab = () => {
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [expandedFolders, setExpandedFolders] = useState([
-//     "Fire Risk Assessments",
-//   ]);
-//   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-//   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
-//   const documents = {
-//     "Fire Risk Assessments": [
-//       {
-//         name: "Annual Fire Risk Assessment 2024.pdf",
-//         size: "5.11 MB",
-//         type: "pdf",
-//       },
-//       {
-//         name: "Annual Fire Risk Assessment 2024.pdf",
-//         size: "5.11 MB",
-//         type: "pdf",
-//       },
-//       {
-//         name: "Annual Fire Risk Assessment 2024.pdf",
-//         size: "5.11 MB",
-//         type: "pdf",
-//       },
-//     ],
-//     "PAT Testing": [],
-//     "Sprinkler System": [],
-//   };
-
-//   const toggleFolder = (folder) => {
-//     setExpandedFolders((prev) =>
-//       prev.includes(folder)
-//         ? prev.filter((f) => f !== folder)
-//         : [...prev, folder]
-//     );
-//   };
-
-//   const handleCreateFolder = async (folderName) => {
-//     try {
-//       // TODO: Implement folder creation
-//       console.log("Creating folder:", folderName);
-//     } catch (error) {
-//       console.error("Error creating folder:", error);
-//     }
-//   };
-
-//   const handleUploadDocuments = async ({ files, folderId }) => {
-//     try {
-//       // TODO: Implement document upload
-//       console.log("Uploading files:", files, "to folder:", folderId);
-//     } catch (error) {
-//       console.error("Error uploading documents:", error);
-//     }
-//   };
-
-//   const getFileIcon = (type) => {
-//     switch (type) {
-//       case "pdf":
-//         return (
-//           <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-//             <span className="text-xs font-medium text-blue-700">PDF</span>
-//           </div>
-//         );
-//       default:
-//         return null;
-//     }
-//   };
-
-//   return (
-//     <div className="space-y-6">
-//       <div className="flex items-center justify-between">
-//         <div className="relative flex-1 max-w-md">
-//           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-//           <input
-//             type="text"
-//             placeholder="Search"
-//             value={searchTerm}
-//             onChange={(e) => setSearchTerm(e.target.value)}
-//             className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-//           />
-//         </div>
-//         <div className="flex gap-3">
-//           <button
-//             onClick={() => setIsCreateFolderModalOpen(true)}
-//             className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2"
-//           >
-//             <Plus className="w-4 h-4" />
-//             Create folder
-//           </button>
-//           <button
-//             onClick={() => setIsUploadModalOpen(true)}
-//             className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
-//           >
-//             <Plus className="w-4 h-4" />
-//             Upload Document
-//           </button>
-//         </div>
-//       </div>
-
-//       <div className="space-y-2">
-//         {Object.entries(documents).map(([folder, files]) => (
-//           <div
-//             key={folder}
-//             className="border border-grey-outline rounded-lg overflow-hidden"
-//           >
-//             <button
-//               onClick={() => toggleFolder(folder)}
-//               className="w-full flex items-center justify-between p-4 hover:bg-grey-fill"
-//             >
-//               <div className="flex items-center gap-3">
-//                 <div className="w-8 h-8 bg-primary-orange/10 rounded flex items-center justify-center">
-//                   <span className="text-xs font-medium text-primary-orange">
-//                     📁
-//                   </span>
-//                 </div>
-//                 <span className="font-medium">{folder}</span>
-//                 <span className="text-sm text-primary-grey">
-//                   {files.length} files
-//                 </span>
-//               </div>
-//               <ChevronDown
-//                 className={`w-5 h-5 text-gray-400 transition-transform ${
-//                   expandedFolders.includes(folder) ? "rotate-180" : ""
-//                 }`}
-//               />
-//             </button>
-
-//             {expandedFolders.includes(folder) && files.length > 0 && (
-//               <div className="border-t border-grey-outline divide-y divide-grey-outline">
-//                 {files.map((file, index) => (
-//                   <div
-//                     key={index}
-//                     className="flex items-center justify-between p-4 hover:bg-grey-fill"
-//                   >
-//                     <div className="flex items-center gap-3">
-//                       {getFileIcon(file.type)}
-//                       <div>
-//                         <p className="font-medium">{file.name}</p>
-//                         <p className="text-sm text-primary-grey">
-//                           File size: {file.size}
-//                         </p>
-//                       </div>
-//                     </div>
-//                     <button className="p-2 text-gray-400 hover:text-primary-orange rounded-full hover:bg-primary-orange/10 transition-colors">
-//                       <Download className="w-5 h-5" />
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-
-//       <CreateFolderModal
-//         isOpen={isCreateFolderModalOpen}
-//         onClose={() => setIsCreateFolderModalOpen(false)}
-//         onSubmit={handleCreateFolder}
-//       />
-
-//       <UploadDocumentModal
-//         isOpen={isUploadModalOpen}
-//         onClose={() => setIsUploadModalOpen(false)}
-//         onSubmit={handleUploadDocuments}
-//         folders={Object.keys(documents).map((name, id) => ({ id, name }))}
-//       />
-//     </div>
-//   );
-// };
-
-// export default DocumentsTab;
-
-
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Search, Plus, ChevronDown, Download, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Search,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+  ArrowDownToLine,
+} from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
+import Shimmer from "../ui/Shimmer";
 import CreateFolderModal from "./CreateFolderModal";
 import UploadDocumentModal from "./UploadDocumentModal";
+import FolderIcon from "../../assets/Folder.png";
+import PDFIcon from "../../assets/PDF.png";
+import DocIcon from "../../assets/Doc.png";
 import {
   getDocumentFolders,
   getDocuments,
@@ -194,7 +24,7 @@ import {
   deleteDocumentFolder,
   downloadDocument,
   deleteDocument,
-  searchDocuments
+  searchDocuments,
 } from "../../services/documentServices";
 
 const DocumentsTab = () => {
@@ -209,6 +39,7 @@ const DocumentsTab = () => {
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [recentlyAdded, setRecentlyAdded] = useState([]);
 
   useEffect(() => {
     if (propertyId) {
@@ -225,10 +56,20 @@ const DocumentsTab = () => {
     }
   }, [searchTerm]);
 
+  // Clear recently added docs after some time
+  useEffect(() => {
+    if (recentlyAdded.length > 0) {
+      const timer = setTimeout(() => {
+        setRecentlyAdded([]);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [recentlyAdded]);
+
   const fetchFoldersAndDocuments = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch folders
       const foldersData = await getDocumentFolders(propertyId);
       setFolders(foldersData);
@@ -239,7 +80,7 @@ const DocumentsTab = () => {
         const folderDocuments = await getDocumentsByFolder(folder.id);
         documentsData[folder.id] = folderDocuments;
       }
-      
+
       setDocuments(documentsData);
     } catch (error) {
       console.error("Error fetching folders and documents:", error);
@@ -251,7 +92,7 @@ const DocumentsTab = () => {
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
-    
+
     try {
       setIsSearching(true);
       const results = await searchDocuments(propertyId, searchTerm);
@@ -266,17 +107,17 @@ const DocumentsTab = () => {
 
   const toggleFolder = async (folderId) => {
     if (expandedFolders.includes(folderId)) {
-      setExpandedFolders(prev => prev.filter(id => id !== folderId));
+      setExpandedFolders((prev) => prev.filter((id) => id !== folderId));
     } else {
-      setExpandedFolders(prev => [...prev, folderId]);
-      
+      setExpandedFolders((prev) => [...prev, folderId]);
+
       // Fetch documents for this folder if not already loaded
       if (!documents[folderId]) {
         try {
           const folderDocuments = await getDocumentsByFolder(folderId);
-          setDocuments(prev => ({
+          setDocuments((prev) => ({
             ...prev,
-            [folderId]: folderDocuments
+            [folderId]: folderDocuments,
           }));
         } catch (error) {
           console.error("Error fetching folder documents:", error);
@@ -293,17 +134,17 @@ const DocumentsTab = () => {
         propertyId,
         currentUser.id
       );
-      
-      setFolders(prev => [...prev, newFolder]);
-      setDocuments(prev => ({
+
+      setFolders((prev) => [...prev, newFolder]);
+      setDocuments((prev) => ({
         ...prev,
-        [newFolder.id]: []
+        [newFolder.id]: [],
       }));
-      
+
       toast.success("Folder created successfully");
     } catch (error) {
       console.error("Error creating folder:", error);
-      if (error.code === '23505') {
+      if (error.code === "23505") {
         toast.error("A folder with this name already exists");
       } else {
         toast.error("Failed to create folder");
@@ -313,12 +154,27 @@ const DocumentsTab = () => {
 
   const handleUploadDocuments = async ({ files, folderId }) => {
     try {
-      // This will be handled by the UploadDocumentModal
-      await fetchFoldersAndDocuments();
-      toast.success(`${files.length} document(s) uploaded successfully`);
+      // Update local state directly
+      if (files && files.length > 0) {
+        // Add the new documents to the specific folder
+        setDocuments((prev) => ({
+          ...prev,
+          [folderId]: [...(prev[folderId] || []), ...files],
+        }));
+
+        // Mark these documents as recently added for highlighting
+        setRecentlyAdded(files.map((file) => file.id));
+
+        // Expand the folder if not already expanded
+        if (!expandedFolders.includes(folderId)) {
+          setExpandedFolders((prev) => [...prev, folderId]);
+        }
+
+        toast.success(`${files.length} document(s) uploaded successfully`);
+      }
     } catch (error) {
-      console.error("Error uploading documents:", error);
-      toast.error("Failed to upload documents");
+      console.error("Error handling uploaded documents:", error);
+      toast.error("Failed to process uploaded documents");
     }
   };
 
@@ -338,13 +194,15 @@ const DocumentsTab = () => {
 
     try {
       await deleteDocument(document.id, document.file_path);
-      
+
       // Update local state
-      setDocuments(prev => ({
+      setDocuments((prev) => ({
         ...prev,
-        [document.folder_id]: prev[document.folder_id].filter(doc => doc.id !== document.id)
+        [document.folder_id]: prev[document.folder_id].filter(
+          (doc) => doc.id !== document.id
+        ),
       }));
-      
+
       toast.success("Document deleted successfully");
     } catch (error) {
       console.error("Error deleting document:", error);
@@ -354,56 +212,87 @@ const DocumentsTab = () => {
 
   const getFileIcon = (fileType) => {
     const type = fileType.toLowerCase();
-    let bgColor = "bg-blue-100";
-    let textColor = "text-blue-700";
-    let extension = type.toUpperCase();
 
     if (type.includes("pdf")) {
-      bgColor = "bg-red-100";
-      textColor = "text-red-700";
-      extension = "PDF";
-    } else if (type.includes("image")) {
-      bgColor = "bg-green-100";
-      textColor = "text-green-700";
-      extension = "IMG";
+      return <img src={PDFIcon} alt="PDF" className="w-8 h-10" />;
     } else if (type.includes("word") || type.includes("doc")) {
-      bgColor = "bg-blue-100";
-      textColor = "text-blue-700";
-      extension = "DOC";
-    } else if (type.includes("excel") || type.includes("sheet")) {
-      bgColor = "bg-green-100";
-      textColor = "text-green-700";
-      extension = "XLS";
+      return <img src={DocIcon} alt="DOC" className="w-8 h-10" />;
     }
 
-    return (
-      <div className={`w-8 h-8 ${bgColor} rounded flex items-center justify-center`}>
-        <span className={`text-xs font-medium ${textColor}`}>
-          {extension}
-        </span>
-      </div>
-    );
+    // Default to PDF icon if type is unknown
+    return <img src={PDFIcon} alt="File" className="w-8 h-10" />;
   };
 
   const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
+    if (!bytes || bytes === 0) {
+      // Use a placeholder for missing file size
+      return "File size unavailable";
+    }
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-orange"></div>
+      <div className="space-y-6">
+        {/* Search and buttons shimmer */}
+        <div className="flex items-center justify-between mb-8">
+          <Shimmer className="h-10 w-64" />
+          <div className="flex gap-3">
+            <Shimmer className="h-10 w-32" />
+            <Shimmer className="h-10 w-40" />
+          </div>
+        </div>
+
+        {/* Folder shimmer */}
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="border border-grey-outline p-2 rounded-xl overflow-hidden"
+            >
+              <div className="flex items-center p-3">
+                <Shimmer className="h-5 w-5 mr-3" />
+                <div className="flex justify-between items-center gap-3 w-full">
+                  <div className="flex items-center gap-3">
+                    <Shimmer className="h-8 w-8" />
+                    <Shimmer className="h-5 w-32" />
+                  </div>
+                  <Shimmer className="h-6 w-16 rounded-full" />
+                </div>
+              </div>
+
+              {i === 1 && (
+                <div className="ml-8 mt-3 space-y-2">
+                  {[1, 2].map((j) => (
+                    <div
+                      key={j}
+                      className="flex items-center justify-between p-3 m-2 bg-grey-fill/30 border border-grey-outline rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Shimmer className="h-10 w-8" />
+                        <div>
+                          <Shimmer className="h-4 w-48 mb-2" />
+                          <Shimmer className="h-3 w-24" />
+                        </div>
+                      </div>
+                      <Shimmer className="h-9 w-9 rounded-lg" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
@@ -436,134 +325,173 @@ const DocumentsTab = () => {
       {searchTerm.trim() && (
         <div className="space-y-2">
           <h3 className="text-lg font-medium">
-            Search Results {isSearching && <span className="text-sm text-gray-500">(searching...)</span>}
+            Search Results{" "}
+            {isSearching && (
+              <span className="text-sm text-gray-500">(searching...)</span>
+            )}
           </h3>
           {searchResults.length > 0 ? (
-            <div className="border border-grey-outline rounded-lg overflow-hidden">
+            <div className="space-y-1">
               {searchResults.map((document) => (
                 <div
                   key={document.id}
-                  className="flex items-center justify-between p-4 hover:bg-grey-fill border-b border-grey-outline last:border-b-0"
+                  className="flex items-center justify-between p-3 hover:bg-grey-fill rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     {getFileIcon(document.file_type)}
                     <div>
                       <p className="font-medium">{document.name}</p>
                       <p className="text-sm text-primary-grey">
-                        Folder: {document.document_folders?.name || 'Unknown'}
+                        Folder: {document.document_folders?.name || "Unknown"}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleDownloadDocument(document)}
-                      className="p-2 text-gray-400 hover:text-primary-orange rounded-full hover:bg-primary-orange/10 transition-colors"
-                    >
-                      <Download className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteDocument(document)}
-                      className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleDownloadDocument(document)}
+                    className="text-sm text-primary-orange hover:underline"
+                  >
+                    Download
+                  </button>
                 </div>
               ))}
             </div>
-          ) : !isSearching && (
-            <p className="text-gray-500 text-center py-8">No documents found matching your search.</p>
+          ) : (
+            !isSearching && (
+              <p className="text-gray-500 text-center py-8">
+                No documents found matching your search.
+              </p>
+            )
           )}
         </div>
       )}
 
       {/* Folders */}
       {!searchTerm.trim() && (
-        <div className="space-y-2">
+        <div className="space-y-1">
           {folders.length > 0 ? (
             folders.map((folder) => (
-              <div
+              <motion.div
                 key={folder.id}
-                className="border border-grey-outline rounded-lg overflow-hidden"
+                initial={{ opacity: 1 }}
+                whileHover={{
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+                }}
+                className="border border-grey-outline p-2 rounded-xl overflow-hidden"
               >
                 <button
                   onClick={() => toggleFolder(folder.id)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-grey-fill"
+                  className="w-full flex items-center gap-3 p-3 hover:bg-grey-fill rounded-xl"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-primary-orange/10 rounded flex items-center justify-center">
-                      <span className="text-xs font-medium text-primary-orange">
-                        📁
-                      </span>
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      rotate: expandedFolders.includes(folder.id) ? 90 : 0,
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronRight className="w-5 h-5 text-primary-black" />
+                  </motion.div>
+                  <div className="flex justify-between items-center gap-3 w-full">
+                    <div className="flex items-center gap-3">
+                      <img src={FolderIcon} alt="Folder" className="w-8 h-8" />
+                      <span className="font-medium flex-1">{folder.name}</span>
                     </div>
-                    <span className="font-medium">{folder.name}</span>
-                    <span className="text-sm text-primary-grey">
+
+                    <span className="text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-3 py-1 text-primary-black font-medium">
                       {documents[folder.id]?.length || 0} files
                     </span>
                   </div>
-                  <ChevronDown
-                    className={`w-5 h-5 text-gray-400 transition-transform ${
-                      expandedFolders.includes(folder.id) ? "rotate-180" : ""
-                    }`}
-                  />
                 </button>
 
-                {expandedFolders.includes(folder.id) && documents[folder.id] && (
-                  <div className="border-t border-grey-outline divide-y divide-grey-outline">
-                    {documents[folder.id].length > 0 ? (
-                      documents[folder.id].map((document) => (
-                        <div
-                          key={document.id}
-                          className="flex items-center justify-between p-4 hover:bg-grey-fill"
-                        >
-                          <div className="flex items-center gap-3">
-                            {getFileIcon(document.file_type)}
-                            <div>
-                              <p className="font-medium">{document.name}</p>
-                              <p className="text-sm text-primary-grey">
-                                Created: {new Date(document.created_at).toLocaleDateString()}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleDownloadDocument(document)}
-                              className="p-2 text-gray-400 hover:text-primary-orange rounded-full hover:bg-primary-orange/10 transition-colors"
+                <AnimatePresence>
+                  {expandedFolders.includes(folder.id) &&
+                    documents[folder.id] && (
+                      <motion.div
+                        key={`folder-${folder.id}-content`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="ml-8 overflow-hidden"
+                      >
+                        {documents[folder.id].length > 0 ? (
+                          documents[folder.id].map((document) => (
+                            <motion.div
+                              key={document.id}
+                              initial={{ scale: 1 }}
+                              whileHover={{ scale: 1.01 }}
+                              transition={{ duration: 0.2 }}
+                              className={`flex items-center justify-between p-3 m-2 bg-grey-fill/50 border border-grey-outline rounded-lg shadow-sm ${
+                                recentlyAdded.includes(document.id)
+                                  ? "animate-pulse bg-green-50/50 border-green-200"
+                                  : ""
+                              }`}
                             >
-                              <Download className="w-5 h-5" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteDocument(document)}
-                              className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
-                            >
-                              <Trash2 className="w-5 h-5" />
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="p-4 text-center text-gray-500">
-                        No documents in this folder
-                      </div>
+                              <div className="flex items-center gap-3">
+                                {getFileIcon(document.file_type)}
+                                <div>
+                                  <p className="font-medium">{document.name}</p>
+                                  <p className="text-sm text-primary-grey flex items-center gap-2">
+                                    {new Date(
+                                      document.created_at
+                                    ).toLocaleDateString()}
+                                    <span className="w-1 h-1 bg-primary-grey rounded-full"></span>
+                                    {document.size
+                                      ? formatFileSize(document.size)
+                                      : document.file_size
+                                      ? formatFileSize(document.file_size)
+                                      : "File size unavailable"}
+                                  </p>
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => handleDownloadDocument(document)}
+                                className="bg-white border border-grey-outline rounded-lg p-2 hover:bg-grey-fill shadow-sm"
+                              >
+                                <ArrowDownToLine className="w-5 h-5" />
+                              </button>
+                            </motion.div>
+                          ))
+                        ) : (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="p-3 text-center text-gray-500"
+                          >
+                            No documents in this folder
+                          </motion.div>
+                        )}
+                      </motion.div>
                     )}
-                  </div>
-                )}
-              </div>
+                </AnimatePresence>
+              </motion.div>
             ))
           ) : (
-            <div className="text-center py-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-center py-12"
+            >
               <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mx-auto mb-4">
                 <Plus className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No folders yet</h3>
-              <p className="text-gray-500 mb-4">Create your first folder to organize documents</p>
-              <button
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No folders yet
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Create your first folder to organize documents
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsCreateFolderModalOpen(true)}
                 className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
               >
                 Create Folder
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           )}
         </div>
       )}
@@ -581,7 +509,7 @@ const DocumentsTab = () => {
         folders={folders}
         propertyId={propertyId}
         currentUser={currentUser}
-        onSuccess={fetchFoldersAndDocuments}
+        onSuccess={null}
       />
     </div>
   );
