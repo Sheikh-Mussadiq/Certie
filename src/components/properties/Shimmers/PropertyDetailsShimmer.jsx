@@ -1,6 +1,6 @@
 const PropertyDetailsShimmer = () => {
   return (
-    <div className="p-8">
+    <div className="">
       {/* Header Shimmer */}
       <div className="flex justify-between items-center mb-6">
         <div className="space-y-2">

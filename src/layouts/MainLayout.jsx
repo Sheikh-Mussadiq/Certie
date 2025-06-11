@@ -1,26 +1,3 @@
-// "use client";
-
-// import { AnimatePresence } from "framer-motion";
-// import { useLocation } from "react-router-dom";
-// import Navbar from "../components/Navbar";
-// import Footer from "../components/Footer";
-
-// const MainLayout = ({ children }) => {
-//   const location = useLocation();
-
-//   return (
-//     <div className="min-h-screen flex flex-col bg-gray-50">
-//       <Navbar />
-//       <main className="flex-grow">
-//         <AnimatePresence mode="wait">{children}</AnimatePresence>
-//       </main>
-//       {/* <Footer /> */}
-//     </div>
-//   );
-// };
-
-// export default MainLayout;
-
 "use client";
 
 import { AnimatePresence } from "framer-motion";
@@ -32,14 +9,21 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-primary-black">
       <Sidebar />
-      {/* Add left margin equal to sidebar width */}
-      <div className="flex-1 flex flex-col ml-64">
-        <Navbar />
-        <main className="flex-grow">
-          <AnimatePresence mode="wait">{children}</AnimatePresence>
-        </main>
+      {/* Main content container with margin */}
+      <div className="flex-1 flex flex-col ml-64 m-4">
+        {/* Container with rounded corners and shadow */}
+        <div className="bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden h-full">
+          {/* Navbar container */}
+          <div className="z-10">
+            <Navbar />
+          </div>
+          {/* Main content with padding */}
+          <main className="flex-grow p-4">
+            <AnimatePresence mode="wait">{children}</AnimatePresence>
+          </main>
+        </div>
       </div>
     </div>
   );

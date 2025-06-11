@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { supabase } from "../lib/supabase";
 
 /**
  * Create a new booking
@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase';
 export const createBooking = async (bookingData) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
+      .from("bookings")
       .insert([bookingData])
       .select()
       .single();
@@ -16,7 +16,7 @@ export const createBooking = async (bookingData) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error creating booking:', error);
+    console.error("Error creating booking:", error);
     throw error;
   }
 };
@@ -29,15 +29,15 @@ export const createBooking = async (bookingData) => {
 export const getPropertyBookings = async (propertyId) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('property_id', propertyId)
-      .order('booking_time', { ascending: true });
+      .from("bookings")
+      .select("*")
+      .eq("property_id", propertyId)
+      .order("booking_time", { ascending: true });
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching property bookings:', error);
+    console.error("Error fetching property bookings:", error);
     throw error;
   }
 };
@@ -50,15 +50,15 @@ export const getPropertyBookings = async (propertyId) => {
 export const getBookingById = async (bookingId) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
-      .select('*')
-      .eq('id', bookingId)
+      .from("bookings")
+      .select("*")
+      .eq("id", bookingId)
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching booking:', error);
+    console.error("Error fetching booking:", error);
     throw error;
   }
 };
@@ -72,16 +72,16 @@ export const getBookingById = async (bookingId) => {
 export const updateBookingStatus = async (bookingId, status) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
+      .from("bookings")
       .update({ status })
-      .eq('id', bookingId)
+      .eq("id", bookingId)
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error updating booking status:', error);
+    console.error("Error updating booking status:", error);
     throw error;
   }
 };
@@ -95,20 +95,19 @@ export const updateBookingStatus = async (bookingId, status) => {
 export const updateBooking = async (bookingId, updateData) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
+      .from("bookings")
       .update(updateData)
-      .eq('id', bookingId)
+      .eq("id", bookingId)
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error updating booking:', error);
+    console.error("Error updating booking:", error);
     throw error;
   }
 };
-
 
 /**
  * Complete a booking
@@ -118,23 +117,22 @@ export const updateBooking = async (bookingId, updateData) => {
 export const completeBooking = async (bookingId) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
+      .from("bookings")
       .update({
-        status: 'completed',
-        completed_at: new Date().toISOString()
+        status: "completed",
+        completed_at: new Date().toISOString(),
       })
-      .eq('id', bookingId)
+      .eq("id", bookingId)
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error completing booking:', error);
+    console.error("Error completing booking:", error);
     throw error;
   }
 };
-
 
 /**
  * Cancel a booking
@@ -144,16 +142,35 @@ export const completeBooking = async (bookingId) => {
 export const cancelBooking = async (bookingId) => {
   try {
     const { data, error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancelled' })
-      .eq('id', bookingId)
+      .from("bookings")
+      .update({ status: "cancelled" })
+      .eq("id", bookingId)
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error cancelling booking:', error);
+    console.error("Error cancelling booking:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get all bookings
+ * @returns {Promise} Array of all bookings
+ */
+export const getAllBookings = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("*, properties(name)")
+      .order("booking_time", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching all bookings:", error);
     throw error;
   }
 };

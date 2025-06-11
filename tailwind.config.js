@@ -10,6 +10,8 @@ export default {
         "grey-outline": "#E8E8E9",
         "grey-fill": "#F6F6F6",
         "primary-grey": "#757575",
+        "primary-red": "#FF0000",
+        "primary-green": "#00FF00",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

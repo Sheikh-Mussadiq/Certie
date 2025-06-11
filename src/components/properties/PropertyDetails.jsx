@@ -60,7 +60,7 @@ const PropertyDetails = ({ property, setProperty }) => {
   ];
 
   return (
-    <div className="p-8">
+    <div className="">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-primary-black">
@@ -435,8 +435,10 @@ const PropertyDetails = ({ property, setProperty }) => {
               </div>
             </>
           )}
-          {activeTab === "assessments" && <AssessmentsTab owner_id={property.owner_id} />}
-          {activeTab === "logbooks" && <LogBooksTab />} 
+          {activeTab === "assessments" && (
+            <AssessmentsTab owner_id={property.owner_id} />
+          )}
+          {activeTab === "logbooks" && <LogBooksTab />}
           {activeTab === "documents" && <DocumentsTab />}
         </div>
       </div>

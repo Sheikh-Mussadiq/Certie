@@ -18,6 +18,7 @@ import Properties from "./pages/Properties";
 import AddProperty from "./pages/AddProperty";
 import PropertyDetails from "./pages/PropertyDetails";
 import Calendar from "./pages/Calendar";
+import Bookings from "./pages/Bookings";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 import Logo from "./assets/Logo.png";
 
@@ -124,6 +125,14 @@ const AuthenticatedRoutes = () => {
             element={
               <ProtectedLayout>
                 <PropertyDetails />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/bookings"
+            element={
+              <ProtectedLayout>
+                <Bookings />
               </ProtectedLayout>
             }
           />

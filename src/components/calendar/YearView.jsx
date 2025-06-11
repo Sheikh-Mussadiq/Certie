@@ -73,7 +73,7 @@ const YearView = ({ currentDate }) => {
                     day === null
                       ? ""
                       : isToday(day, monthIndex)
-                      ? "bg-primary-orange text-white rounded-md"
+                      ? "bg-primary-black text-white font-bold rounded-md"
                       : "text-primary-black"
                   }`}
                 >
