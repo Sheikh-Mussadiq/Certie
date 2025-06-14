@@ -23,7 +23,7 @@ const AssessmentsTab = ({ owner_id }) => {
   const { id: propertyId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const [sortBy, setSortBy] = useState("booking_time");
+  const [sortBy, setSortBy] = useState("assessment_time");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
   const [assessments, setAssessments] = useState([]);
@@ -180,9 +180,9 @@ const AssessmentsTab = ({ owner_id }) => {
       .slice(0, 2);
   };
 
-  const formatAssessmentTime = (assignee) => {
-    if (!assignee || !assignee.assessment_time) return "Not scheduled";
-    return new Date(assignee.assessment_time).toLocaleString("en-GB", {
+  const formatAssessmentTime = (assessment_time) => {
+    if (!assessment_time) return "Not scheduled";
+    return new Date(assessment_time).toLocaleString("en-GB", {
       day: "numeric",
       month: "short",
       year: "numeric",
@@ -547,6 +547,9 @@ const AssessmentsTab = ({ owner_id }) => {
                               {assignee.contact}
                             </span>
                           )}
+                          <span className="text-xs text-primary-grey">
+                            {assignee.email}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -559,7 +562,7 @@ const AssessmentsTab = ({ owner_id }) => {
                       </button>
                     </td>
                     <td className="py-4 px-6 text-sm">
-                      {formatAssessmentTime(assignee)}
+                      {formatAssessmentTime(assessment.assessment_time)}
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-2">

@@ -1,11 +1,30 @@
-
 import StatusBadge from "./StatusBadge";
 import { MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import BookingDetailsModal from "./BookingDetailsModal";
 
-const BookingList = ({ bookings }) => {
+const BookingList = ({ bookings, onBookingUpdate }) => {
   const navigate = useNavigate();
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = (booking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBooking(null);
+  };
+
+  const handleBookingUpdate = (updatedBooking) => {
+    if (onBookingUpdate) {
+      onBookingUpdate(updatedBooking);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
@@ -51,8 +70,10 @@ const BookingList = ({ bookings }) => {
             >
               Assessor Details
             </th>
-            <th scope="col" className="relative px-6 py-3">
-              <span className="sr-only">Actions</span>
+            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline">
+              {/* <span className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider  border-grey-outline"> */}
+                Actions
+              {/* </span> */}
             </th>
           </tr>
         </thead>
@@ -75,8 +96,8 @@ const BookingList = ({ bookings }) => {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
                 {booking.completed_at
                   ? format(new Date(booking.completed_at), "dd MMM - yyyy")
-                  : booking.booking_time
-                  ? format(new Date(booking.booking_time), "dd MMM - yyyy")
+                  : booking.assessment_time
+                  ? format(new Date(booking.assessment_time), "dd MMM - yyyy")
                   : "N/A"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
@@ -97,8 +118,11 @@ const BookingList = ({ bookings }) => {
                   </div>
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button className="text-primary-grey hover:text-primary-black">
+              <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <button 
+                  className="text-primary-grey hover:text-primary-black"
+                  onClick={() => handleOpenModal(booking)}
+                >
                   <MoreHorizontal className="h-5 w-5" />
                 </button>
               </td>
@@ -106,6 +130,14 @@ const BookingList = ({ bookings }) => {
           ))}
         </tbody>
       </table>
+
+      {/* Booking Details Modal */}
+      <BookingDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        booking={selectedBooking}
+        onUpdate={handleBookingUpdate}
+      />
     </div>
   );
 };

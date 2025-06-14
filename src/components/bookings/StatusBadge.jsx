@@ -1,5 +1,5 @@
 import React from "react";
-import { FileX, FileCheck, Lock, CircleDotDashed } from "lucide-react";
+import { FileX, FileCheck, Lock, CircleDotDashed, Calendar } from "lucide-react";
 
 const StatusBadge = ({ status }) => {
   let badgeClasses =
@@ -20,6 +20,12 @@ const StatusBadge = ({ status }) => {
       icon = <CircleDotDashed className="w-4 h-4 mr-1.5" />;
       text = "Pending Assignment";
       break;
+    case "assigned":
+      badgeClasses +=
+        " bg-blue-50 text-blue-600 border border-blue-600/50";
+      icon = <Calendar className="w-4 h-4 mr-1.5" />;
+      text = "Assigned for Assessment";
+      break;
     case "cancelled":
       badgeClasses +=
         " bg-red-50 text-primary-red border border-primary-red/50";
@@ -29,7 +35,7 @@ const StatusBadge = ({ status }) => {
     default:
       badgeClasses +=
         " bg-gray-100 text-primary-grey border border-primary-grey/50";
-      text = status;
+      text = status.charAt(0).toUpperCase() + status.slice(1);
   }
 
   return (

@@ -32,7 +32,7 @@ export const getPropertyBookings = async (propertyId) => {
       .from("bookings")
       .select("*")
       .eq("property_id", propertyId)
-      .order("booking_time", { ascending: true });
+      .order("assessment_time", { ascending: true });
 
     if (error) throw error;
     return data;
@@ -165,7 +165,7 @@ export const getAllBookings = async () => {
     const { data, error } = await supabase
       .from("bookings")
       .select("*, properties(name)")
-      .order("booking_time", { ascending: false });
+      .order("assessment_time", { ascending: false });
 
     if (error) throw error;
     return data;

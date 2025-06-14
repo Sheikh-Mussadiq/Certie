@@ -6,7 +6,7 @@ CREATE TABLE bookings (
   property_id UUID REFERENCES properties(id),
   property_name TEXT NOT NULL,
   booked_by UUID REFERENCES users(id) DEFAULT auth.uid(),
-  booking_time TIMESTAMPTZ NOT NULL,
+  assessment_time TIMESTAMPTZ,
   completed_at TIMESTAMPTZ,
   type TEXT NOT NULL,
   assignee JSONB,
