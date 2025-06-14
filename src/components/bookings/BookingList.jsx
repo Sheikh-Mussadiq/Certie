@@ -115,6 +115,11 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                         {booking.assignee.contact}
                       </div>
                     )}
+                    {booking.assignee?.email && (
+                      <div className="text-xs text-primary-grey">
+                        {booking.assignee.email}
+                      </div>
+                    )}
                   </div>
                 </div>
               </td>
