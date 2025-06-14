@@ -75,23 +75,23 @@ ALTER TABLE document_folders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
 
-CREATE POLICY "Managers can view folders"
-  ON document_folders FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM property_managers
-      WHERE property_id = document_folders.property_id AND user_id = (select auth.uid())
-    )
-  );
-
-CREATE POLICY "Site users can view folders"
-  ON document_folders FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM property_site_users
-      WHERE property_id = document_folders.property_id AND user_id = (select auth.uid())
-    )
-  );
+CREATE POLICY "Managers or Site Users can view folders"
+ON document_folders
+FOR SELECT
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM property_managers
+    WHERE property_id = document_folders.property_id
+      AND user_id = (select auth.uid())
+  )
+  OR
+  EXISTS (
+    SELECT 1 FROM property_site_users
+    WHERE property_id = document_folders.property_id
+      AND user_id = (select auth.uid())
+  )
+);
 
 CREATE POLICY "Super admin or Owner Full Access on Document Folders"
 ON document_folders
@@ -107,23 +107,24 @@ WITH CHECK (
 );
 
 
-CREATE POLICY "Managers can view documents"
-  ON documents FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM property_managers
-      WHERE property_id = documents.property_id AND user_id = (select auth.uid())
-    )
-  );
+CREATE POLICY "Managers or Site Users can view documents"
+ON documents
+FOR SELECT
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM property_managers
+    WHERE property_id = documents.property_id
+      AND user_id = (select auth.uid())
+  )
+  OR
+  EXISTS (
+    SELECT 1 FROM property_site_users
+    WHERE property_id = documents.property_id
+      AND user_id = (select auth.uid())
+  )
+);
 
-CREATE POLICY "Site users can view documents"
-  ON documents FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM property_site_users
-      WHERE property_id = documents.property_id AND user_id = (select auth.uid())
-    )
-  );
 
 
 CREATE POLICY "Super admin or Owner Full Access on Documents"

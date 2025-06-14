@@ -70,17 +70,6 @@ WITH CHECK (
 );
 
 
-CREATE POLICY "Manager Booking Select Access" ON bookings
-FOR SELECT
-TO authenticated
-USING (
-  EXISTS (
-    SELECT 1 FROM property_managers 
-    WHERE property_id = bookings.property_id 
-      AND user_id = (select auth.uid())
-  )
-);
-
 
 -- CREATE POLICY "Manager Booking Update Access" ON bookings
 -- FOR UPDATE
@@ -95,12 +84,21 @@ USING (
 --   )
 -- );
 
--- Site User Booking Access
-CREATE POLICY "Site User Booking Access" ON bookings
+-- Manager and Site User Booking View Access
+CREATE POLICY "Managers or Site Users can view bookings"
+ON bookings
 FOR SELECT
 TO authenticated
- USING (
-  EXISTS (SELECT 1 FROM property_site_users 
-         WHERE property_id = bookings.property_id 
-         AND user_id = (select auth.uid()))
+USING (
+  EXISTS (
+    SELECT 1 FROM property_managers
+    WHERE property_id = bookings.property_id
+      AND user_id = (select auth.uid())
+  )
+  OR
+  EXISTS (
+    SELECT 1 FROM property_site_users
+    WHERE property_id = bookings.property_id
+      AND user_id = (select auth.uid()) 
+  )
 );
