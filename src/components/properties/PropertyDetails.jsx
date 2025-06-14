@@ -143,7 +143,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Property ID
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.id || "01"}
+                            {property?.id}
                           </p>
                         </div>
                       </div>
@@ -157,38 +157,12 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Compliance Score
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.compliance_score || "93"}
+                            {property?.compliance_score || "Not Specified"}
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center px-4 py-3">
-                        <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                          <User className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-sm text-primary-grey">
-                            Manager
-                          </span>
-                          <p className="text-sm font-medium">
-                            {property?.manager || "John Smith"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center px-4 py-3">
-                        <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                          <UserCheck className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-sm text-primary-grey">
-                            Assistant Manager
-                          </span>
-                          <p className="text-sm font-medium">
-                            {property?.assistant_manager || "Sarah Clark"}
-                          </p>
-                        </div>
-                      </div>
+                      
 
                       <div className="flex items-center px-4 py-3">
                         <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
@@ -199,7 +173,21 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Square Ft
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.square_ft || "850 sqft"}
+                            {property?.square_ft || "Not Specified"}
+                          </p>
+                        </div>
+                      </div>
+
+                       <div className="flex items-center px-4 py-3">
+                        <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
+                          <Layers className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-sm text-primary-grey">
+                            Floors
+                          </span>
+                          <p className="text-sm font-medium">
+                            {property?.floors || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -213,7 +201,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Property Type
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.property_type || "Residential"}
+                            {property?.property_type || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -227,7 +215,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Construction Year
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.construction_year || "2001"}
+                            {property?.construction_year || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -241,7 +229,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Tenure
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.tenure || "Leasehold"}
+                            {property?.tenure || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -255,7 +243,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Insurance Provider
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.insurance_provider || "Acme Insurance"}
+                            {property?.insurance_provider || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -276,7 +264,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Contact
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.contact_phone || "020 1234 5678"}
+                            {property?.contact_phone || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -295,20 +283,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                         </div>
                       </div>
 
-                      <div className="flex items-center px-4 py-3">
-                        <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                          <Layers className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <span className="text-sm text-primary-grey">
-                            Floors
-                          </span>
-                          <p className="text-sm font-medium">
-                            {property?.floors || "2"}
-                          </p>
-                        </div>
-                      </div>
-
+                     
                       <div className="flex items-center px-4 py-3">
                         <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
                           <Users className="w-5 h-5" />
@@ -318,7 +293,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Occupants
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.occupants || "4"}
+                            {property?.occupants || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -332,8 +307,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Local Fire Brigade
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.local_fire_brigade ||
-                              "London Fire Brigade"}
+                            {property?.local_fire_brigade || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -347,7 +321,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Fire Strategy
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.fire_strategy || "Stay in Place"}
+                            {property?.fire_strategy || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -361,8 +335,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Evacuation Policy
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.evacuation_policy ||
-                              "Immediate Evacuation"}
+                            {property?.evacuation_policy || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -376,7 +349,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Emergency Contact
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.emergency_contact || "07890 123456"}
+                            {property?.emergency_contact || "Not Specified"}
                           </p>
                         </div>
                       </div>
@@ -390,8 +363,7 @@ const PropertyDetails = ({ property, setProperty }) => {
                             Contractor Hours
                           </span>
                           <p className="text-sm font-medium">
-                            {property?.contactor_hours ||
-                              "08:00 - 17:00, Mon-Fri"}
+                            {property?.contactor_hours || "Not Specified"}  
                           </p>
                         </div>
                       </div>

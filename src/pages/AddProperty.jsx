@@ -405,29 +405,6 @@ const AddProperty = () => {
             </div>
           </div>
 
-          <div className="md:col-span-2 border border-grey-outline rounded-xl p-4">
-            <h3 className="text-lg font-medium mb-4">Management Details</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Manager
-                </label>
-                <input
-                  type="text"
-                  value={formData.manager}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      manager: e.target.value,
-                    }))
-                  }
-                  placeholder="Enter manager name"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                />
-              </div>
-            </div>
-          </div>
 
           <div className="md:col-span-2 border border-grey-outline rounded-xl p-4">
             <h3 className="text-lg font-medium mb-4">
@@ -509,7 +486,7 @@ const AddProperty = () => {
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Contractor Hours
+                  Contactor Hours
                 </label>
                 <input
                   type="text"
@@ -520,7 +497,7 @@ const AddProperty = () => {
                       contactor_hours: e.target.value,
                     }))
                   }
-                  placeholder="Enter contractor hours"
+                  placeholder="Enter contactor hours"
                   className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                 />
               </div>
