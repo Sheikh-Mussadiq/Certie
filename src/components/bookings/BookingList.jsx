@@ -1,9 +1,12 @@
-import React from "react";
+
 import StatusBadge from "./StatusBadge";
 import { MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const BookingList = ({ bookings }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
       <table className="min-w-full divide-y divide-grey-outline">
@@ -66,7 +69,7 @@ const BookingList = ({ bookings }) => {
                 {booking.type ||
                   (booking.service_name ? booking.service_name : "N/A")}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange" onClick={() => {navigate(`/properties/${booking.property_id}`)}}>
                 {booking.properties?.name || booking.property_name || "N/A"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">

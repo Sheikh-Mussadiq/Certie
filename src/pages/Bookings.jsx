@@ -65,10 +65,10 @@ const Bookings = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-primary-black">Bookings</h1>
-        <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
+        {/* <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
           <Plus className="h-5 w-5 mr-1" />
           <span>New Booking</span>
-        </button>
+        </button> */}
       </div>
 
       <BookingFilters onSearch={handleSearch} />

@@ -425,14 +425,14 @@ const AssessmentsTab = ({ owner_id }) => {
           </button>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
+          {/* <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
             <Plus className="w-4 h-4" />
             Add New Assessment
-          </button>
-          <button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-orange rounded-lg hover:bg-primary-orange/90">
+          </button> */}
+          {<button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
             <Plus className="w-4 h-4" />
             Book Assessment
-          </button>
+          </button>}
         </div>
       </div>
 
@@ -454,7 +454,7 @@ const AssessmentsTab = ({ owner_id }) => {
                 Status
               </th>
               <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Performed By
+                Assignee
               </th>
               <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
                 Document
@@ -552,10 +552,10 @@ const AssessmentsTab = ({ owner_id }) => {
                     </td>
                     <td className="py-4 px-6">
                       <button className="text-sm text-primary-orange hover:underline">
-                        {assessment.attachments &&
-                        assessment.attachments.length > 0
+                        {assessment.status === "completed" &&
+                        assessment.completed_at
                           ? "View Document"
-                          : "Upload Document"}
+                          : "N/A"}
                       </button>
                     </td>
                     <td className="py-4 px-6 text-sm">
