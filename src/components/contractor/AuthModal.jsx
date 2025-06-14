@@ -1,16 +1,22 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Eye, EyeOff } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 
 const AuthModal = ({ isOpen, onClose, onLogin, onSignup }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [keepSignedIn, setKeepSignedIn] = useState(false)
+  const { isAuthenticated } = useAuth()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     onLogin({ email, password, keepSignedIn })
+  }
+
+  if (isAuthenticated) {
+    return null
   }
 
   return (

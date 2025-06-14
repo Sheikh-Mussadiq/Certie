@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, X } from 'lucide-react'
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, X } from "lucide-react";
 
 const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
   return (
     <div className="border-b border-grey-outline py-4">
-      <div 
+      <div
         className="flex justify-between items-center cursor-pointer"
         onClick={toggleOpen}
       >
@@ -14,12 +14,12 @@ const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
           {isOpen ? <X size={16} /> : <Plus size={16} />}
         </button>
       </div>
-      
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
@@ -29,43 +29,47 @@ const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
         )}
       </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
 const FAQAccordion = () => {
-  const [openIndex, setOpenIndex] = useState(0)
-  
+  const [openIndex, setOpenIndex] = useState(0);
+
   const faqs = [
     {
-      question: 'What is Modoin?',
-      answer: 'Modoin refers to a specialized methodology for commercial & residential property fire risk assessments where fire hazards are identified and mitigated. Potenti tellus hendrerit facilisis praesent nunc habitasse convallis semper bibendum vitae molestie phasellus iaculis diam elit.'
+      question: "What is Modoin?",
+      answer:
+        "Modoin refers to a specialized methodology for commercial & residential property fire risk assessments where fire hazards are identified and mitigated. Potenti tellus hendrerit facilisis praesent nunc habitasse convallis semper bibendum vitae molestie phasellus iaculis diam elit.",
     },
     {
-      question: 'Do you have a monthly plan?',
-      answer: 'Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.'
+      question: "Do you have a monthly plan?",
+      answer:
+        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
     },
     {
-      question: 'Do you have a monthly plan?',
-      answer: 'Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.'
+      question: "Do you have a monthly plan?",
+      answer:
+        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
     },
     {
-      question: 'Do you have a monthly plan?',
-      answer: 'Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.'
-    }
-  ]
-  
+      question: "Do you have a monthly plan?",
+      answer:
+        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
+    },
+  ];
+
   return (
-    <motion.div 
-      className="bg-white rounded-lg p-6 border border-grey-outline"
+    <motion.div
+      className="bg-white rounded-xl p-6 border border-grey-outline"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
       <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
-      
+
       <div className="border-t border-grey-outline">
         {faqs.map((faq, index) => (
-          <FAQItem 
+          <FAQItem
             key={index}
             question={faq.question}
             answer={faq.answer}
@@ -75,7 +79,7 @@ const FAQAccordion = () => {
         ))}
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default FAQAccordion
+export default FAQAccordion;

@@ -86,7 +86,7 @@ const AddProperty = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white rounded-2xl">
       <div className="flex justify-between items-center mb-2 px-6 py-2 border-b border-grey-outline">
         <div>
           <h1 className="text-2xl font-semibold text-primary-black">

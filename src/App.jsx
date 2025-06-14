@@ -145,6 +145,7 @@ const AuthenticatedRoutes = () => {
             }
           />
 
+
           <Route
             path="*"
             element={
@@ -166,6 +167,14 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<ProtectedLoginRoute />} />
+          <Route
+            path="/contractor-workflow"
+            element={
+              <ProtectedLayout>
+                <ContractorWorkflow />
+              </ProtectedLayout>
+            }
+          />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>
         <Toaster position="top-right" />

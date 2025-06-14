@@ -229,7 +229,7 @@ const UploadDocumentModal = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 !mt-0"
           onClick={handleClose}
         >
           <motion.div
@@ -425,7 +425,7 @@ const UploadDocumentModal = ({
                               </span>
                             </p>
                             <p className="text-xs text-primary-grey mt-4 px-6 py-2 bg-grey-fill rounded-full">
-                              PDF, Images, Documents up to 10MB each
+                              PDF and Documents up to 10MB each
                             </p>
                           </motion.div>
                         </div>

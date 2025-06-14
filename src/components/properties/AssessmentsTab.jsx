@@ -9,7 +9,7 @@ import {
   Download,
   Trash2,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
 import Shimmer from "../ui/Shimmer";
@@ -21,6 +21,7 @@ import {
 
 const AssessmentsTab = ({ owner_id }) => {
   const { id: propertyId } = useParams();
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [sortBy, setSortBy] = useState("booking_time");
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,6 +200,15 @@ const AssessmentsTab = ({ owner_id }) => {
       console.error("Error updating assessment status:", error);
       toast.error("Failed to update assessment status");
     }
+  };
+
+  const handleBookAssessment = () => {
+    navigate("/contractor-workflow", {
+      state: {
+        propertyId: propertyId,
+        startAtStep: 2,
+      },
+    });
   };
 
   const handleDeleteAssessment = async (assessmentId) => {
@@ -419,7 +429,7 @@ const AssessmentsTab = ({ owner_id }) => {
             <Plus className="w-4 h-4" />
             Add New Assessment
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-orange rounded-lg hover:bg-primary-orange/90">
+          <button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-orange rounded-lg hover:bg-primary-orange/90">
             <Plus className="w-4 h-4" />
             Book Assessment
           </button>
@@ -582,7 +592,7 @@ const AssessmentsTab = ({ owner_id }) => {
                     <p className="text-gray-500 mb-4">
                       Get started by booking your first assessment
                     </p>
-                    <button className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors">
+                    <button onClick={handleBookAssessment} className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors">
                       Book Assessment
                     </button>
                   </div>
