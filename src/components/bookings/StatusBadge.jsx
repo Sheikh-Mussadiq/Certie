@@ -1,5 +1,5 @@
 import React from "react";
-import { Eye, FileText, Lock } from "lucide-react";
+import { FileX, FileCheck, Lock, CircleDotDashed } from "lucide-react";
 
 const StatusBadge = ({ status }) => {
   let badgeClasses =
@@ -11,20 +11,20 @@ const StatusBadge = ({ status }) => {
     case "completed":
       badgeClasses +=
         " bg-green-50 text-primary-green border border-primary-green/50 ";
-      icon = <Eye className="w-4 h-4 mr-1.5" />;
-      text = "See Report";
+      icon = <FileCheck className="w-4 h-4 mr-1.5" />;
+      text = "Assessment Completed";
       break;
-    case "pending":
+    case "approved":
       badgeClasses +=
         " bg-orange-50 text-primary-orange border border-primary-orange/50";
-      icon = <FileText className="w-4 h-4 mr-1.5" />;
-      text = "Report Pending";
+      icon = <CircleDotDashed className="w-4 h-4 mr-1.5" />;
+      text = "Pending Assignment";
       break;
-    case "locked":
+    case "cancelled":
       badgeClasses +=
         " bg-red-50 text-primary-red border border-primary-red/50";
-      icon = <Lock className="w-4 h-4 mr-1.5" />;
-      text = "Report Locked";
+      icon = <FileX className="w-4 h-4 mr-1.5" />;
+      text = "Assessment Cancelled";
       break;
     default:
       badgeClasses +=

@@ -21,7 +21,8 @@ const Bookings = () => {
       try {
         setLoading(true);
         const data = await getAllBookings();
-        setBookings(data);
+        const filteredData = data.filter(booking => booking.status !== "pending" && booking.status !== "rejected");
+        setBookings(filteredData);
         setError(null);
       } catch (err) {
         setError("Failed to fetch bookings.");
