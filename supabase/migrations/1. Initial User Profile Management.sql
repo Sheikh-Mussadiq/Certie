@@ -13,18 +13,17 @@ CREATE TABLE users (
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- Super Admin Full Access
--- Super Admin Select Access
-CREATE POLICY "Super Admin Select Access" ON users
-FOR SELECT TO authenticated USING (is_user_role('super_admin'));
+CREATE POLICY "Super Admin full Access"
+ON users
+FOR ALL
+TO authenticated
+USING (
+  is_user_role('super_admin')
+)
+WITH CHECK (
+  is_user_role('super_admin')
+);
 
--- Super Admin Update Access
-CREATE POLICY "Super Admin Update Access" ON users
-FOR UPDATE TO authenticated USING (is_user_role('super_admin'))
-WITH CHECK (is_user_role('super_admin'));
-
--- Super Admin Delete Access
-CREATE POLICY "Super Admin Delete Access" ON users
-FOR DELETE TO authenticated USING (is_user_role('super_admin'));
 
 
 -- Users can read their own profile

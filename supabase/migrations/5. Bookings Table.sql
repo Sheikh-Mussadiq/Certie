@@ -19,20 +19,30 @@ CREATE TABLE bookings (
 -- RLS Policies
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 
--- Property Owner Booking Access
-CREATE POLICY "Owner Booking Access" ON bookings
-FOR ALL USING (
-  EXISTS (SELECT 1 FROM properties 
-         WHERE id = bookings.property_id 
-         AND owner_id = (select auth.uid()))
-);
+-- Property Owner and Super Admin Booking Access
+CREATE POLICY "Owner or Super Admin Booking Access"
+ON bookings
+FOR ALL
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1
+    FROM properties p
+    WHERE p.id = bookings.property_id
+      AND p.owner_id = (select auth.uid())
+  )
+  OR is_user_role('super_admin')
+)
+WITH CHECK (
+  EXISTS (
+    SELECT 1
+    FROM properties p
+    WHERE p.id = bookings.property_id
+      AND p.owner_id = (select auth.uid())
+  )
+  OR is_user_role('super_admin')
+)
 
--- Super Admin Booking Access
-CREATE POLICY "Super Admin Booking Access" ON bookings
-FOR ALL USING (
-  EXISTS (SELECT 1 FROM users 
-         WHERE id = (select auth.uid()) AND role = 'super_admin')
-);
 
 -- Property Manager Booking Access
 -- CREATE POLICY "Manager Booking Access" ON bookings
@@ -45,18 +55,24 @@ FOR ALL USING (
 -- );
 
 
-CREATE POLICY "Manager Booking Insert Access" ON bookings
+CREATE POLICY "Manager Booking Insert Access"
+ON bookings
 FOR INSERT
+TO authenticated
 WITH CHECK (
+  bookings.status = 'pending' AND
   EXISTS (
-    SELECT 1 FROM property_managers 
-    WHERE property_id = bookings.property_id 
+    SELECT 1
+    FROM property_managers
+    WHERE property_id = bookings.property_id
       AND user_id = (select auth.uid())
   )
 );
 
+
 CREATE POLICY "Manager Booking Select Access" ON bookings
 FOR SELECT
+TO authenticated
 USING (
   EXISTS (
     SELECT 1 FROM property_managers 
@@ -66,21 +82,24 @@ USING (
 );
 
 
-CREATE POLICY "Manager Booking Update Access" ON bookings
-FOR UPDATE
-WITH CHECK (
-  status = 'pending' AND
-  booked_by = (select auth.uid()) AND
-  EXISTS (
-    SELECT 1 FROM property_managers 
-    WHERE property_id = bookings.property_id 
-      AND user_id = (select auth.uid())
-  )
-);
+-- CREATE POLICY "Manager Booking Update Access" ON bookings
+-- FOR UPDATE
+-- TO authenticated
+-- WITH CHECK (
+--   status = 'pending' AND
+--   booked_by = (select auth.uid()) AND
+--   EXISTS (
+--     SELECT 1 FROM property_managers 
+--     WHERE property_id = bookings.property_id 
+--       AND user_id = (select auth.uid())
+--   )
+-- );
 
 -- Site User Booking Access
 CREATE POLICY "Site User Booking Access" ON bookings
-FOR SELECT USING (
+FOR SELECT
+TO authenticated
+ USING (
   EXISTS (SELECT 1 FROM property_site_users 
          WHERE property_id = bookings.property_id 
          AND user_id = (select auth.uid()))

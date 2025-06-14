@@ -55,18 +55,25 @@ CREATE TABLE documents (
   created_by UUID REFERENCES auth.users(id)
 );
 
+
+CREATE OR REPLACE FUNCTION is_property_owner(p_property_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql STABLE PARALLEL SAFE
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM properties
+    WHERE id = p_property_id
+      AND owner_id = (select auth.uid())
+  );
+$$;
+
+
+
 -- Enable RLS
 ALTER TABLE document_folders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Owners can view folders"
-  ON document_folders FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM properties
-      WHERE id = property_id AND owner_id = (select auth.uid())
-    )
-  );
 
 CREATE POLICY "Managers can view folders"
   ON document_folders FOR SELECT
@@ -86,38 +93,19 @@ CREATE POLICY "Site users can view folders"
     )
   );
 
-CREATE POLICY "Super admins can view folders"
-  ON document_folders FOR SELECT
-  USING (
-    is_user_role('super_admin')
-  );
+CREATE POLICY "Super admin or Owner Full Access on Document Folders"
+ON document_folders
+FOR ALL
+TO authenticated
+USING (
+  is_user_role('super_admin') OR
+  is_property_owner(property_id)
+)
+WITH CHECK (
+  is_user_role('super_admin') OR
+  is_property_owner(property_id)
+);
 
-CREATE POLICY "Super admins can insert folders"
-  ON document_folders FOR INSERT
-  WITH CHECK (
-    is_user_role('super_admin')
-  );
-
-CREATE POLICY "Super admins can update folders"
-  ON document_folders FOR UPDATE
-  USING (
-    is_user_role('super_admin')
-  );
-
-CREATE POLICY "Super admins can delete folders"
-  ON document_folders FOR DELETE
-  USING (
-    is_user_role('super_admin')
-  );
-
-CREATE POLICY "Owners can view documents"
-  ON documents FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM properties
-      WHERE id = property_id AND owner_id = (select auth.uid())
-    )
-  );
 
 CREATE POLICY "Managers can view documents"
   ON documents FOR SELECT
@@ -137,30 +125,20 @@ CREATE POLICY "Site users can view documents"
     )
   );
 
-CREATE POLICY "Super admins can view documents"
-  ON documents FOR SELECT
-  USING (
-    is_user_role('super_admin')
-  );
 
+CREATE POLICY "Super admin or Owner Full Access on Documents"
+ON documents
+FOR ALL
+TO authenticated
+USING (
+  is_user_role('super_admin') OR
+  is_property_owner(property_id)
+)
+WITH CHECK (
+  is_user_role('super_admin') OR
+  is_property_owner(property_id)
+);
 
-CREATE POLICY "Super admins can insert documents"
-  ON documents FOR INSERT
-  WITH CHECK (
-    is_user_role('super_admin')
-  );
-
-CREATE POLICY "Super admins can update documents"
-  ON documents FOR UPDATE
-  USING (
-    is_user_role('super_admin')
-  );
-
-CREATE POLICY "Super admins can delete documents"
-  ON documents FOR DELETE
-  USING (
-    is_user_role('super_admin')
-  );
 
 
 -- Storage Policies

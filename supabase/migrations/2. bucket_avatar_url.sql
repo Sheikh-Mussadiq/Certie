@@ -1,8 +1,8 @@
 -- Create avatars bucket for avatars if it doesn't exist, We keep this Bucket Public as avatars can be accessed publically
 DO $$
 BEGIN
-  INSERT INTO storage.buckets (id, name, public)
-  VALUES ('avatars', 'avatars', true)
+  INSERT INTO storage.buckets (id, name)
+  VALUES ('avatars', 'avatars')
   ON CONFLICT (id) DO NOTHING;
 END $$;
 
@@ -13,7 +13,7 @@ CREATE POLICY "Users can upload their own avatar"
   TO authenticated
   WITH CHECK (
     bucket_id = 'avatars' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+   (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Users can update their own avatar"
@@ -22,7 +22,7 @@ CREATE POLICY "Users can update their own avatar"
   TO authenticated
   USING (
     bucket_id = 'avatars' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+   (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Users can delete their own avatar"
@@ -31,7 +31,7 @@ CREATE POLICY "Users can delete their own avatar"
   TO authenticated
   USING (
     bucket_id = 'avatars' AND
-    auth.uid()::text = (storage.foldername(name))[1]
+   (select auth.uid())::text = (storage.foldername(name))[1]
   );
 
 CREATE POLICY "Avatar images are publicly accessible"
@@ -40,4 +40,15 @@ CREATE POLICY "Avatar images are publicly accessible"
   TO public
   USING (bucket_id = 'avatars');
 
-------------------------------------------
+-- Add avatar_url validation
+-- ALTER TABLE public.users
+--   ADD CONSTRAINT valid_avatar_url CHECK (
+--     avatar_url IS NULL OR 
+--     avatar_url ~* '^https?://.*\.(png|jpg|jpeg)$'
+--   );
+
+ALTER TABLE public.users
+  ADD CONSTRAINT valid_avatar_url CHECK (
+    avatar_url IS NULL OR 
+    avatar_url ~* '^https?://(.*\.(png|jpg|jpeg)(\?.*)?|ui-avatars\.com/.*|.*\.googleusercontent\.com/.*)$'
+  );
