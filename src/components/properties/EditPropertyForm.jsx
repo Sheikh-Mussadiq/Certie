@@ -347,7 +347,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                     />
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label
                       htmlFor="address.country"
                       className="block text-sm font-medium text-primary-grey mb-1"
@@ -362,7 +362,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
-                  </div>
+                  </div> */}
 
                   <div>
                     <label
@@ -418,22 +418,6 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                     </select>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="insurance_provider"
-                      className="block text-sm font-medium text-primary-grey mb-1"
-                    >
-                      Insurance Provider
-                    </label>
-                    <input
-                      type="text"
-                      id="insurance_provider"
-                      name="insurance_provider"
-                      value={formData.insurance_provider}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -707,6 +691,23 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       id="evacuation_policy"
                       name="evacuation_policy"
                       value={formData.evacuation_policy}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label
+                      htmlFor="insurance_provider"
+                      className="block text-sm font-medium text-primary-grey mb-1"
+                    >
+                      Insurance Provider
+                    </label>
+                    <input
+                      type="text"
+                      id="insurance_provider"
+                      name="insurance_provider"
+                      value={formData.insurance_provider}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />

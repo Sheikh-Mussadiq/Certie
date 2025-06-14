@@ -17,7 +17,7 @@ const AddProperty = () => {
       city: "",
       state: "",
       postcode: "",
-      country: "",
+      // country: "",
     },
     property_type: "Residential",
     image: null,
@@ -223,7 +223,7 @@ const AddProperty = () => {
                   className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                 />
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium mb-2">
                   Country
                 </label>
@@ -236,7 +236,7 @@ const AddProperty = () => {
                   placeholder="Enter country"
                   className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
 
