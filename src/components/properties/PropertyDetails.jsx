@@ -23,11 +23,14 @@ import AssessmentsTab from "./AssessmentsTab";
 import LogBooksTab from "./LogBooksTab";
 import DocumentsTab from "./DocumentsTab";
 import EditPropertyForm from "./EditPropertyForm";
+import { useAuth } from "../../context/AuthContext";
+
 
 const PropertyDetails = ({ property, setProperty }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const { currentUser } = useAuth();
 
   const tabs = [
     { id: "overview", label: "Overview" },
@@ -68,7 +71,7 @@ const PropertyDetails = ({ property, setProperty }) => {
           </h1>
         </div>
 
-        {activeTab === "overview" && (
+        {activeTab === "overview" && (currentUser.id === property.owner_id || property.managers?.some(manager => manager.user_id === currentUser.id)) && (
           <button
             onClick={() => setIsEditModalOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-white shadow-sm border border-grey-outline text-primary-black hover:bg-grey-fill rounded-lg transition-colors"
@@ -436,10 +439,10 @@ const PropertyDetails = ({ property, setProperty }) => {
             </>
           )}
           {activeTab === "assessments" && (
-            <AssessmentsTab owner_id={property.owner_id} />
+            <AssessmentsTab owner_id={property.owner_id} property={property} />
           )}
           {activeTab === "logbooks" && <LogBooksTab />}
-          {activeTab === "documents" && <DocumentsTab />}
+          {activeTab === "documents" && <DocumentsTab owner_id={property.owner_id} />}
         </div>
       </div>
 

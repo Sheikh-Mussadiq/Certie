@@ -63,6 +63,25 @@ const ProtectedLayout = ({ children }) => (
   <ProtectedRoute>{children}</ProtectedRoute>
 );
 
+// New component for admin-only routes
+const AdminProtectedRoute = ({ children }) => {
+  const { currentUser, isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (currentUser?.role !== "super_admin") {
+    return <Navigate to="/home" replace />;
+  }
+
+  return children;
+};
+
 const ProtectedLoginRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -131,9 +150,9 @@ const AuthenticatedRoutes = () => {
           <Route
             path="/bookings"
             element={
-              <ProtectedLayout>
+              <AdminProtectedRoute>
                 <Bookings />
-              </ProtectedLayout>
+              </AdminProtectedRoute>
             }
           />
           <Route
@@ -144,7 +163,6 @@ const AuthenticatedRoutes = () => {
               </ProtectedLayout>
             }
           />
-
 
           <Route
             path="*"

@@ -19,7 +19,7 @@ import {
   cancelBooking,
 } from "../../services/bookingServices";
 
-const AssessmentsTab = ({ owner_id }) => {
+const AssessmentsTab = ({ owner_id , property}) => {
   const { id: propertyId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -429,10 +429,12 @@ const AssessmentsTab = ({ owner_id }) => {
             <Plus className="w-4 h-4" />
             Add New Assessment
           </button> */}
-          {<button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
-            <Plus className="w-4 h-4" />
-            Book Assessment
-          </button>}
+          {(currentUser.id === property.owner_id || property.managers?.some(manager => manager.user_id === currentUser.id)) && (
+            <button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
+              <Plus className="w-4 h-4" />
+              Book Assessment
+            </button>
+          )}
         </div>
       </div>
 
@@ -592,12 +594,16 @@ const AssessmentsTab = ({ owner_id }) => {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
                       No assessments found
                     </h3>
+                     {(currentUser.id === property.owner_id || property.managers?.some(manager => manager.user_id === currentUser.id)) && (
+                      <>
                     <p className="text-gray-500 mb-4">
                       Get started by booking your first assessment
                     </p>
                     <button onClick={handleBookAssessment} className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors">
                       Book Assessment
                     </button>
+                    </>
+                    )}
                   </div>
                 </td>
               </tr>

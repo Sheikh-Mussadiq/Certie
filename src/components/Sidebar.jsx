@@ -12,9 +12,11 @@ import {
 } from "lucide-react";
 import { SiOverleaf } from "react-icons/si";
 import Logo from "../assets/Logo.png";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
   const location = useLocation();
+  const { currentUser } = useAuth();
 
   const isPathActive = (path) => {
     return location.pathname.startsWith(path);
@@ -25,7 +27,9 @@ const Sidebar = () => {
     { icon: Building2, label: "Properties", path: "/properties" },
     { icon: BookText, label: "Logbooks", path: "/logbooks", badge: "2" },
     { icon: Users, label: "Directory", path: "/directory" },
-    { icon: CalendarDays, label: "Bookings", path: "/bookings" },
+    ...(currentUser?.role === "super_admin"
+      ? [{ icon: CalendarDays, label: "Bookings", path: "/bookings" }]
+      : []),
     { icon: FileText, label: "Documents", path: "/documents" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
     { icon: Settings, label: "Settings", path: "/settings" },

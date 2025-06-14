@@ -27,7 +27,7 @@ import {
   searchDocuments,
 } from "../../services/documentServices";
 
-const DocumentsTab = () => {
+const DocumentsTab = ({ owner_id }) => {
   const { id: propertyId } = useParams();
   const { currentUser } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -303,22 +303,24 @@ const DocumentsTab = () => {
             className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
           />
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setIsCreateFolderModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Create folder
-          </button>
-          <button
-            onClick={() => setIsUploadModalOpen(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Upload Document
-          </button>
-        </div>
+        {currentUser.id === owner_id || currentUser.role === "super_admin" && (
+          <div className="flex gap-3">
+            <button
+              onClick={() => setIsCreateFolderModalOpen(true)}
+              className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Create folder
+            </button>
+            <button
+              onClick={() => setIsUploadModalOpen(true)}
+              className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Upload Document
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Search Results */}
@@ -480,17 +482,21 @@ const DocumentsTab = () => {
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 No folders yet
               </h3>
-              <p className="text-gray-500 mb-4">
-                Create your first folder to organize documents
-              </p>
+              {(currentUser.id === owner_id || currentUser.role === "super_admin") && (
+                <>
+                <p className="text-gray-500 mb-4">
+                  Create your first folder to organize documents
+                </p>
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsCreateFolderModalOpen(true)}
-                className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsCreateFolderModalOpen(true)}
+              className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
               >
                 Create Folder
               </motion.button>
+              </>
+              )}
             </motion.div>
           )}
         </div>
