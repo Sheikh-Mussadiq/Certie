@@ -15,7 +15,6 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     "Gas Safety Certificate",
     "Fire Risk Assessment",
     "Smoke and Carbon Monoxide Testing",
-    "",
     "Others",
   ];
 

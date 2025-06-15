@@ -10,6 +10,7 @@ CREATE TABLE bookings (
   completed_at TIMESTAMPTZ,
   type TEXT NOT NULL,
   assignee JSONB,
+  building_type text,
   contact_details JSONB NOT NULL,
   status booking_status DEFAULT 'pending',
   attachments TEXT[],

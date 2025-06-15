@@ -44,9 +44,9 @@ const ServiceSummary = ({
               className="text-primary-orange flex-shrink-0 mt-1"
             />
             <div className="flex flex-col w-full">
-              <p className="text-sm font-medium">Property Address:</p>
+              <p className="text-sm font-medium">Property Address: </p>
               <p className="text-sm text-primary-grey">
-                {property.address.city}, {property.address.postcode}
+                {property.address.street}, {property.address.city}
               </p>
             </div>
           </div>
@@ -111,7 +111,7 @@ const ServiceSummary = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <Building size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
             <p className="text-sm font-medium">Building Type:</p>
@@ -119,14 +119,14 @@ const ServiceSummary = ({
               {additionalServices?.buildingCategory || "Not specified"}
             </p>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-3">
           <Users size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
-            <p className="text-sm font-medium">No. of Tenants:</p>
+            <p className="text-sm font-medium">No. of Occupants:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {buildingType?.tenants || tenants}
+              {property?.occupants || "Not specified"}
             </p>
           </div>
         </div>

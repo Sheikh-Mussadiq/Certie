@@ -11,6 +11,20 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
+  const property_types = [
+    "Residential Block",
+    "Single Residential Dwelling",
+    "Commercial Office",
+    "Mixed-Use Building",
+    "School / Education",
+    "Retail Unit",
+    "Warehouse / Industrial",
+    "HMO (House in Multiple Occupation)",
+    "Care Facility",
+    "Hotel",
+    "Other",
+  ];
+  
 const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
@@ -291,14 +305,15 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       required
                       className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     >
-                      <option value="">Select property type</option>
-                      <option value="Residential">Residential</option>
-                      <option value="Commercial">Commercial</option>
-                      <option value="Mixed-Use">Mixed-Use</option>
+                     {property_types.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                     </select>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <label
                       htmlFor="building_type"
                       className="block text-sm font-medium text-primary-grey mb-1"
@@ -331,7 +346,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       </option>
                       <option value="Other">Other</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   <div>
                     <label

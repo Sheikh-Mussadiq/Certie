@@ -57,17 +57,31 @@ const AddProperty = () => {
     },
   });
 
-  const property_types = ["Residential", "Commercial", "Mixed-Use"];
-  const building_types = [
-    "Block of Flats",
-    "Flat/Apartment",
+  const property_types = [
+    "Residential Block",
+    "Single Residential Dwelling",
+    "Commercial Office",
+    "Mixed-Use Building",
+    "School / Education",
+    "Retail Unit",
+    "Warehouse / Industrial",
     "HMO (House in Multiple Occupation)",
-    "Mixed Use (Residential with Commercial)",
-    "Care Home",
-    "Student Occupation",
-    "Construction Site",
+    "Care Facility",
+    "Hotel",
     "Other",
   ];
+
+  // const building_types = [
+  //   "Block of Flats",
+  //   "Flat/Apartment",
+  //   "HMO (House in Multiple Occupation)",
+  //   "Mixed Use (Residential with Commercial)",
+  //   "Care Home",
+  //   "Student Occupation",
+  //   "Construction Site",
+  //   "Other",
+  // ];
+
   const tenureTypes = ["Leasehold", "Freehold"];
 
   const handleAddressChange = (field, value) => {
@@ -276,7 +290,7 @@ const AddProperty = () => {
                   ))}
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium mb-2">
                   Building Type
                 </label>
@@ -297,7 +311,7 @@ const AddProperty = () => {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-sm font-medium mb-2">
