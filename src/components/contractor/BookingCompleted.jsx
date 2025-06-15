@@ -1,7 +1,18 @@
-import { motion } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const BookingCompleted = () => {
+const BookingCompleted = ({ propertyId, onBookAnother }) => {
+  const navigate = useNavigate();
+
+  const handleSeeBookings = () => {
+    if (propertyId) {
+      navigate(`/properties/${propertyId}/assessments`);
+    } else {
+      navigate("/bookings");
+    }
+  };
+
   return (
     <div className="max-w-xl mx-auto text-center py-12">
       <motion.div
@@ -28,8 +39,9 @@ const BookingCompleted = () => {
         transition={{ delay: 0.4 }}
         className="text-gray-600 mb-8"
       >
-        Enable plane backwards needle optimize synergy. Shelf-ware or hill want on land bandwagon
-        opportunity great team. Stand existing skulls hammer winning unlock I loss.
+        Enable plane backwards needle optimize synergy. Shelf-ware or hill want
+        on land bandwagon opportunity great team. Stand existing skulls hammer
+        winning unlock I loss.
       </motion.p>
 
       <motion.div
@@ -38,15 +50,21 @@ const BookingCompleted = () => {
         transition={{ delay: 0.5 }}
         className="flex gap-4 justify-center"
       >
-        <button className="px-6 py-3 bg-[#151718] text-white rounded-md font-medium hover:bg-black transition-colors">
+        <button
+          onClick={handleSeeBookings}
+          className="px-6 py-3 bg-[#151718] text-white rounded-md font-medium hover:bg-black transition-colors"
+        >
           See Bookings
         </button>
-        <button className="px-6 py-3 border border-grey-outline rounded-md font-medium hover:bg-gray-50 transition-colors">
+        <button
+          onClick={onBookAnother}
+          className="px-6 py-3 border border-grey-outline rounded-md font-medium hover:bg-gray-50 transition-colors"
+        >
           Book Another Service
         </button>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default BookingCompleted
+export default BookingCompleted;

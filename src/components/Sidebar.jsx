@@ -30,7 +30,9 @@ const Sidebar = () => {
     ...(currentUser?.role === "super_admin"
       ? [{ icon: CalendarDays, label: "Bookings", path: "/bookings" }]
       : []),
-    { icon: FileText, label: "Documents", path: "/documents" },
+    ...(currentUser?.role === "super_admin"
+      ? [{ icon: FileText, label: "Documents", path: "/documents" }]
+      : []),
     { icon: Calendar, label: "Calendar", path: "/calendar" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];

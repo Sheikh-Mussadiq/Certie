@@ -20,6 +20,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
     managers: [],
     square_ft: "",
     property_type: "",
+    building_type: "",
     construction_year: "",
     tenure: "",
     insurance_provider: "",
@@ -64,6 +65,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
         managers: property.managers || [],
         square_ft: property.square_ft || 0,
         property_type: property.property_type || "",
+        building_type: property.building_type || "",
         construction_year: property.construction_year || 0,
         tenure: property.tenure || "",
         insurance_provider: property.insurance_provider || "",
@@ -298,6 +300,41 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
 
                   <div>
                     <label
+                      htmlFor="building_type"
+                      className="block text-sm font-medium text-primary-grey mb-1"
+                    >
+                      Building Type*
+                    </label>
+                    <select
+                      id="building_type"
+                      name="building_type"
+                      value={formData.building_type}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                    >
+                      <option value="">Select building type</option>
+                      <option value="Block of Flats">Block of Flats</option>
+                      <option value="Flat/Apartment">Flat/Apartment</option>
+                      <option value="HMO (House in Multiple Occupation)">
+                        HMO (House in Multiple Occupation)
+                      </option>
+                      <option value="Mixed Use (Residential with Commercial)">
+                        Mixed Use (Residential with Commercial)
+                      </option>
+                      <option value="Care Home">Care Home</option>
+                      <option value="Student Occupation">
+                        Student Occupation
+                      </option>
+                      <option value="Construction Site">
+                        Construction Site
+                      </option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
                       htmlFor="address.street"
                       className="block text-sm font-medium text-primary-grey mb-1"
                     >
@@ -417,7 +454,6 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       <option value="Freehold">Freehold</option>
                     </select>
                   </div>
-
                 </div>
               </div>
 
@@ -695,7 +731,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
-                  
+
                   <div>
                     <label
                       htmlFor="insurance_provider"

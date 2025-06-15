@@ -9,7 +9,7 @@ import {
   Download,
   Trash2,
 } from "lucide-react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
 import Shimmer from "../ui/Shimmer";
@@ -19,7 +19,8 @@ import {
   cancelBooking,
 } from "../../services/bookingServices";
 
-const AssessmentsTab = ({ owner_id , property}) => {
+const AssessmentsTab = () => {
+  const { property } = useOutletContext();
   const { id: propertyId } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -429,8 +430,14 @@ const AssessmentsTab = ({ owner_id , property}) => {
             <Plus className="w-4 h-4" />
             Add New Assessment
           </button> */}
-          {(currentUser.id === property.owner_id || property.managers?.some(manager => manager.user_id === currentUser.id)) && (
-            <button onClick={handleBookAssessment} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
+          {(currentUser.id === property.owner_id ||
+            property.managers?.some(
+              (manager) => manager.user_id === currentUser.id
+            )) && (
+            <button
+              onClick={handleBookAssessment}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90"
+            >
               <Plus className="w-4 h-4" />
               Book Assessment
             </button>
@@ -500,7 +507,7 @@ const AssessmentsTab = ({ owner_id , property}) => {
                       {getNextDueDate(assessment.completed_at)}
                     </td>
                     <td className="py-4 px-6">
-                      {currentUser?.id === owner_id &&
+                      {currentUser?.id === property.owner_id &&
                       (status === "pending" || status === "approved") ? (
                         <select
                           value={status}
@@ -594,15 +601,21 @@ const AssessmentsTab = ({ owner_id , property}) => {
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
                       No assessments found
                     </h3>
-                     {(currentUser.id === property.owner_id || property.managers?.some(manager => manager.user_id === currentUser.id)) && (
+                    {(currentUser.id === property.owner_id ||
+                      property.managers?.some(
+                        (manager) => manager.user_id === currentUser.id
+                      )) && (
                       <>
-                    <p className="text-gray-500 mb-4">
-                      Get started by booking your first assessment
-                    </p>
-                    <button onClick={handleBookAssessment} className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors">
-                      Book Assessment
-                    </button>
-                    </>
+                        <p className="text-gray-500 mb-4">
+                          Get started by booking your first assessment
+                        </p>
+                        <button
+                          onClick={handleBookAssessment}
+                          className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
+                        >
+                          Book Assessment
+                        </button>
+                      </>
                     )}
                   </div>
                 </td>

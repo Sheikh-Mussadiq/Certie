@@ -20,6 +20,7 @@ const AddProperty = () => {
       // country: "",
     },
     property_type: "Residential",
+    building_type: "",
     image: null,
     owner_id: currentUser.id,
     compliance_score: 0,
@@ -57,7 +58,16 @@ const AddProperty = () => {
   });
 
   const property_types = ["Residential", "Commercial", "Mixed-Use"];
-
+  const building_types = [
+    "Block of Flats",
+    "Flat/Apartment",
+    "HMO (House in Multiple Occupation)",
+    "Mixed Use (Residential with Commercial)",
+    "Care Home",
+    "Student Occupation",
+    "Construction Site",
+    "Other",
+  ];
   const tenureTypes = ["Leasehold", "Freehold"];
 
   const handleAddressChange = (field, value) => {
@@ -266,6 +276,28 @@ const AddProperty = () => {
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Building Type
+                </label>
+                <select
+                  value={formData.building_type}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      building_type: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                >
+                  <option value="">Select building type</option>
+                  {building_types.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium mb-2">
@@ -404,7 +436,6 @@ const AddProperty = () => {
               </div>
             </div>
           </div>
-
 
           <div className="md:col-span-2 border border-grey-outline rounded-xl p-4">
             <h3 className="text-lg font-medium mb-4">

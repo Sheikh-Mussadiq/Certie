@@ -19,8 +19,13 @@ import AddProperty from "./pages/AddProperty";
 import PropertyDetails from "./pages/PropertyDetails";
 import Calendar from "./pages/Calendar";
 import Bookings from "./pages/Bookings";
+import Documents from "./pages/Documents";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 import Logo from "./assets/Logo.png";
+import AssessmentsTab from "./components/properties/AssessmentsTab";
+import LogBooksTab from "./components/properties/LogBooksTab";
+import DocumentsTab from "./components/properties/DocumentsTab";
+import PropertyOverview from "./components/properties/PropertyOverview";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -146,12 +151,25 @@ const AuthenticatedRoutes = () => {
                 <PropertyDetails />
               </ProtectedLayout>
             }
-          />
+          >
+            <Route index element={<PropertyOverview />} />
+            <Route path="assessments" element={<AssessmentsTab />} />
+            <Route path="logbooks" element={<LogBooksTab />} />
+            <Route path="documents" element={<DocumentsTab />} />
+          </Route>
           <Route
             path="/bookings"
             element={
               <AdminProtectedRoute>
                 <Bookings />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/documents"
+            element={
+              <AdminProtectedRoute>
+                <Documents />
               </AdminProtectedRoute>
             }
           />

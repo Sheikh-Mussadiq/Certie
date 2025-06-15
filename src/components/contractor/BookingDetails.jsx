@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import ProgressTracker from "./ProgressTracker";
 import AdditionalServices from "./AdditionalServices";
@@ -13,6 +13,7 @@ import FAQAccordion from "./FAQAccordion";
 const BookingDetails = ({
   postcode,
   property,
+  propertyId,
   currentStep,
   onGoBack,
   onBuildingTypeSubmit,
@@ -20,15 +21,22 @@ const BookingDetails = ({
   onTimeAndDateSubmit,
   onContactSubmit,
   onPaymentSubmit,
+  paymentDetails,
+  dateTime,
+  onFinalizeBooking,
+  onBookAnother,
 }) => {
   const [selectedBuildingType, setSelectedBuildingType] = useState("");
-  const [selectedAdditionalServices, setSelectedAdditionalServices] = useState(
-    null
-  );
-  const [showServices, setShowServices] = useState(false);
-  const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [selectedAdditionalServices, setSelectedAdditionalServices] =
+    useState(null);
+
   const [contactFormData, setContactFormData] = useState(null);
-  const [paymentFormData, setPaymentFormData] = useState(null);
+
+  useEffect(() => {
+    if (property?.property_type) {
+      setSelectedBuildingType(property.property_type);
+    }
+  }, [property]);
 
   const handleBuildingTypeSubmit = (type) => {
     setSelectedBuildingType(type);
@@ -38,8 +46,8 @@ const BookingDetails = ({
     setSelectedAdditionalServices(data);
   }, []);
 
-  const handleTimeAndDateSubmit = (dateTime) => {
-    setSelectedDateTime(dateTime);
+  const handleTimeAndDateSubmit = (data) => {
+    onTimeAndDateSubmit(data);
   };
 
   const handleContactFormSubmit = (data) => {
@@ -55,9 +63,7 @@ const BookingDetails = ({
   };
 
   const handlePaymentFormSubmit = (data) => {
-    if (data.cardNumber && data.nameOnCard && data.expiryDate && data.cvv) {
-      setPaymentFormData(data);
-    }
+    onPaymentSubmit(data);
   };
 
   return (
@@ -85,55 +91,50 @@ const BookingDetails = ({
                   Go back
                 </motion.button>
 
-                {!(currentStep === 'additional-services' && !showServices) && (
-                  <motion.button
-                    onClick={() => {
-                      if (
-                        currentStep === "building-type" &&
-                        selectedBuildingType
-                      ) {
-                        onBuildingTypeSubmit(selectedBuildingType);
-                      } else if (
-                        currentStep === "additional-services" &&
-                        selectedAdditionalServices
-                      ) {
-                        onAdditionalServicesSubmit(selectedAdditionalServices);
-                      } else if (
-                        currentStep === "time-date" &&
-                        selectedDateTime
-                      ) {
-                        onTimeAndDateSubmit(selectedDateTime);
-                      } else if (currentStep === "contact" && contactFormData) {
-                        onContactSubmit(contactFormData);
-                      } else if (currentStep === "payment" && paymentFormData) {
-                        onPaymentSubmit(paymentFormData);
-                      }
-                    }}
-                    disabled={
-                      (currentStep === "building-type" &&
-                        !selectedBuildingType) ||
-                      (currentStep === "additional-services" &&
-                        (!selectedAdditionalServices || !selectedAdditionalServices.buildingCategory)) ||
-                      (currentStep === "time-date" && !selectedDateTime) ||
-                      (currentStep === "contact" && !contactFormData) ||
-                      (currentStep === "payment" && !paymentFormData)
+                <motion.button
+                  onClick={() => {
+                    if (
+                      currentStep === "building-type" &&
+                      selectedBuildingType
+                    ) {
+                      onBuildingTypeSubmit(selectedBuildingType);
+                    } else if (
+                      currentStep === "additional-services" &&
+                      selectedAdditionalServices
+                    ) {
+                      onAdditionalServicesSubmit(selectedAdditionalServices);
+                    } else if (currentStep === "time-date" && dateTime) {
+                      onTimeAndDateSubmit(dateTime);
+                    } else if (currentStep === "contact" && contactFormData) {
+                      onContactSubmit(contactFormData);
+                    } else if (currentStep === "payment" && paymentDetails) {
+                      onFinalizeBooking();
                     }
-                    className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
-                      (currentStep === "building-type" && selectedBuildingType) ||
-                      (currentStep === "additional-services" &&
-                        selectedAdditionalServices && selectedAdditionalServices.buildingCategory) ||
-                      (currentStep === "time-date" && selectedDateTime) ||
-                      (currentStep === "contact" && contactFormData) ||
-                      (currentStep === "payment" && paymentFormData)
-                        ? "bg-primary-black hover:bg-primary-black/80"
-                        : "bg-primary-grey cursor-not-allowed"
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Continue
-                  </motion.button>
-                )}
+                  }}
+                  disabled={
+                    (currentStep === "building-type" &&
+                      !selectedBuildingType) ||
+                    (currentStep === "additional-services" &&
+                      !selectedAdditionalServices) ||
+                    (currentStep === "time-date" && !dateTime) ||
+                    (currentStep === "contact" && !contactFormData) ||
+                    (currentStep === "payment" && !paymentDetails)
+                  }
+                  className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
+                    (currentStep === "building-type" && selectedBuildingType) ||
+                    (currentStep === "additional-services" &&
+                      selectedAdditionalServices) ||
+                    (currentStep === "time-date" && dateTime) ||
+                    (currentStep === "contact" && contactFormData) ||
+                    (currentStep === "payment" && paymentDetails)
+                      ? "bg-primary-black hover:bg-primary-black/80"
+                      : "bg-primary-grey cursor-not-allowed"
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Continue
+                </motion.button>
               </div>
             </div>
 
@@ -150,18 +151,21 @@ const BookingDetails = ({
               {currentStep === "additional-services" && (
                 <AdditionalServicesForm
                   onSubmit={handleAdditionalServicesSubmit}
-                  showServices={showServices}
-                  onContinue={() => setShowServices(true)}
+                  buildingCategory={
+                    typeof selectedBuildingType === "object"
+                      ? selectedBuildingType.type
+                      : selectedBuildingType
+                  }
                 />
               )}
               {currentStep === "time-date" && (
-                <TimeAndDateForm onSubmit={handleTimeAndDateSubmit} />
+                <TimeAndDateForm onSubmit={onTimeAndDateSubmit} />
               )}
               {currentStep === "contact" && (
                 <ContactForm onSubmit={handleContactFormSubmit} />
               )}
               {currentStep === "payment" && (
-                <PaymentForm onSubmit={handlePaymentFormSubmit} />
+                <PaymentForm onSubmit={onPaymentSubmit} />
               )}
             </div>
 
@@ -170,8 +174,8 @@ const BookingDetails = ({
                 postcode={postcode}
                 property={property}
                 buildingType={selectedBuildingType}
-                additionalServices={selectedAdditionalServices?.services}
-                dateTime={selectedDateTime}
+                additionalServices={selectedAdditionalServices}
+                dateTime={dateTime}
                 contactDetails={contactFormData}
               />
               {currentStep !== "complete" && <FAQAccordion />}
@@ -179,7 +183,10 @@ const BookingDetails = ({
           </div>
         </>
       ) : (
-        <BookingCompleted />
+        <BookingCompleted
+          propertyId={propertyId}
+          onBookAnother={onBookAnother}
+        />
       )}
     </div>
   );

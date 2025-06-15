@@ -143,7 +143,7 @@ export const cancelBooking = async (bookingId) => {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .update({ status: "cancelled" })
+      .update({ status: "rejected" })
       .eq("id", bookingId)
       .select()
       .single();

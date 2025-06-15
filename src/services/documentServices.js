@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "../lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Create a new document folder
@@ -11,19 +11,21 @@ import { v4 as uuidv4 } from 'uuid';
 export const createDocumentFolder = async (name, propertyId, createdBy) => {
   try {
     const { data, error } = await supabase
-      .from('document_folders')
-      .insert([{
-        name,
-        property_id: propertyId,
-        created_by: createdBy
-      }])
+      .from("document_folders")
+      .insert([
+        {
+          name,
+          property_id: propertyId,
+          created_by: createdBy,
+        },
+      ])
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error creating document folder:', error);
+    console.error("Error creating document folder:", error);
     throw error;
   }
 };
@@ -36,15 +38,15 @@ export const createDocumentFolder = async (name, propertyId, createdBy) => {
 export const getDocumentFolders = async (propertyId) => {
   try {
     const { data, error } = await supabase
-      .from('document_folders')
-      .select('*')
-      .eq('property_id', propertyId)
-      .order('created_at', { ascending: true });
+      .from("document_folders")
+      .select("*")
+      .eq("property_id", propertyId)
+      .order("created_at", { ascending: true });
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Error fetching document folders:', error);
+    console.error("Error fetching document folders:", error);
     throw error;
   }
 };
@@ -57,14 +59,14 @@ export const getDocumentFolders = async (propertyId) => {
 export const deleteDocumentFolder = async (folderId) => {
   try {
     const { error } = await supabase
-      .from('document_folders')
+      .from("document_folders")
       .delete()
-      .eq('id', folderId);
+      .eq("id", folderId);
 
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Error deleting document folder:', error);
+    console.error("Error deleting document folder:", error);
     throw error;
   }
 };
@@ -78,23 +80,23 @@ export const deleteDocumentFolder = async (folderId) => {
  */
 export const uploadDocumentFile = async (file, propertyId, userId) => {
   try {
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const fileName = `${uuidv4()}.${fileExt}`;
     const filePath = `${userId}/${propertyId}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('documents')
+      .from("documents")
       .upload(filePath, file);
 
     if (uploadError) throw uploadError;
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('documents')
-      .getPublicUrl(filePath);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("documents").getPublicUrl(filePath);
 
     return { filePath, publicUrl };
   } catch (error) {
-    console.error('Error uploading document file:', error);
+    console.error("Error uploading document file:", error);
     throw error;
   }
 };
@@ -107,7 +109,7 @@ export const uploadDocumentFile = async (file, propertyId, userId) => {
 export const createDocument = async (documentData) => {
   try {
     const { data, error } = await supabase
-      .from('documents')
+      .from("documents")
       .insert([documentData])
       .select()
       .single();
@@ -115,7 +117,7 @@ export const createDocument = async (documentData) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error creating document:', error);
+    console.error("Error creating document:", error);
     throw error;
   }
 };
@@ -128,20 +130,22 @@ export const createDocument = async (documentData) => {
 export const getDocuments = async (propertyId) => {
   try {
     const { data, error } = await supabase
-      .from('documents')
-      .select(`
+      .from("documents")
+      .select(
+        `
         *,
         document_folders (
           name
         )
-      `)
-      .eq('property_id', propertyId)
-      .order('created_at', { ascending: false });
+      `
+      )
+      .eq("property_id", propertyId)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Error fetching documents:', error);
+    console.error("Error fetching documents:", error);
     throw error;
   }
 };
@@ -154,15 +158,15 @@ export const getDocuments = async (propertyId) => {
 export const getDocumentsByFolder = async (folderId) => {
   try {
     const { data, error } = await supabase
-      .from('documents')
-      .select('*')
-      .eq('folder_id', folderId)
-      .order('created_at', { ascending: false });
+      .from("documents")
+      .select("*")
+      .eq("folder_id", folderId)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Error fetching documents by folder:', error);
+    console.error("Error fetching documents by folder:", error);
     throw error;
   }
 };
@@ -178,24 +182,24 @@ export const deleteDocument = async (documentId, filePath) => {
     // Delete from storage
     if (filePath) {
       const { error: storageError } = await supabase.storage
-        .from('documents')
+        .from("documents")
         .remove([filePath]);
 
       if (storageError) {
-        console.warn('Error deleting file from storage:', storageError);
+        console.warn("Error deleting file from storage:", storageError);
       }
     }
 
     // Delete from database
     const { error } = await supabase
-      .from('documents')
+      .from("documents")
       .delete()
-      .eq('id', documentId);
+      .eq("id", documentId);
 
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Error deleting document:', error);
+    console.error("Error deleting document:", error);
     throw error;
   }
 };
@@ -209,14 +213,14 @@ export const deleteDocument = async (documentId, filePath) => {
 export const downloadDocument = async (filePath, fileName) => {
   try {
     const { data, error } = await supabase.storage
-      .from('documents')
+      .from("documents")
       .download(filePath);
 
     if (error) throw error;
 
     // Create download URL
     const url = URL.createObjectURL(data);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
     document.body.appendChild(link);
@@ -226,7 +230,7 @@ export const downloadDocument = async (filePath, fileName) => {
 
     return true;
   } catch (error) {
-    console.error('Error downloading document:', error);
+    console.error("Error downloading document:", error);
     throw error;
   }
 };
@@ -240,21 +244,79 @@ export const downloadDocument = async (filePath, fileName) => {
 export const searchDocuments = async (propertyId, searchTerm) => {
   try {
     const { data, error } = await supabase
-      .from('documents')
-      .select(`
+      .from("documents")
+      .select(
+        `
         *,
         document_folders (
           name
         )
-      `)
-      .eq('property_id', propertyId)
-      .ilike('name', `%${searchTerm}%`)
-      .order('created_at', { ascending: false });
+      `
+      )
+      .eq("property_id", propertyId)
+      .ilike("name", `%${searchTerm}%`)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error('Error searching documents:', error);
+    console.error("Error searching documents:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get all documents, grouped by property and folder
+ * @returns {Promise<Array>}
+ */
+export const getAllDocumentsGroupedByProperty = async () => {
+  try {
+    const { data, error } = await supabase.from("documents").select(`
+      *,
+        document_folders (
+          id,
+          name
+        ),
+        properties (
+          id,
+          name
+        )
+      `);
+
+    if (error) throw error;
+
+    // Group documents by property, then by folder
+    const groupedData = data.reduce((acc, doc) => {
+      if (!doc.properties) return acc; // Skip docs with no property
+
+      let property = acc.find((p) => p.id === doc.property_id);
+      if (!property) {
+        property = {
+          id: doc.property_id,
+          name: doc.properties.name,
+          folders: [],
+        };
+        acc.push(property);
+      }
+
+      let folder = property.folders.find((f) => f.id === doc.folder_id);
+      if (!folder) {
+        folder = {
+          id: doc.folder_id,
+          name: doc.document_folders?.name || "Uncategorized",
+          documents: [],
+        };
+        property.folders.push(folder);
+      }
+
+      folder.documents.push(doc);
+
+      return acc;
+    }, []);
+
+    return groupedData;
+  } catch (error) {
+    console.error("Error fetching all documents:", error);
     throw error;
   }
 };

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import ProfileDropdown from "../ProfileDropdown";
+import LogoWithNoBG from "../../assets/logowithoutbg.png";
 
 const ContractorNavbar = () => {
   const location = useLocation();
@@ -33,7 +34,21 @@ const ContractorNavbar = () => {
       } sticky top-0 z-50 transition-all duration-300 border-b border-grey-outline`}
     >
       <div className="w-full px-4 mx-auto">
-        <div className="flex justify-end h-16">
+        <div className="flex items-center justify-between h-16">
+          <Link to="/contractor">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-2"
+            >
+              <img src={LogoWithNoBG} alt="" className="w-8" />
+              <div className="flex items-center space-x-2">
+                <p className="text-primary-black text-xl font-semibold">
+                  Certie.co
+                </p>
+              </div>
+            </motion.div>
+          </Link>
           <div className="flex items-center space-x-4">
             <ProfileDropdown />
           </div>

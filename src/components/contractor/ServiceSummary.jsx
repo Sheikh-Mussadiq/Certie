@@ -12,7 +12,7 @@ const ServiceSummary = ({
   postcode,
   property,
   buildingType,
-  additionalServices = [],
+  additionalServices = null,
   dateTime,
   contactDetails,
   tenants = "04",
@@ -116,7 +116,7 @@ const ServiceSummary = ({
           <div className="flex w-full">
             <p className="text-sm font-medium">Building Type:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {buildingType?.buildingCategory || "Not specified"}
+              {additionalServices?.buildingCategory || "Not specified"}
             </p>
           </div>
         </div>
@@ -139,8 +139,9 @@ const ServiceSummary = ({
           <div className="flex w-full">
             <p className="text-sm font-medium">Other assessments required:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {additionalServices && additionalServices.length > 0
-                ? additionalServices.join(", ")
+              {additionalServices?.services &&
+              additionalServices.services.length > 0
+                ? additionalServices.services.join(", ")
                 : "None selected"}
             </p>
           </div>
