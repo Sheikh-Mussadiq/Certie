@@ -10,6 +10,7 @@ import { LiaCanadianMapleLeaf } from "react-icons/lia";
 import { GiOakLeaf } from "react-icons/gi";
 import { IoLeafOutline } from "react-icons/io5";
 import Logo from "../assets/Logo.png";
+import LoginPageBG from "../assets/LoginBG_black.png";
 const LoginSignUpPage = () => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -102,7 +103,7 @@ const LoginSignUpPage = () => {
         >
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             <img
-              src="/src/assets/LoginBG_black.png"
+              src={LoginPageBG}
               alt="Login background"
               className="w-full h-full object-cover"
             />
