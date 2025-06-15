@@ -480,7 +480,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div className="md:col-span-2">
                     <h3 className="text-lg font-medium mb-4">Managers</h3>
                     <div className="space-y-4">
-                      {currentUser.role === "property_owner" && (
+                       {currentUser.id === property.owner_id && (
                         <div className="flex gap-3">
                           <input
                             type="email"
@@ -511,7 +511,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 {manager.email}
                               </p>
                             </div>
-                            {currentUser.role === "property_owner" && (
+                           {currentUser.id === property.owner_id && (
                               <button
                                 type="button"
                                 onClick={() =>
@@ -531,7 +531,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div className="md:col-span-2">
                     <h3 className="text-lg font-medium mb-4">Site Users</h3>
                     <div className="space-y-4">
-                      {currentUser.role === "property_owner" && (
+                      {currentUser.id === property.owner_id && (
                         <div className="flex gap-3">
                           <input
                             type="email"
@@ -564,7 +564,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 {user.email}
                               </p>
                             </div>
-                            {currentUser.role === "property_owner" && (
+                           {currentUser.id === property.owner_id && (
                               <button
                                 type="button"
                                 onClick={() =>
