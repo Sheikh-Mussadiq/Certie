@@ -4,12 +4,13 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import BookingDetailsModal from "./BookingDetailsModal";
+import { useAuth } from "../../context/AuthContext";
 
 const BookingList = ({ bookings, onBookingUpdate }) => {
   const navigate = useNavigate();
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const { currentUser } = useAuth();
   const handleOpenModal = (booking) => {
     setSelectedBooking(booking);
     setIsModalOpen(true);
@@ -31,7 +32,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
       <table className="min-w-full divide-y divide-grey-outline">
         <thead className="bg-grey-fill">
           <tr>
-            <th
+            {/* <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider w-12 border-r border-grey-outline"
             >
@@ -39,7 +40,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                 type="checkbox"
                 className="h-4 w-4 text-primary-orange rounded"
               />
-            </th>
+            </th> */}
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
@@ -51,6 +52,12 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
               className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Property
+            </th>
+             <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+            >
+              Contact Details
             </th>
             <th
               scope="col"
@@ -70,28 +77,44 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
             >
               Assessor Details
             </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline">
-              {/* <span className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider  border-grey-outline"> */}
+            {currentUser.role === "super_admin" && (
+              <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline">
+                {/* <span className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider  border-grey-outline"> */}
                 Actions
               {/* </span> */}
             </th>
+            )}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-grey-outline">
           {bookings.map((booking) => (
             <tr key={booking.id} className="hover:bg-grey-fill">
-              <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
+              {/* <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
                 <input
                   type="checkbox"
                   className="h-4 w-4 text-primary-orange rounded border-grey-outline"
                 />
-              </td>
+              </td> */}
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
                 {booking.type ||
                   (booking.service_name ? booking.service_name : "N/A")}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange" onClick={() => {navigate(`/properties/${booking.property_id}`)}}>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange hover:underline" onClick={() => {navigate(`/properties/${booking.property_id}`)}}>
                 {booking.properties?.name || booking.property_name || "N/A"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
+                {booking.contact_details ? (
+                  <div className="space-y-1">
+                    <div className="font-medium"> Name: {booking.contact_details.name}</div>
+                    <div className="text-xs text-primary-grey">
+                      <div>Email: {booking.contact_details.email}</div>
+                      <div>Phone: {booking.contact_details.phone}</div>
+                      <div className="truncate max-w-xs">Address: {booking.contact_details.address}</div>
+                    </div>
+                  </div>
+                ) : (
+                  "N/A"
+                )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
                 {booking.completed_at
@@ -105,10 +128,10 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full"></div>
+                  {/* <div className="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full"></div> */}
                   <div className="ml-3">
                     <div className="text-sm font-medium text-primary-black">
-                      {booking.assignee?.name || "Assigned Assessor"}
+                      {booking.assignee?.name || "No Assessor Assigned"}
                     </div>
                     {booking.assignee?.contact && (
                       <div className="text-xs text-primary-grey">
@@ -123,6 +146,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                   </div>
                 </div>
               </td>
+               {currentUser.role === "super_admin" && (
               <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                 <button 
                   className="text-primary-grey hover:text-primary-black"
@@ -131,6 +155,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                   <MoreHorizontal className="h-5 w-5" />
                 </button>
               </td>
+              )}
             </tr>
           ))}
         </tbody>

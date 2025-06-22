@@ -12,7 +12,7 @@ const PropertyTable = ({
     <table className="w-full border-collapse">
       <thead className="bg-grey-fill">
         <tr>
-          <th className="px-6 py-4 text-left border-r border-grey-outline">
+          {/* <th className="px-6 py-4 text-left border-r border-grey-outline">
             <input
               type="checkbox"
               className="rounded border-grey-outline text-primary-orange focus:ring-primary-orange"
@@ -25,7 +25,7 @@ const PropertyTable = ({
                 }
               }}
             />
-          </th>
+          </th> */}
           <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
             Property Name
           </th>
@@ -53,7 +53,7 @@ const PropertyTable = ({
             className="hover:bg-grey-fill/50 cursor-pointer"
             onClick={() => navigate(`/properties/${property.id}`)}
           >
-            <td className="px-6 py-4 border-r border-grey-outline" onClick={(e) => e.stopPropagation()}>
+            {/* <td className="px-6 py-4 border-r border-grey-outline" onClick={(e) => e.stopPropagation()}>
               <input
                 type="checkbox"
                 className="rounded border-grey-outline text-primary-orange focus:ring-primary-orange"
@@ -68,7 +68,7 @@ const PropertyTable = ({
                   }
                 }}
               />
-            </td>
+            </td> */}
             <td className="px-6 py-4 border-r border-grey-outline">
               <div className="text-sm text-primary-black">
                 {property.name}

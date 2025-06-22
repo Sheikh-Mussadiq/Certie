@@ -31,36 +31,69 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // If status is changed to approved or cancelled, reset all fields except status
+    if (name === "status" && (value === "approved" || value === "cancelled")) {
+      setFormData({
+        assigneeName: "",
+        assigneeContact: "",
+        assigneeEmail: "",
+        assessmentTime: "",
+        status: value
+      });
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
   };
 
+  const allFieldsFilled =
+    formData.assigneeName &&
+    formData.assigneeContact &&
+    formData.assigneeEmail &&
+    formData.assessmentTime &&
+    formData.status;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    
-    if (!formData.assigneeName || !formData.assessmentTime || !formData.status) {
+
+    // All fields are required except for status "approved" or "cancelled"
+    if (
+      (formData.status !== "approved" && formData.status !== "cancelled") &&
+      (
+        !formData.assigneeName ||
+        !formData.assigneeContact ||
+        !formData.assigneeEmail ||
+        !formData.assessmentTime ||
+        !formData.status
+      )
+    ) {
       setError("Please fill all required fields");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      
+
       const updateData = {
         assignee: {
           name: formData.assigneeName,
           contact: formData.assigneeContact,
           email: formData.assigneeEmail
         },
-        assessment_time: new Date(formData.assessmentTime).toISOString(),
+        assessment_time: formData.assessmentTime
+          ? new Date(formData.assessmentTime).toISOString()
+          : null,
         status: formData.status
       };
 
       updateData.status === "cancelled" && (updateData.completed_at = null);
       updateData.status === "completed" && (updateData.completed_at = new Date().toISOString());
+      // Allow updateBooking for approved status as well
       const updatedBooking = await updateBooking(booking.id, updateData);
       onUpdate(updatedBooking);
       onClose();
@@ -84,6 +117,14 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
     { value: "completed", label: "Completed" },
     { value: "cancelled", label: "Cancelled" }
   ];
+
+  // Check if all fields are present in the original booking
+  const bookingHasAllFields =
+    booking &&
+    booking.assignee?.name &&
+    booking.assignee?.contact &&
+    booking.assignee?.email &&
+    booking.assessment_time;
 
   return (
     <AnimatePresence>
@@ -160,7 +201,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                   {/* Assignee Contact */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-primary-black">
-                      Contact Number
+                      Contact Number <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -173,6 +214,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                         onChange={handleChange}
                         className="block w-full pl-10 pr-3 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                         placeholder="Enter contact number"
+                        required
                       />
                     </div>
                   </div>
@@ -180,7 +222,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                   {/* Assignee Email */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-primary-black">
-                      Email Address
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -193,6 +235,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                         onChange={handleChange}
                         className="block w-full pl-10 pr-3 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                         placeholder="Enter email address"
+                        required
                       />
                     </div>
                   </div>
@@ -213,6 +256,7 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                         onChange={handleChange}
                         className="block w-full pl-10 pr-3 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                         required
+                        min={new Date().toISOString().slice(0, 16)}
                       />
                     </div>
                   </div>
@@ -230,11 +274,25 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                       required
                     >
                       <option value="" disabled>Select status</option>
-                      {statusOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
+                      <option value="approved">Approved</option>
+                      <option
+                        value="assigned"
+                        disabled={
+                          !formData.assigneeName ||
+                          !formData.assigneeContact ||
+                          !formData.assigneeEmail ||
+                          !formData.assessmentTime
+                        }
+                      >
+                        Assigned
+                      </option>
+                      <option
+                        value="completed"
+                        disabled={!bookingHasAllFields}
+                      >
+                        Completed
+                      </option>
+                      <option value="cancelled">Cancelled</option>
                     </select>
                   </div>
                   

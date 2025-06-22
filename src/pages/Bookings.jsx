@@ -58,10 +58,6 @@ const Bookings = () => {
         booking.service_name
           .toLowerCase()
           .includes(searchQuery.toLowerCase())) ||
-      (booking.properties?.name &&
-        booking.properties.name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())) ||
       (booking.property_name &&
         booking.property_name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -76,7 +72,8 @@ const Bookings = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-primary-black">Bookings</h1>
         <p className="text-sm text-primary-grey">
-          Manage all the bookings for Certie customers. Please make sure to upload the assessment report for each booking once completed. You can also cancel bookings if needed.
+          Manage all the bookings for Certie customers.
+          <span className="font-bold underline"> Please make sure to upload the assessment report for each booking once completed. You can also cancel bookings if needed.</span>
         </p>
         {/* <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
           <Plus className="h-5 w-5 mr-1" />

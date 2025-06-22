@@ -25,14 +25,11 @@ const Sidebar = () => {
   const menuItems = [
     { icon: LayoutGrid, label: "Overview", path: "/overview" },
     { icon: Building2, label: "Properties", path: "/properties" },
-    { icon: BookText, label: "Logbooks", path: "/logbooks", badge: "2" },
+    { icon: BookText, label: "Logbooks", path: "/logbooks"},
+    // { icon: BookText, label: "Logbooks", path: "/logbooks", badge: "2" },
     { icon: Users, label: "Directory", path: "/directory" },
-    ...(currentUser?.role === "super_admin"
-      ? [{ icon: CalendarDays, label: "Bookings", path: "/bookings" }]
-      : []),
-    ...(currentUser?.role === "super_admin"
-      ? [{ icon: FileText, label: "Documents", path: "/documents" }]
-      : []),
+    { icon: CalendarDays, label: "Bookings", path: "/bookings" },
+    { icon: FileText, label: "Documents", path: "/documents" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];
