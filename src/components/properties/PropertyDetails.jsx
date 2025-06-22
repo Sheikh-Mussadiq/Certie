@@ -124,10 +124,8 @@ const PropertyDetails = ({ property, setProperty }) => {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
-        <div className="p-6">
-          <Outlet context={{ property, setProperty }} />
-        </div>
+      <div className="">
+        <Outlet context={{ property, setProperty }} />
       </div>
 
       {isEditModalOpen && (

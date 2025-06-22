@@ -159,7 +159,7 @@ const Properties = () => {
           </div>
           <button
             onClick={() => navigate("/properties/add")}
-            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add Property

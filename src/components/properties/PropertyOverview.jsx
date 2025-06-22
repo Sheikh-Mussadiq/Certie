@@ -43,7 +43,7 @@ const PropertyOverview = () => {
 
   return (
     <>
-      <div className="space-y-8">
+      <div className="space-y-8 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
         <div>
           <h2 className="text-lg font-semibold mb-4 flex flex-col gap-2">
             Property Name: {property?.name}
@@ -52,7 +52,7 @@ const PropertyOverview = () => {
               {property?.address?.postcode}
             </p>
           </h2>
-          <div className="max-w-3xl mx-auto aspect-[16/9] md:aspect-[21/9] rounded-lg overflow-hidden shadow-sm">
+          <div className="w-full h-[400px] mx-auto rounded-xl overflow-hidden shadow-sm">
             {property?.image ? (
               <img
                 src={property.image}
@@ -292,7 +292,7 @@ const PropertyOverview = () => {
         </div>
       </div>
 
-      <div className="py-8 mt-8 border-t border-grey-outline">
+      <div className="py-8 mt-4 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
         <h3 className="text-lg font-semibold mb-4">Protection Assets</h3>
         <div className="bg-white rounded-2xl border border-grey-outline overflow-hidden">
           <div className="grid grid-cols-3 border-b border-grey-outline">

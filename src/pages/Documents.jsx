@@ -4,7 +4,7 @@ import {
   Search,
   ChevronRight,
   ArrowDownToLine,
-  Folder,
+  FolderOpen,
   ChevronDown,
   SortAsc,
   Filter,
@@ -204,7 +204,7 @@ const Documents = () => {
         Browse and manage documents across all your properties.
       </p>
 
-      <div className="bg-white rounded-xl p-4">
+      <div className="bg-white rounded-xl p-4 border border-grey-outline shadow-sm">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <div className="relative flex-1 max-w-md">
@@ -293,7 +293,7 @@ const Documents = () => {
             filteredData.map((property) => (
               <motion.div
                 key={property.id}
-                className="border border-grey-outline p-2 rounded-xl overflow-hidden"
+                className="border border-grey-outline p-2 rounded-xl shadow-sm overflow-hidden"
               >
                 <button
                   onClick={() => toggleProperty(property.id)}
@@ -306,7 +306,7 @@ const Documents = () => {
                   >
                     <ChevronRight className="w-5 h-5" />
                   </motion.div>
-                  <Folder className="w-6 h-6 text-primary-orange" />
+                  <FolderOpen className="w-6 h-6 text-primary-orange" />
                   <Link
                     to={`/properties/${property.id}`}
                     className="font-medium text-lg hover:underline"
@@ -314,6 +314,12 @@ const Documents = () => {
                   >
                     {property.name}
                   </Link>
+                  {property.folders && property.folders.length > 0 && (
+                    <span className="text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-3 py-1 ml-auto">
+                      {property.folders.length}{" "}
+                      {property.folders.length === 1 ? "folder" : "folders"}
+                    </span>
+                  )}
                 </button>
                 <AnimatePresence>
                   {expandedProperties.includes(property.id) && (
@@ -321,13 +327,32 @@ const Documents = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="ml-8 pl-4 border-l border-grey-outline"
+                      className="ml-8 relative"
                     >
-                      {property.folders.map((folder) => (
-                        <div key={folder.id} className="py-2">
+                      {property.folders.map((folder, index) => (
+                        <div key={folder.id} className="py-2 relative">
+                          {/* Curved connector line */}
+                          <div className="absolute left-0 top-0 bottom-0 w-5">
+                            <svg
+                              className="absolute left-0 top-0 w-5 h-10"
+                              viewBox="0 0 20 40"
+                              fill="none"
+                            >
+                              <path
+                                d="M0 0 L0 24 Q0 32 10 32 L20 32"
+                                stroke="rgb(229 231 235)"
+                                strokeWidth="1"
+                                fill="none"
+                              />
+                            </svg>
+                            {/* Vertical line for non-last items */}
+                            {index < property.folders.length - 1 && (
+                              <div className="absolute left-0 top-0 bottom-0 w-px bg-grey-outline"></div>
+                            )}
+                          </div>
                           <button
                             onClick={() => toggleFolder(property.id, folder.id)}
-                            className="w-full flex items-center gap-3 p-2 hover:bg-grey-fill rounded-lg"
+                            className="w-[98%] flex items-center gap-3 p-2 hover:bg-grey-fill rounded-lg ml-4"
                           >
                             <motion.div
                               animate={{
@@ -386,7 +411,7 @@ const Documents = () => {
                                       onClick={() =>
                                         handleDownloadDocument(doc)
                                       }
-                                      className="p-2 hover:bg-grey-outline rounded-lg"
+                                      className="p-2 bg-white border border-grey-outline rounded-lg shadow-sm"
                                     >
                                       <ArrowDownToLine className="w-5 h-5" />
                                     </button>
