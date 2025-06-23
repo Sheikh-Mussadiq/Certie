@@ -8,6 +8,8 @@ import {
 import { useState, useRef, useEffect } from "react";
 import SortMenu from "./SortMenu";
 import FilterMenu from "./FilterMenu";
+import Sort from "../../assets/sort-a-z.png";
+import Filter from "../../assets/filter.png";
 
 const TableHeader = ({
   onSearch,
@@ -49,7 +51,7 @@ const TableHeader = ({
                 : "text-primary-black hover:text-primary-orange"
             }`}
           >
-            <ArrowUpDown className="w-4 h-4" />
+            <img src={Sort} alt="sort" className="w-5 h-5" />
             Sort by
             <ChevronDown className="w-4 h-4" />
           </button>
@@ -69,7 +71,7 @@ const TableHeader = ({
                 : "text-primary-black hover:text-primary-orange"
             }`}
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            <img src={Filter} alt="filter" className="w-5 h-5" />
             Filter
           </button>
           <FilterMenu
@@ -87,7 +89,7 @@ const TableHeader = ({
               : "text-primary-black hover:text-primary-orange"
           }`}
         >
-          <List className="w-4 h-4" />
+          <List className="w-5 h-5" />
           {viewMode === "list" ? "Table view" : "List view"}
           <ChevronDown className="w-4 h-4" />
         </button>

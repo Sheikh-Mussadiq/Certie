@@ -11,20 +11,20 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
-  const property_types = [
-    "Residential Block",
-    "Single Residential Dwelling",
-    "Commercial Office",
-    "Mixed-Use Building",
-    "School / Education",
-    "Retail Unit",
-    "Warehouse / Industrial",
-    "HMO (House in Multiple Occupation)",
-    "Care Facility",
-    "Hotel",
-    "Other",
-  ];
-  
+const property_types = [
+  "Residential Block",
+  "Single Residential Dwelling",
+  "Commercial Office",
+  "Mixed-Use Building",
+  "School / Education",
+  "Retail Unit",
+  "Warehouse / Industrial",
+  "HMO (House in Multiple Occupation)",
+  "Care Facility",
+  "Hotel",
+  "Other",
+];
+
 const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
@@ -305,11 +305,11 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       required
                       className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     >
-                     {property_types.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
+                      {property_types.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -480,7 +480,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div className="md:col-span-2">
                     <h3 className="text-lg font-medium mb-4">Managers</h3>
                     <div className="space-y-4">
-                       {currentUser.id === property.owner_id && (
+                      {currentUser.id === property.owner_id && (
                         <div className="flex gap-3">
                           <input
                             type="email"
@@ -493,7 +493,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                             type="button"
                             onClick={handleAddManager}
                             disabled={!newManagerEmail}
-                            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-50"
+                            className="px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50"
                           >
                             Add Manager
                           </button>
@@ -511,7 +511,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 {manager.email}
                               </p>
                             </div>
-                           {currentUser.id === property.owner_id && (
+                            {currentUser.id === property.owner_id && (
                               <button
                                 type="button"
                                 onClick={() =>
@@ -546,7 +546,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                             type="button"
                             onClick={handleAddSiteUser}
                             disabled={!newSiteUserEmail}
-                            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-50"
+                            className="px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50"
                           >
                             Add Site User
                           </button>
@@ -564,7 +564,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 {user.email}
                               </p>
                             </div>
-                           {currentUser.id === property.owner_id && (
+                            {currentUser.id === property.owner_id && (
                               <button
                                 type="button"
                                 onClick={() =>
@@ -853,7 +853,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   );
               }}
               disabled={loading}
-              className="px-6 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors disabled:opacity-70"
+              className="px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-70"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>

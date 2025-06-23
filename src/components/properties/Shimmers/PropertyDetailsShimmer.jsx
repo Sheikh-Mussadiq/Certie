@@ -37,7 +37,7 @@ const PropertyDetailsShimmer = () => {
               <div className="h-6 w-56 bg-grey-fill rounded mb-4 relative overflow-hidden">
                 <div className="absolute inset-0 shimmer"></div>
               </div>
-              <div className="max-w-3xl mx-auto aspect-[16/9] md:aspect-[21/9] rounded-lg bg-grey-fill relative overflow-hidden">
+              <div className="max-w-4xl mx-auto aspect-[16/9] md:aspect-[21/9] rounded-lg bg-grey-fill relative overflow-hidden">
                 <div className="absolute inset-0 shimmer"></div>
               </div>
             </div>

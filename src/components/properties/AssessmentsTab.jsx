@@ -9,6 +9,8 @@ import {
   Download,
   Trash2,
 } from "lucide-react";
+import Sort from "../../assets/sort-a-z.png";
+import Filter from "../../assets/filter.png";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
@@ -412,289 +414,297 @@ const AssessmentsTab = () => {
       </div>
 
       {/* Actions Bar */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black hover:bg-grey-fill rounded-lg">
-              <span>Sort by</span>
+      <div className="space-y-4 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
+                <img src={Sort} alt="sort" className="w-5 h-5" />
+                <span>Sort by</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+            <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
+              <img src={Filter} alt="filter" className="w-5 h-5" />
+              <span>Filter</span>
               <ChevronDown className="w-4 h-4" />
             </button>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black hover:bg-grey-fill rounded-lg">
-            <span>Filter</span>
-            <ChevronDown className="w-4 h-4" />
-          </button>
-        </div>
-        <div className="flex items-center gap-3">
-          {/* <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
+          <div className="flex items-center gap-3">
+            {/* <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
             <Plus className="w-4 h-4" />
             Add New Assessment
           </button> */}
-          {(currentUser.id === property.owner_id ||
-            property.managers?.some(
-              (manager) => manager.user_id === currentUser.id
-            )) && (
-            <button
-              onClick={handleBookAssessment}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90"
-            >
-              <Plus className="w-4 h-4" />
-              Book Assessment
-            </button>
-          )}
+            {(currentUser.id === property.owner_id ||
+              property.managers?.some(
+                (manager) => manager.user_id === currentUser.id
+              )) && (
+              <button
+                onClick={handleBookAssessment}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90"
+              >
+                <Plus className="w-4 h-4" />
+                Book Assessment
+              </button>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-grey-fill border-b border-grey-outline">
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Assessment Type
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Date Completed
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Next Due
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Status
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Assignee
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Document
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Assessment Time
-              </th>
-              <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentAssessments.length > 0 ? (
-              currentAssessments.map((assessment) => {
-                const status = getAssessmentStatus(assessment);
-                const assignee = assessment.assignee || {};
-                console.log("Assessment Data:", assessment);
+        {/* Table */}
+        <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-grey-fill/50 border-b border-grey-outline">
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Assessment Type
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Date Completed
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Next Due
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Status
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Assignee
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Document
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Assessment Time
+                </th>
+                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey  ">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentAssessments.length > 0 ? (
+                currentAssessments.map((assessment) => {
+                  const status = getAssessmentStatus(assessment);
+                  const assignee = assessment.assignee || {};
+                  console.log("Assessment Data:", assessment);
 
-                return (
-                  <tr
-                    key={assessment.id}
-                    className="border-b border-grey-outline last:border-0 hover:bg-grey-fill/50"
-                  >
-                    <td className="py-4 px-6 text-sm font-medium">
-                      {assessment.type || "Assessment"}
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      {assessment.completed_at
-                        ? new Date(assessment.completed_at).toLocaleDateString(
-                            "en-GB",
-                            {
+                  return (
+                    <tr
+                      key={assessment.id}
+                      className="border-b border-grey-outline last:border-0 hover:bg-grey-fill/50"
+                    >
+                      <td className="py-4 px-6 text-sm font-medium  border-r border-grey-outline">
+                        {assessment.type || "Assessment"}
+                      </td>
+                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                        {assessment.completed_at
+                          ? new Date(
+                              assessment.completed_at
+                            ).toLocaleDateString("en-GB", {
                               day: "numeric",
                               month: "short",
                               year: "numeric",
+                            })
+                          : "Not completed"}
+                      </td>
+                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                        {getNextDueDate(assessment.completed_at)}
+                      </td>
+                      <td className="py-4 px-6 border-r border-grey-outline">
+                        {currentUser?.id === property.owner_id &&
+                        (status === "pending" || status === "approved") ? (
+                          <select
+                            value={status}
+                            onChange={(e) =>
+                              handleStatusUpdate(assessment.id, e.target.value)
                             }
-                          )
-                        : "Not completed"}
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      {getNextDueDate(assessment.completed_at)}
-                    </td>
-                    <td className="py-4 px-6">
-                      {currentUser?.id === property.owner_id &&
-                      (status === "pending" || status === "approved") ? (
-                        <select
-                          value={status}
-                          onChange={(e) =>
-                            handleStatusUpdate(assessment.id, e.target.value)
-                          }
-                          className={`px-3 py-1 text-xs font-medium rounded-full cursor-pointer ${getStatusColor(
-                            status
-                          )}`}
-                        >
-                          {statusOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span
-                          className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(
-                            status
-                          )}`}
-                        >
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
-                          {assignee.avatar ? (
-                            <img
-                              src={assignee.avatar}
-                              alt={assignee.name}
-                              className="w-full h-full rounded-full object-cover"
-                            />
-                          ) : (
-                            getAssigneeInitials(assignee)
-                          )}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium">
-                            {assignee.name || "Unassigned"}
-                          </span>
-                          {assignee.contact && (
-                            <span className="text-xs text-primary-grey">
-                              {assignee.contact}
-                            </span>
-                          )}
-                          <span className="text-xs text-primary-grey">
-                            {assignee.email}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-6">
-                      <button className="text-sm text-primary-orange hover:underline">
-                        {assessment.status === "completed" &&
-                        assessment.completed_at
-                          ? "View Document"
-                          : "N/A"}
-                      </button>
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      {formatAssessmentTime(assessment.assessment_time)}
-                    </td>
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-2">
-                        {isStatusDeletable(status) && (
-                          <button
-                            onClick={() =>
-                              handleDeleteAssessment(assessment.id)
-                            }
-                            className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
-                            title="Cancel Assessment"
+                            className={`px-3 py-1 text-xs font-medium rounded-full cursor-pointer ${getStatusColor(
+                              status
+                            )}`}
                           >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                            {statusOptions.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span
+                            className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                              status
+                            )}`}
+                          >
+                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                          </span>
                         )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan="8" className="py-12 text-center text-gray-500">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
-                      <Plus className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      No assessments found
-                    </h3>
-                    {(currentUser.id === property.owner_id ||
-                      property.managers?.some(
-                        (manager) => manager.user_id === currentUser.id
-                      )) && (
-                      <>
-                        <p className="text-gray-500 mb-4">
-                          Get started by booking your first assessment
-                        </p>
-                        <button
-                          onClick={handleBookAssessment}
-                          className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
-                        >
-                          Book Assessment
+                      </td>
+                      <td className="py-4 px-6 border-r border-grey-outline">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
+                            {assignee.avatar ? (
+                              <img
+                                src={assignee.avatar}
+                                alt={assignee.name}
+                                className="w-full h-full rounded-full object-cover"
+                              />
+                            ) : (
+                              getAssigneeInitials(assignee)
+                            )}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">
+                              {assignee.name || "Unassigned"}
+                            </span>
+                            {assignee.contact && (
+                              <span className="text-xs text-primary-grey">
+                                {assignee.contact}
+                              </span>
+                            )}
+                            <span className="text-xs text-primary-grey">
+                              {assignee.email}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 border-r border-grey-outline">
+                        <button className="text-sm text-primary-orange hover:underline">
+                          {assessment.status === "completed" &&
+                          assessment.completed_at
+                            ? "View Document"
+                            : "N/A"}
                         </button>
-                      </>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        {/* Pagination */}
-        {assessments.length > itemsPerPage && (
-          <div className="flex justify-between items-center p-4 border-t border-grey-outline">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-primary-grey">Show</span>
-              <select
-                className="px-2 py-1 border border-grey-outline rounded text-sm"
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-              >
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-              <span className="text-sm text-primary-grey">items</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
-                      pageNum === currentPage
-                        ? "bg-primary-orange text-white"
-                        : "text-primary-black hover:bg-grey-fill"
-                    }`}
+                      </td>
+                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                        {formatAssessmentTime(assessment.assessment_time)}
+                      </td>
+                      <td className="py-4 px-6 ">
+                        <div className="flex items-center gap-2">
+                          {isStatusDeletable(status) && (
+                            <button
+                              onClick={() =>
+                                handleDeleteAssessment(assessment.id)
+                              }
+                              className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
+                              title="Cancel Assessment"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="py-12 text-center text-gray-500 border-l border-r border-grey-outline"
                   >
-                    {pageNum}
-                  </button>
-                );
-              })}
-              {totalPages > 5 && (
-                <>
-                  <span className="text-primary-grey">...</span>
-                  <button
-                    onClick={() => setCurrentPage(totalPages)}
-                    className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
-                      totalPages === currentPage
-                        ? "bg-primary-orange text-white"
-                        : "text-primary-black hover:bg-grey-fill"
-                    }`}
-                  >
-                    {totalPages}
-                  </button>
-                </>
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
+                        <Plus className="w-8 h-8 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        No assessments found
+                      </h3>
+                      {(currentUser.id === property.owner_id ||
+                        property.managers?.some(
+                          (manager) => manager.user_id === currentUser.id
+                        )) && (
+                        <>
+                          <p className="text-gray-500 mb-4">
+                            Get started by booking your first assessment
+                          </p>
+                          <button
+                            onClick={handleBookAssessment}
+                            className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
+                          >
+                            Book Assessment
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
               )}
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+            </tbody>
+          </table>
+
+          {/* Pagination */}
+          {assessments.length > itemsPerPage && (
+            <div className="flex justify-between items-center p-4 border-t border-grey-outline">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-primary-grey">Show</span>
+                <select
+                  className="px-2 py-1 border border-grey-outline rounded text-sm"
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <span className="text-sm text-primary-grey">items</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const pageNum = i + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
+                        pageNum === currentPage
+                          ? "bg-primary-orange text-white"
+                          : "text-primary-black hover:bg-grey-fill"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                {totalPages > 5 && (
+                  <>
+                    <span className="text-primary-grey">...</span>
+                    <button
+                      onClick={() => setCurrentPage(totalPages)}
+                      className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
+                        totalPages === currentPage
+                          ? "bg-primary-orange text-white"
+                          : "text-primary-black hover:bg-grey-fill"
+                      }`}
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

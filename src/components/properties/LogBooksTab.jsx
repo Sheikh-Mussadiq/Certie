@@ -77,7 +77,7 @@ const LogBooksTab = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-semibold text-primary-black">LogBooks</h2>
@@ -91,25 +91,21 @@ const LogBooksTab = () => {
         </button>
       </div>
 
-      <div className="flex gap-4 border-b border-grey-outline">
+      <div className="flex mb-4 bg-gray-100 p-0.5 rounded-md w-fit">
         {["Active", "In Active"].map((tab) => (
-          <button
+          <motion.button
             key={tab}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setActiveTab(tab)}
-            className={`py-2 relative ${
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
-                ? "text-primary-orange"
+                ? "bg-white text-primary-black shadow-sm border border-grey-outline"
                 : "text-primary-grey hover:text-primary-black"
             }`}
           >
             {tab}
-            {activeTab === tab && (
-              <motion.div
-                layoutId="activeLogbookTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-orange"
-              />
-            )}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -122,7 +118,6 @@ const LogBooksTab = () => {
           className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
         />
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredLogbooks.map((logbook) => (
           <div
