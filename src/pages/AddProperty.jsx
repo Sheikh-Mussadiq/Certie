@@ -20,7 +20,6 @@ const AddProperty = () => {
       // country: "",
     },
     property_type: "Residential",
-    building_type: "",
     image: null,
     owner_id: currentUser.id,
     compliance_score: 0,
