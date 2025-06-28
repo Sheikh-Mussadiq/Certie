@@ -7,7 +7,7 @@ import {
   ChevronRight,
   ArrowDownToLine,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
 import Shimmer from "../ui/Shimmer";
@@ -27,7 +27,8 @@ import {
   searchDocuments,
 } from "../../services/documentServices";
 
-const DocumentsTab = ({ owner_id }) => {
+const DocumentsTab = () => {
+  const { property } = useOutletContext();
   const { id: propertyId } = useParams();
   const { currentUser } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
@@ -303,7 +304,7 @@ const DocumentsTab = ({ owner_id }) => {
             className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
           />
         </div>
-        {currentUser.id === owner_id ||
+        {currentUser.id === property.owner_id ||
           (currentUser.role === "super_admin" && (
             <div className="flex gap-3">
               <button
@@ -483,7 +484,7 @@ const DocumentsTab = ({ owner_id }) => {
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 No folders yet
               </h3>
-              {(currentUser.id === owner_id ||
+              {(currentUser.id === property.owner_id ||
                 currentUser.role === "super_admin") && (
                 <>
                   <p className="text-gray-500 mb-4">
