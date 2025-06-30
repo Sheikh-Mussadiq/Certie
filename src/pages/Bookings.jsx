@@ -25,7 +25,8 @@ const Bookings = () => {
       setLoading(true);
       const data = await getAllBookings();
       const filteredData = data.filter(
-        (booking) => booking.status !== "pending" && booking.status !== "rejected"
+        (booking) =>
+          booking.status !== "pending" && booking.status !== "rejected"
       );
       setBookings(filteredData);
       setError(null);
@@ -73,7 +74,11 @@ const Bookings = () => {
         <h1 className="text-2xl font-bold text-primary-black">Bookings</h1>
         <p className="text-sm text-primary-grey">
           Manage all the bookings for Certie customers.
-          <span className="font-bold underline"> Please make sure to upload the assessment report for each booking once completed. You can also cancel bookings if needed.</span>
+          <span className="font-bold underline">
+            {" "}
+            Please make sure to upload the assessment report for each booking
+            once completed. You can also cancel bookings if needed.
+          </span>
         </p>
         {/* <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
           <Plus className="h-5 w-5 mr-1" />
@@ -81,27 +86,29 @@ const Bookings = () => {
         </button> */}
       </div>
 
-      <BookingFilters onSearch={handleSearch} />
+      <div className="bg-white rounded-xl border border-grey-outline shadow-sm p-4">
+        <BookingFilters onSearch={handleSearch} />
 
-      {loading ? (
-        <BookingListShimmer />
-      ) : error ? (
-        <div className="text-center text-red-500 py-10">{error}</div>
-      ) : (
-        <>
-          <BookingList
-            bookings={paginatedBookings}
-            onBookingUpdate={handleBookingUpdate}
-          />
-          <BookingPagination
-            currentPage={currentPage}
-            totalItems={filteredBookings.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
-          />
-        </>
-      )}
+        {loading ? (
+          <BookingListShimmer />
+        ) : error ? (
+          <div className="text-center text-red-500 py-10">{error}</div>
+        ) : (
+          <>
+            <BookingList
+              bookings={paginatedBookings}
+              onBookingUpdate={handleBookingUpdate}
+            />
+            <BookingPagination
+              currentPage={currentPage}
+              totalItems={filteredBookings.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
+              onItemsPerPageChange={setItemsPerPage}
+            />
+          </>
+        )}
+      </div>
     </motion.div>
   );
 };

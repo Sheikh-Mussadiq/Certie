@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import { getLogbooks, activateLogbook, deactivateLogbook, createLogbook } from "../../services/logbookservices";
+import {
+  getLogbooks,
+  activateLogbook,
+  deactivateLogbook,
+  createLogbook,
+} from "../../services/logbookservices";
 import LogbookEntriesView from "./LogbookEntriesView";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-  
+
 const LogBooksTab = () => {
   const { currentUser } = useAuth();
   const { property } = useOutletContext();
@@ -26,8 +31,15 @@ const LogBooksTab = () => {
   const [selectedLogbook, setSelectedLogbook] = useState(null);
 
   const frequencyOptions = [
-    'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Annually',
-    'Every 6 months', 'Every 2 years', 'Every 3 years', 'Every 5 years'
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Quarterly",
+    "Annually",
+    "Every 6 months",
+    "Every 2 years",
+    "Every 3 years",
+    "Every 5 years",
   ];
 
   useEffect(() => {
@@ -123,10 +135,13 @@ const LogBooksTab = () => {
           </p>
         </div>
         {currentUser.id === property.owner_id && (
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors" onClick={() => setShowModal(true)}>
-          <Plus className="w-4 h-4" />
-          Create Custom LogBook
-        </button>
+          <button
+            className="flex items-center gap-2 px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors"
+            onClick={() => setShowModal(true)}
+          >
+            <Plus className="w-4 h-4" />
+            Create Custom LogBook
+          </button>
         )}
       </div>
 
@@ -166,13 +181,13 @@ const LogBooksTab = () => {
           {filteredLogbooks.map((logbook) => (
             <div
               key={logbook.id}
-              className="bg-white rounded-lg border border-grey-outline p-6 hover:border-primary-orange transition-colors cursor-pointer"
-              onClick={e => {
+              className="bg-white rounded-lg border border-grey-outline hover:border-primary-orange transition-colors cursor-pointer"
+              onClick={(e) => {
                 // Prevent opening modal when toggling active
-                if (e.target.type !== 'checkbox') setSelectedLogbook(logbook);
+                if (e.target.type !== "checkbox") setSelectedLogbook(logbook);
               }}
             >
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex flex-col items-start justify-between p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-grey-fill flex items-center justify-center">
                     <img
@@ -190,7 +205,27 @@ const LogBooksTab = () => {
                     </p>
                   </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer" onClick={e => e.stopPropagation()}>
+                <div>
+                  <p className="text-xs text-primary-grey mb-4">
+                    {logbook.regulation}
+                  </p>
+                  <p className="text-sm text-primary-grey mb-4">
+                    {logbook.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-4 bg-grey-fill p-4">
+                <button
+                  className="text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-4 py-2 rounded-lg"
+                  type="button"
+                >
+                  View detail
+                </button>
+                <label
+                  className="relative inline-flex items-center cursor-pointer"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <input
                     type="checkbox"
                     className="sr-only peer"
@@ -198,20 +233,13 @@ const LogBooksTab = () => {
                     onChange={() => handleToggleActive(logbook)}
                     disabled={toggleLoadingId === logbook.id}
                   />
-                  <div className={`w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-orange ${toggleLoadingId === logbook.id ? 'opacity-50' : ''}`}></div>
+                  <div
+                    className={`w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-black ${
+                      toggleLoadingId === logbook.id ? "opacity-50" : ""
+                    }`}
+                  ></div>
                 </label>
               </div>
-
-              <p className="text-xs text-primary-grey mb-4">
-                {logbook.regulation}
-              </p>
-              <p className="text-sm text-primary-grey mb-4">
-                {logbook.description}
-              </p>
-
-              <button className="text-sm text-primary-orange hover:text-primary-black transition-colors" type="button">
-                View detail
-              </button>
             </div>
           ))}
 
@@ -234,8 +262,15 @@ const LogBooksTab = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
-            <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-600" onClick={() => setShowModal(false)}>&times;</button>
-            <h2 className="text-lg font-semibold mb-4">Create Custom LogBook</h2>
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+              onClick={() => setShowModal(false)}
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold mb-4">
+              Create Custom LogBook
+            </h2>
             <form onSubmit={handleCreateLogbook} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
@@ -249,7 +284,9 @@ const LogBooksTab = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
                 <textarea
                   name="description"
                   value={form.description}
@@ -259,7 +296,9 @@ const LogBooksTab = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Frequency</label>
+                <label className="block text-sm font-medium mb-1">
+                  Frequency
+                </label>
                 <select
                   name="frequency"
                   value={form.frequency}
@@ -268,11 +307,15 @@ const LogBooksTab = () => {
                   required
                 >
                   {frequencyOptions.map((freq) => (
-                    <option key={freq} value={freq}>{freq}</option>
+                    <option key={freq} value={freq}>
+                      {freq}
+                    </option>
                   ))}
                 </select>
               </div>
-              {modalError && <div className="text-red-500 text-sm">{modalError}</div>}
+              {modalError && (
+                <div className="text-red-500 text-sm">{modalError}</div>
+              )}
               <button
                 type="submit"
                 className="w-full bg-primary-black text-white py-2 rounded-lg hover:bg-primary-black/90 transition-colors"
