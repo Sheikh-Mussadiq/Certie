@@ -181,7 +181,7 @@ const LogBooksTab = () => {
           {filteredLogbooks.map((logbook) => (
             <div
               key={logbook.id}
-              className="bg-white rounded-lg border border-grey-outline hover:border-primary-orange transition-colors cursor-pointer"
+              className="bg-white rounded-xl border border-grey-outline transition-colors cursor-pointer shadow-sm"
               onClick={(e) => {
                 // Prevent opening modal when toggling active
                 if (e.target.type !== "checkbox") setSelectedLogbook(logbook);
@@ -215,7 +215,7 @@ const LogBooksTab = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mt-4 bg-grey-fill p-4">
+              <div className="flex items-center justify-between mt-4 bg-grey-fill p-4 rounded-b-xl">
                 <button
                   className="text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-4 py-2 rounded-lg"
                   type="button"
