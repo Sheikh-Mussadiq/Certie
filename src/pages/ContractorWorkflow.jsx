@@ -1,28 +1,115 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LocationSelector from "../components/contractor/LocationSelector";
 import BookingDetails from "../components/contractor/BookingDetails";
 import AuthModal from "../components/contractor/AuthModal";
-import { getPropertyById } from "../services/propertiesServices";
+import { getPropertyById, createProperty } from "../services/propertiesServices";
 import { createBooking } from "../services/bookingServices";
 import ContractorNavbar from "../components/contractor/ContractorNavbar";
+import { useAuth } from "../context/AuthContext";
 
 const ContractorWorkflow = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, currentUser } = useAuth();
+
   const [postcode, setPostcode] = useState("");
   const [currentStep, setCurrentStep] = useState("location");
   const [buildingType, setBuildingType] = useState("");
+  const [propertyName, setPropertyName] = useState("");
   const [additionalServices, setAdditionalServices] = useState([]);
   const [contactDetails, setContactDetails] = useState(null);
 
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [propertyId, setPropertyId] = useState(null);
   const [property, setProperty] = useState(null);
   const [dateTime, setDateTime] = useState(null);
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState(null);
+
+  useEffect(() => {
+    const processPendingWorkflow = async () => {
+      const pendingWorkflowRaw = localStorage.getItem("pendingWorkflow");
+      if (isAuthenticated && currentUser && pendingWorkflowRaw) {
+        const pendingWorkflow = JSON.parse(pendingWorkflowRaw);
+
+        setIsBooking(true);
+        setBookingError(null);
+
+        try {
+          let propertyIdForBooking = propertyId;
+          let propertyForBooking = property;
+
+          if (!propertyIdForBooking && pendingWorkflow.propertyName) {
+            const newProperty = await createProperty(
+              {
+                name: pendingWorkflow.propertyName,
+                address: { postcode: pendingWorkflow.postcode },
+                property_type: pendingWorkflow.buildingType,
+              },
+              currentUser.id
+            );
+            propertyIdForBooking = newProperty.id;
+            propertyForBooking = newProperty;
+            setProperty(newProperty);
+            setPropertyId(newProperty.id);
+          }
+
+          if (!propertyIdForBooking) {
+            throw new Error(
+              "Could not find or create a property for the booking."
+            );
+          }
+
+          const servicesToBook = pendingWorkflow.additionalServices?.services;
+          if (!servicesToBook || servicesToBook.length === 0) {
+            setBookingError("No services selected.");
+            setIsBooking(false);
+            return;
+          }
+
+          const combinedDateTime = new Date(pendingWorkflow.dateTime.date);
+          const [time, modifier] = pendingWorkflow.dateTime.time.split(" ");
+          let [hours, minutes] = time.split(":");
+          hours = parseInt(hours, 10);
+          minutes = parseInt(minutes, 10);
+
+          if (modifier.toUpperCase() === "PM" && hours < 12) {
+            hours += 12;
+          }
+          if (modifier.toUpperCase() === "AM" && hours === 12) {
+            hours = 0;
+          }
+
+          combinedDateTime.setHours(hours, minutes, 0, 0);
+
+          const creationPromises = servicesToBook.map((service) =>
+            createBooking({
+              property_id: propertyIdForBooking,
+              property_name:
+                propertyForBooking?.name || pendingWorkflow.propertyName,
+              assessment_time: combinedDateTime.toISOString(),
+              contact_details: pendingWorkflow.contactDetails,
+              type: service,
+              building_type: pendingWorkflow.buildingType,
+              // user_id: currentUser.id,
+            })
+          );
+
+          await Promise.all(creationPromises);
+          setCurrentStep("complete");
+          localStorage.removeItem("pendingWorkflow");
+        } catch (error) {
+          setBookingError(`Failed to create booking(s). ${error.message}`);
+          console.error(error);
+        } finally {
+          setIsBooking(false);
+        }
+      }
+    };
+    processPendingWorkflow();
+  }, [isAuthenticated, currentUser, property, propertyId]);
 
   useEffect(() => {
     if (location.state) {
@@ -33,7 +120,7 @@ const ContractorWorkflow = () => {
         const fetchProperty = async () => {
           const propertyData = await getPropertyById(propId);
           setProperty(propertyData);
-          setPostcode(propertyData.postcode);
+          setPostcode(propertyData.address?.postcode || "");
           setBuildingType(propertyData.property_type);
           if (propertyData.property_type) {
             setCurrentStep("additional-services");
@@ -53,8 +140,11 @@ const ContractorWorkflow = () => {
     setCurrentStep("building-type");
   };
 
-  const handleBuildingTypeSubmit = (type) => {
+  const handleBuildingTypeSubmit = (type, name) => {
     setBuildingType(type);
+    if (name) {
+      setPropertyName(name);
+    }
     setCurrentStep("additional-services");
   };
 
@@ -78,6 +168,21 @@ const ContractorWorkflow = () => {
   };
 
   const handleFinalizeBooking = async () => {
+    if (!isAuthenticated) {
+      const workflowData = {
+        postcode,
+        buildingType,
+        propertyName: property ? property.name : propertyName,
+        additionalServices,
+        dateTime,
+        contactDetails,
+        paymentDetails,
+      };
+      localStorage.setItem("pendingWorkflow", JSON.stringify(workflowData));
+      navigate("/", { state: { from: location.pathname, pendingWorkflow: true } });
+      return;
+    }
+
     console.log("Attempting to finalize booking with data:", {
       propertyId,
       dateTime,
@@ -123,7 +228,7 @@ const ContractorWorkflow = () => {
           contact_details: contactDetails,
           type: service,
           building_type: buildingType,
-          // TODO: Add user_id and payment details securely
+          // user_id: currentUser.id,
         })
       );
 
@@ -163,19 +268,6 @@ const ContractorWorkflow = () => {
     } else {
       setCurrentStep("location");
     }
-  };
-
-  const handleLogin = async (credentials) => {
-    // TODO: Implement actual login logic
-    console.log("Login:", credentials);
-    setIsAuthenticated(true);
-    setShowAuthModal(false);
-    handleFinalizeBooking();
-  };
-
-  const handleSignup = () => {
-    // TODO: Implement signup logic
-    console.log("Navigate to signup");
   };
 
   return (
@@ -222,12 +314,6 @@ const ContractorWorkflow = () => {
             dateTime={dateTime}
           />
         )}
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onLogin={handleLogin}
-          onSignup={handleSignup}
-        />
       </main>
     </>
   );

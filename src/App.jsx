@@ -95,6 +95,9 @@ const ProtectedLoginRoute = () => {
   }
 
   if (isAuthenticated) {
+    if (localStorage.getItem("pendingWorkflow")) {
+      return <Navigate to="/contractor-workflow" replace />;
+    }
     return <Navigate to="/home" replace />;
   }
 
@@ -205,11 +208,7 @@ export default function App() {
           <Route path="/" element={<ProtectedLoginRoute />} />
           <Route
             path="/contractor-workflow"
-            element={
-              <ProtectedLayout>
-                <ContractorWorkflow />
-              </ProtectedLayout>
-            }
+            element={<ContractorWorkflow />}
           />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>

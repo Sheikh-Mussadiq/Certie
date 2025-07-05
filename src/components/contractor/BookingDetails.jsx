@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import ProgressTracker from "./ProgressTracker";
-import AdditionalServices from "./AdditionalServices";
+import BuildingForm from "./BuildingForm";
 import AdditionalServicesForm from "./AdditionalServicesForm";
 import TimeAndDateForm from "./TimeAndDateForm";
 import ContactForm from "./ContactForm";
@@ -27,6 +27,7 @@ const BookingDetails = ({
   onBookAnother,
 }) => {
   const [selectedBuildingType, setSelectedBuildingType] = useState("");
+  const [propertyName, setPropertyName] = useState("");
   const [selectedAdditionalServices, setSelectedAdditionalServices] =
     useState(null);
 
@@ -38,9 +39,12 @@ const BookingDetails = ({
     }
   }, [property]);
 
-  const handleBuildingTypeSubmit = (type) => {
-    setSelectedBuildingType(type);
-  };
+  const handleBuildingDataChange = useCallback((data) => {
+    setSelectedBuildingType(data.buildingType);
+    if (data.propertyName) {
+      setPropertyName(data.propertyName);
+    }
+  }, []);
 
   const handleAdditionalServicesSubmit = useCallback((data) => {
     setSelectedAdditionalServices(data);
@@ -97,7 +101,7 @@ const BookingDetails = ({
                       currentStep === "building-type" &&
                       selectedBuildingType
                     ) {
-                      onBuildingTypeSubmit(selectedBuildingType);
+                      onBuildingTypeSubmit(selectedBuildingType, propertyName);
                     } else if (
                       currentStep === "additional-services" &&
                       selectedAdditionalServices
@@ -146,7 +150,14 @@ const BookingDetails = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               {currentStep === "building-type" && (
-                <AdditionalServices onSubmit={handleBuildingTypeSubmit} />
+                <BuildingForm
+                  property={property}
+                  onDataChange={handleBuildingDataChange}
+                  initialData={{
+                    buildingType: selectedBuildingType,
+                    propertyName,
+                  }}
+                />
               )}
               {currentStep === "additional-services" && (
                 <AdditionalServicesForm

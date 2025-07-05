@@ -1,13 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
-const BuildingForm = () => {
-  const [buildingType, setBuildingType] = useState('residential')
+const BuildingForm = ({ property, onDataChange, initialData }) => {
+  const [buildingType, setBuildingType] = useState(initialData?.buildingType || '')
+  const [propertyName, setPropertyName] = useState(initialData?.propertyName || '')
   const [floors, setFloors] = useState('1-3 Floors')
   const [size, setSize] = useState('Select the Size e.g (250 sqft - 450 sqft)')
   const [tenants, setTenants] = useState('10 or fewer')
-  
+
+  const property_types = [
+    "Residential Block",
+    "Single Residential Dwelling",
+    "Commercial Office",
+    "Mixed-Use Building",
+    "School / Education",
+    "Retail Unit",
+    "Warehouse / Industrial",
+    "HMO (House in Multiple Occupation)",
+    "Care Facility",
+    "Hotel",
+    "Other",
+  ];
+
+  useEffect(() => {
+    if (property) {
+      setBuildingType(property.property_type || '')
+    }
+  }, [property])
+
+  useEffect(() => {
+    onDataChange({ buildingType, propertyName })
+  }, [buildingType, propertyName, onDataChange])
+
   return (
     <motion.div
       className="w-full"
@@ -15,40 +40,41 @@ const BuildingForm = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      {!property && (
+        <div className="mb-8">
+          <h3 className="font-semibold text-lg mb-2">Property Name</h3>
+          <p className="text-sm text-primary-grey mb-4">
+            Please provide a name for this new property.
+          </p>
+          <input
+            type="text"
+            value={propertyName}
+            onChange={(e) => setPropertyName(e.target.value)}
+            className="w-full appearance-none bg-white border border-grey-outline rounded-md py-3 px-4 text-gray-700 focus:outline-none focus:border-primary-orange"
+            placeholder="e.g., The Grand Building"
+            required
+          />
+        </div>
+      )}
       <div className="mb-8">
         <h3 className="font-semibold text-lg mb-2">Choose your Building Type</h3>
         <p className="text-sm text-primary-grey mb-4">Enable plans buttondown rebuke nobistate synergy. Shelf-ware of hit want on land blindwhagon opportunity great team.</p>
         
-        <div className="flex flex-col gap-3">
-          <label className={`relative flex items-center border rounded-md p-4 cursor-pointer transition-all ${buildingType === 'residential' ? 'border-primary-orange bg-red-50' : 'border-grey-outline'}`}>
-            <input
-              type="radio"
-              name="buildingType"
-              value="residential"
-              checked={buildingType === 'residential'}
-              onChange={() => setBuildingType('residential')}
-              className="sr-only"
-            />
-            <span className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${buildingType === 'residential' ? 'border-primary-orange' : 'border-grey-outline'}`}>
-              {buildingType === 'residential' && <span className="w-3 h-3 rounded-full bg-primary-orange"></span>}
-            </span>
-            <span className="font-medium">Residential</span>
-          </label>
-          
-          <label className={`relative flex items-center border rounded-md p-4 cursor-pointer transition-all ${buildingType === 'commercial' ? 'border-primary-orange bg-red-50' : 'border-grey-outline'}`}>
-            <input
-              type="radio"
-              name="buildingType"
-              value="commercial"
-              checked={buildingType === 'commercial'}
-              onChange={() => setBuildingType('commercial')}
-              className="sr-only"
-            />
-            <span className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${buildingType === 'commercial' ? 'border-primary-orange' : 'border-grey-outline'}`}>
-              {buildingType === 'commercial' && <span className="w-3 h-3 rounded-full bg-primary-orange"></span>}
-            </span>
-            <span className="font-medium">Commercial</span>
-          </label>
+        <div className="relative">
+          <select
+            value={buildingType}
+            onChange={(e) => setBuildingType(e.target.value)}
+            className="w-full appearance-none bg-white border border-grey-outline rounded-md py-3 px-4 pr-10 text-gray-700 cursor-pointer focus:outline-none focus:border-primary-orange"
+            required
+          >
+            <option value="" disabled>Select a building type</option>
+            {property_types.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <ChevronDown className="h-5 w-5 text-gray-400" />
+          </div>
         </div>
       </div>
       
