@@ -160,17 +160,17 @@ const AuthenticatedRoutes = () => {
           <Route
             path="/bookings"
             element={
-              <AdminProtectedRoute>
+              <ProtectedLayout>
                 <Bookings />
-              </AdminProtectedRoute>
+              </ProtectedLayout>
             }
           />
           <Route
             path="/documents"
             element={
-              <AdminProtectedRoute>
+              <ProtectedLayout> 
                 <Documents />
-              </AdminProtectedRoute>
+              </ProtectedLayout>
             }
           />
           <Route

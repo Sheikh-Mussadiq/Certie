@@ -6,12 +6,13 @@ import BookingFilters from "../components/bookings/BookingFilters";
 import BookingPagination from "../components/bookings/BookingPagination";
 import { getAllBookings } from "../services/bookingServices";
 import BookingListShimmer from "../components/bookings/shimmers/BookingListShimmer";
+import { useAuth } from "../context/AuthContext";
 
 const Bookings = () => {
+  const { currentUser } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -72,14 +73,20 @@ const Bookings = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-primary-black">Bookings</h1>
-        <p className="text-sm text-primary-grey">
-          Manage all the bookings for Certie customers.
-          <span className="font-bold underline">
-            {" "}
-            Please make sure to upload the assessment report for each booking
-            once completed. You can also cancel bookings if needed.
-          </span>
-        </p>
+        {currentUser?.role === "super_admin" ? (
+          <p className="text-sm text-primary-grey">
+            Manage all the bookings for Certie customers.
+            <span className="font-bold underline">
+              {" "}
+              Please make sure to upload the assessment report for each booking
+              once completed. You can also cancel bookings if needed.
+            </span>
+          </p>
+        ) : (
+          <p className="text-sm text-primary-grey">
+            Check all the bookings of properties here.
+          </p>
+        )}
         {/* <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
           <Plus className="h-5 w-5 mr-1" />
           <span>New Booking</span>

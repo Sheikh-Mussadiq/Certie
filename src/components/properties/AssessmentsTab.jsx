@@ -40,6 +40,7 @@ const AssessmentsTab = () => {
   const statusOptions = [
     { value: "pending", label: "Pending" },
     { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
   ];
 
   useEffect(() => {
@@ -166,6 +167,10 @@ const AssessmentsTab = () => {
         return "bg-orange-100 text-orange-800";
       case "pending":
         return "bg-yellow-100 text-yellow-800";
+      case "approved":
+        return "bg-blue-100 text-blue-800";
+      case "rejected":
+        return "bg-red-50 text-red-600";
       case "missing":
         return "bg-gray-100 text-gray-800";
       default:
@@ -197,7 +202,24 @@ const AssessmentsTab = () => {
   const handleStatusUpdate = async (assessmentId, newStatus) => {
     try {
       await updateBookingStatus(assessmentId, newStatus);
-      await fetchAssessments();
+      
+      // Update local state instead of refetching
+      setAssessments(prevAssessments => 
+        prevAssessments.map(assessment => 
+          assessment.id === assessmentId 
+            ? { ...assessment, status: newStatus }
+            : assessment
+        )
+      );
+      
+      // Recalculate stats with updated data
+      const updatedAssessments = assessments.map(assessment => 
+        assessment.id === assessmentId 
+          ? { ...assessment, status: newStatus }
+          : assessment
+      );
+      calculateStats(updatedAssessments);
+      
       toast.success("Assessment status updated");
     } catch (error) {
       console.error("Error updating assessment status:", error);
@@ -512,7 +534,7 @@ const AssessmentsTab = () => {
                       </td>
                       <td className="py-4 px-6 border-r border-grey-outline">
                         {currentUser?.id === property.owner_id &&
-                        (status === "pending" || status === "approved") ? (
+                        (status === "pending" || status === "approved" || status === "rejected") ? (
                           <select
                             value={status}
                             onChange={(e) =>

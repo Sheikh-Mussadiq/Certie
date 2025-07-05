@@ -47,7 +47,7 @@ const LogBooksTab = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getLogbooks();
+        const data = await getLogbooks(property.id);
         setLogbooks(data || []);
       } catch (err) {
         setError("Failed to fetch logbooks");
