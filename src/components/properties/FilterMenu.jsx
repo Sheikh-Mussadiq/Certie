@@ -52,8 +52,8 @@ const FilterMenu = ({ isOpen, onClose, onFilter, currentFilters }) => {
       <div className="p-2 space-y-4">
         {filterOptions.map((filterGroup) => (
           <div key={filterGroup.id}>
-            <h3 className="px-4 py-2 text-sm font-medium text-primary-black">
-              {filterGroup.label}
+            <h3 className="px-4 py-2 text-sm font-medium text-primary-black bg-grey-fill rounded-lg">
+              {filterGroup.label} :
             </h3>
             <div className="space-y-1">
               {filterGroup.options.map((option) => (

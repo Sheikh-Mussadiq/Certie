@@ -132,7 +132,7 @@ const BookingFilters = ({
             <ChevronDown className="w-5 h-5 ml-2" />
           </button>
           {isFilterOpen && (
-            <div className="absolute right-0 z-10 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div className="absolute right-0 z-10 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="p-2">
                 {Object.entries(filterOptions).map(([key, value]) => (
                   <button
