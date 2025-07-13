@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import BookingList from "../components/bookings/BookingList";
@@ -14,6 +14,8 @@ const Bookings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("booked_time_desc");
+  const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -52,19 +54,59 @@ const Bookings = () => {
     setCurrentPage(1);
   };
 
-  const filteredBookings = bookings.filter(
-    (booking) =>
-      (booking.type &&
-        booking.type.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (booking.service_name &&
-        booking.service_name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())) ||
-      (booking.property_name &&
-        booking.property_name.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const handleSortChange = (option) => {
+    setSortOption(option);
+  };
 
-  const paginatedBookings = filteredBookings.slice(
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+    setCurrentPage(1);
+  };
+
+  const processedBookings = useMemo(() => {
+    let filtered = bookings;
+
+    if (filterStatus !== "all") {
+      filtered = filtered.filter((booking) => booking.status === filterStatus);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (booking) =>
+          (booking.type &&
+            booking.type.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (booking.service_name &&
+            booking.service_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())) ||
+          (booking.property_name &&
+            booking.property_name
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortOption) {
+        case "booked_time_desc":
+          return new Date(b.booked_time) - new Date(a.booked_time);
+        case "booked_time_asc":
+          return new Date(a.booked_time) - new Date(b.booked_time);
+        case "property_name_asc":
+          return a.property_name.localeCompare(b.property_name);
+        case "property_name_desc":
+          return b.property_name.localeCompare(a.property_name);
+        case "status":
+          return a.status.localeCompare(b.status);
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [bookings, searchQuery, sortOption, filterStatus]);
+
+  const paginatedBookings = processedBookings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -94,7 +136,13 @@ const Bookings = () => {
       </div>
 
       <div className="bg-white rounded-xl border border-grey-outline shadow-sm p-4">
-        <BookingFilters onSearch={handleSearch} />
+        <BookingFilters
+          onSearch={handleSearch}
+          onSortChange={handleSortChange}
+          onFilterChange={handleFilterChange}
+          sortOption={sortOption}
+          filterStatus={filterStatus}
+        />
 
         {loading ? (
           <BookingListShimmer />
@@ -108,7 +156,7 @@ const Bookings = () => {
             />
             <BookingPagination
               currentPage={currentPage}
-              totalItems={filteredBookings.length}
+              totalItems={processedBookings.length}
               itemsPerPage={itemsPerPage}
               onPageChange={setCurrentPage}
               onItemsPerPageChange={setItemsPerPage}
