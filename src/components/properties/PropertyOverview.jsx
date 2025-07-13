@@ -13,6 +13,8 @@ import {
   Flag,
   AlertTriangle,
   Clock,
+  UserCheck,
+  UserCog,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 
@@ -287,6 +289,84 @@ const PropertyOverview = () => {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Property Team Section */}
+      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+        <h3 className="text-lg font-semibold mb-4">Property Team</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+          {/* Property Managers */}
+          <div className="border border-grey-outline rounded-2xl md:rounded-r-none">
+            <h4 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline flex items-center">
+              <UserCog className="w-4 h-4 mr-2" />
+              Property Managers ({property?.managers?.length || 0})
+            </h4>
+            <div className="divide-y divide-grey-outline">
+              {property?.managers && property.managers.length > 0 ? (
+                property.managers.map((manager, index) => (
+                  <div key={index} className="flex items-center px-4 py-3">
+                    <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
+                      <UserCog className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">
+                        {manager.name || manager.email || 'Unknown Manager'}
+                      </p>
+                      {manager.email && (
+                        <p className="text-xs text-primary-grey">{manager.email}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center px-4 py-3">
+                  <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
+                    <UserCog className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-primary-grey">No managers assigned</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Site Users */}
+          <div className="border border-grey-outline rounded-2xl md:rounded-l-none md:border-l-0">
+            <h4 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline flex items-center">
+              <UserCheck className="w-4 h-4 mr-2" />
+              Site Users ({property?.site_users?.length || 0})
+            </h4>
+            <div className="divide-y divide-grey-outline">
+              {property?.site_users && property.site_users.length > 0 ? (
+                property.site_users.map((siteUser, index) => (
+                  <div key={index} className="flex items-center px-4 py-3">
+                    <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
+                      <UserCheck className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">
+                        {siteUser.name || siteUser.email || 'Unknown User'}
+                      </p>
+                      {siteUser.email && (
+                        <p className="text-xs text-primary-grey">{siteUser.email}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center px-4 py-3">
+                  <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
+                    <UserCheck className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-primary-grey">No site users assigned</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

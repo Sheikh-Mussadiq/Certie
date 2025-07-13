@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   getLogbooks,
   activateLogbook,
   deactivateLogbook,
   createLogbook,
+  deleteLogbook,
 } from "../../services/logbookservices";
 import LogbookEntriesView from "./LogbookEntriesView";
 import { useOutletContext } from "react-router-dom";
@@ -29,6 +30,9 @@ const LogBooksTab = () => {
     frequency: "Monthly",
   });
   const [selectedLogbook, setSelectedLogbook] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [logbookToDelete, setLogbookToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const frequencyOptions = [
     "Daily",
@@ -66,9 +70,14 @@ const LogBooksTab = () => {
       } else {
         await activateLogbook(logbook.id);
       }
-      // Refresh logbooks after update
-      const data = await getLogbooks();
-      setLogbooks(data || []);
+      // Update local state instead of refetching
+      setLogbooks(prevLogbooks => 
+        prevLogbooks.map(lb => 
+          lb.id === logbook.id 
+            ? { ...lb, active: !lb.active }
+            : lb
+        )
+      );
     } catch (err) {
       setError("Failed to update logbook status");
     } finally {
@@ -85,16 +94,45 @@ const LogBooksTab = () => {
     setModalLoading(true);
     setModalError(null);
     try {
-      await createLogbook(form);
+      const newLogbook = await createLogbook({ 
+        ...form, 
+        property_id: property.id 
+      });
       setShowModal(false);
       setForm({ logbook_type: "", description: "", frequency: "Monthly" });
-      // Refresh logbooks
-      const data = await getLogbooks();
-      setLogbooks(data || []);
+      // Add new logbook to local state instead of refetching
+      if (newLogbook) {
+        setLogbooks(prevLogbooks => [...prevLogbooks, newLogbook]);
+      }
     } catch (err) {
       setModalError("Failed to create logbook");
     } finally {
       setModalLoading(false);
+    }
+  };
+
+  const handleDeleteClick = (logbook, e) => {
+    e.stopPropagation();
+    setLogbookToDelete(logbook);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteLogbook = async () => {
+    if (!logbookToDelete) return;
+    
+    setDeleteLoading(true);
+    try {
+      await deleteLogbook(logbookToDelete.id);
+      // Remove from local state
+      setLogbooks(prevLogbooks => 
+        prevLogbooks.filter(lb => lb.id !== logbookToDelete.id)
+      );
+      setShowDeleteModal(false);
+      setLogbookToDelete(null);
+    } catch (err) {
+      setError("Failed to delete logbook");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -131,7 +169,7 @@ const LogBooksTab = () => {
         <div>
           <h2 className="text-xl font-semibold text-primary-black">LogBooks</h2>
           <p className="text-sm text-primary-grey">
-            Streamline work, save your time and growth easier
+            Easily manage, track, and organize all your property logbooks in one place.
           </p>
         </div>
         {currentUser.id === property.owner_id && (
@@ -216,12 +254,23 @@ const LogBooksTab = () => {
               </div>
 
               <div className="flex items-center justify-between mt-4 bg-grey-fill p-4 rounded-b-xl">
-                <button
-                  className="text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-4 py-2 rounded-lg"
-                  type="button"
-                >
-                  View detail
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    className="text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-4 py-2 rounded-lg"
+                    type="button"
+                  >
+                    View detail
+                  </button>
+                  {currentUser.id === property.owner_id && (
+                    <button
+                      onClick={(e) => handleDeleteClick(logbook, e)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete logbook"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
                 <label
                   className="relative inline-flex items-center cursor-pointer"
                   onClick={(e) => e.stopPropagation()}
@@ -324,6 +373,58 @@ const LogBooksTab = () => {
                 {modalLoading ? "Creating..." : "Create LogBook"}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+              onClick={() => {
+                setShowDeleteModal(false);
+                setLogbookToDelete(null);
+              }}
+            >
+              &times;
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-500" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-primary-black">
+                  Delete LogBook
+                </h2>
+                <p className="text-sm text-primary-grey">
+                  This action cannot be undone
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-primary-grey mb-6">
+              Are you sure you want to delete "<strong>{logbookToDelete?.name}</strong>"? 
+              This will permanently remove the logbook and all its entries.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setLogbookToDelete(null);
+                }}
+                className="flex-1 px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors"
+                disabled={deleteLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteLogbook}
+                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? "Deleting..." : "Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}

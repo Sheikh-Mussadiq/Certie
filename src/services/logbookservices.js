@@ -92,6 +92,21 @@ export const getLogbookEntries = async (logbookId) => {
   }
 };
 
+// Delete a logbook
+export const deleteLogbook = async (logbookId) => {
+  try {
+    const { error } = await supabase
+      .from('property_logbooks')
+      .delete()
+      .eq('id', logbookId);
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error deleting logbook:', error);
+    throw error;
+  }
+};
+
 // Create a new logbook entry
 export const createLogbookEntry = async ({ logbook_id, completion_status, issue_comment, performed_by }) => {
   try {

@@ -128,10 +128,19 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
     }
 
     const response = await addPropertySiteUser(property.id, newSiteUserEmail);
+    const updatedSiteUsers = [...formData.site_users, response];
+    
     setFormData((prev) => ({
       ...prev,
-      site_users: [...prev.site_users, response],
+      site_users: updatedSiteUsers,
     }));
+    
+    // Update parent component's property state immediately
+    setProperty((prev) => ({
+      ...prev,
+      site_users: updatedSiteUsers,
+    }));
+    
     setNewSiteUserEmail("");
     toast.success("Site user added successfully");
   };
@@ -147,10 +156,19 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
     }
 
     const response = await addPropertyManager(property.id, newManagerEmail);
+    const updatedManagers = [...formData.managers, response];
+    
     setFormData((prev) => ({
       ...prev,
-      managers: [...prev.managers, response],
+      managers: updatedManagers,
     }));
+    
+    // Update parent component's property state immediately
+    setProperty((prev) => ({
+      ...prev,
+      managers: updatedManagers,
+    }));
+    
     setNewManagerEmail("");
     toast.success("Manager added successfully");
   };
@@ -161,10 +179,19 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
       toast.error("Failed to remove site user");
       return;
     }
+    const updatedSiteUsers = formData.site_users.filter((user) => user.user_id !== userId);
+    
     setFormData((prev) => ({
       ...prev,
-      site_users: prev.site_users.filter((user) => user.user_id !== userId),
+      site_users: updatedSiteUsers,
     }));
+    
+    // Update parent component's property state immediately
+    setProperty((prev) => ({
+      ...prev,
+      site_users: updatedSiteUsers,
+    }));
+    
     setRemovedSiteUsers((prev) => [...prev, userId]);
   };
 
@@ -174,10 +201,19 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
       toast.error("Failed to remove manager");
       return;
     }
+    const updatedManagers = formData.managers.filter((manager) => manager.user_id !== userId);
+    
     setFormData((prev) => ({
       ...prev,
-      managers: prev.managers.filter((manager) => manager.user_id !== userId),
+      managers: updatedManagers,
     }));
+    
+    // Update parent component's property state immediately
+    setProperty((prev) => ({
+      ...prev,
+      managers: updatedManagers,
+    }));
+    
     setRemovedManagers((prev) => [...prev, userId]);
   };
 
@@ -222,14 +258,20 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
         await removePropertyManager(property.id, userId);
       }
 
-      const response = await updateProperty(
-        property.id,
-        formData,
-        currentUser.id
-      );
-      setLoading(false);
-      setProperty(response); // Clear the property state to trigger re-fetch
-      onSuccess();
+          const response = await updateProperty(
+      property.id,
+      formData,
+      currentUser.id
+    );
+    setLoading(false);
+    
+    // Preserve the current managers and site_users since they're updated in real-time
+    setProperty((prev) => ({
+      ...response,
+      managers: prev.managers,
+      site_users: prev.site_users
+    }));
+    onSuccess();
     } catch (err) {
       console.error("Error updating property:", err);
       setError("Failed to update property. Please try again.");

@@ -419,9 +419,9 @@ const AssessmentsTab = () => {
               <span className="text-sm font-medium text-gray-600">
                 {stat.label}
               </span>
-              <button className="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
+              {/* <button className="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
                 <MoreVertical className="w-5 h-5" />
-              </button>
+              </button> */}
             </div>
             <div className="mt-4">
               <div className="flex items-baseline">
