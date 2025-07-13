@@ -118,7 +118,7 @@ const Bookings = () => {
         {currentUser?.role === "super_admin" ? (
           <p className="text-sm text-primary-grey">
             Manage all the bookings for Certie customers.
-            <span className="font-bold underline">
+            <span className="font-bold text-primary-black">
               {" "}
               Please make sure to upload the assessment report for each booking
               once completed. You can also cancel bookings if needed.

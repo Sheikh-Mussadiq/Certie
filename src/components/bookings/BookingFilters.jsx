@@ -30,7 +30,7 @@ const BookingFilters = ({
 
   const filterOptions = {
     all: "All Statuses",
-    approved: "Approved",
+    approved: "Pending",
     completed: "Completed",
     cancelled: "Cancelled",
   };
@@ -72,9 +72,9 @@ const BookingFilters = ({
   const activeFilterCount = filterStatus === "all" ? 0 : 1;
 
   return (
-    <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+    <div className="flex flex-wrap justify-end items-center mb-6 gap-4">
       <div className="flex space-x-4">
-        <div className="relative inline-block" ref={sortRef}>
+        {/* <div className="relative inline-block" ref={sortRef}>
           <button
             onClick={handleSortClick}
             className="inline-flex text-sm items-center px-4 py-2 border border-grey-outline rounded-lg bg-white text-gray-700 hover:bg-gray-50"
@@ -103,6 +103,18 @@ const BookingFilters = ({
               </div>
             </div>
           )}
+        </div> */}
+
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search bookings"
+            onChange={(e) => onSearch && onSearch(e.target.value)}
+            className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-primary-orange"
+          />
         </div>
 
         <div className="relative inline-block" ref={filterRef}>
@@ -120,7 +132,7 @@ const BookingFilters = ({
             <ChevronDown className="w-5 h-5 ml-2" />
           </button>
           {isFilterOpen && (
-            <div className="absolute z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1">
                 {Object.entries(filterOptions).map(([key, value]) => (
                   <button
@@ -141,7 +153,7 @@ const BookingFilters = ({
           )}
         </div>
 
-        <div className="relative inline-block">
+        {/* <div className="relative inline-block">
           <button
             onClick={onViewChange}
             className="inline-flex text-sm items-center px-4 py-2 border border-grey-outline rounded-lg bg-white text-gray-700 hover:bg-gray-50"
@@ -150,19 +162,7 @@ const BookingFilters = ({
             List view
             <ChevronDown className="w-5 h-5 ml-2" />
           </button>
-        </div>
-      </div>
-
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
-        </div>
-        <input
-          type="text"
-          placeholder="Search bookings"
-          onChange={(e) => onSearch && onSearch(e.target.value)}
-          className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-primary-orange"
-        />
+        </div> */}
       </div>
     </div>
   );
