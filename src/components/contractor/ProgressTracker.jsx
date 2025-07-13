@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
-const ProgressTracker = ({ currentStep = "building-type" }) => {
+const ProgressTracker = ({ currentStep = "property-details" }) => {
   const steps = [
-    { id: "service-details", label: "Service Details" },
-    { id: "additional-info", label: "Additional Information" },
-    { id: "time-date", label: "Time & Date" },
+    { id: "property-details", label: "Property Details" },
+    { id: "service-details", label: "Services Details" },
+    { id: "time-date", label: "Time and Date" },
     { id: "contact", label: "Contact Details" },
     { id: "complete", label: "Complete Booking" },
   ];
@@ -14,9 +14,9 @@ const ProgressTracker = ({ currentStep = "building-type" }) => {
   const mapWorkflowToProgressStep = (workflowStep) => {
     // Mapping from workflow steps to progress tracker steps
     const stepMapping = {
-      location: "service-details",
-      "building-type": "service-details",
-      "additional-services": "additional-info",
+      location: "property-details",
+      "property-details": "property-details",
+      "service-details": "service-details",
       "time-date": "time-date",
       contact: "contact",
       payment: "contact",
@@ -29,8 +29,8 @@ const ProgressTracker = ({ currentStep = "building-type" }) => {
   const getStepStatus = (stepId) => {
     const mappedCurrentStep = mapWorkflowToProgressStep(currentStep);
     const stepOrder = [
+      "property-details",
       "service-details",
-      "additional-info",
       "time-date",
       "contact",
       "complete",
@@ -39,8 +39,8 @@ const ProgressTracker = ({ currentStep = "building-type" }) => {
     const stepIndex = stepOrder.indexOf(stepId);
 
     // Handle special cases for progress
-    if (stepId === "service-details") {
-      if (currentStep === "building-type") {
+    if (stepId === "property-details") {
+      if (currentStep === "property-details") {
         return { status: "current", progress: 0.5 };
       } else if (currentStep === "location") {
         return { status: "current", progress: 0 };

@@ -11,6 +11,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --color-primary-600: #ff5436;
+  --color-primary-900: #151718;
 }
 
 body {
@@ -37,8 +40,9 @@ body {
 } */
 
 ::selection {
-  background-color: rgba(var(--color-primary-600), 0.2);
-  color: rgb(var(--color-primary-900));
+  background-color: #ff5436;
+  color: #151718;
+  opacity: 0.5;
 }
 
 .nav-link::before {

@@ -108,12 +108,12 @@ const BookingDetails = ({
                 <motion.button
                   onClick={() => {
                     if (
-                      currentStep === "building-type" &&
+                      currentStep === "property-details" &&
                       selectedBuildingType
                     ) {
                       onBuildingTypeSubmit(selectedBuildingType, propertyName);
                     } else if (
-                      currentStep === "additional-services" &&
+                      currentStep === "service-details" &&
                       selectedAdditionalServices
                     ) {
                       onAdditionalServicesSubmit(selectedAdditionalServices);
@@ -126,17 +126,18 @@ const BookingDetails = ({
                     }
                   }}
                   disabled={
-                    (currentStep === "building-type" &&
+                    (currentStep === "property-details" &&
                       !selectedBuildingType) ||
-                    (currentStep === "additional-services" &&
+                    (currentStep === "service-details" &&
                       !selectedAdditionalServices) ||
                     (currentStep === "time-date" && !dateTime) ||
                     (currentStep === "contact" && !contactFormData) ||
                     (currentStep === "payment" && !paymentDetails)
                   }
                   className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
-                    (currentStep === "building-type" && selectedBuildingType) ||
-                    (currentStep === "additional-services" &&
+                    (currentStep === "property-details" &&
+                      selectedBuildingType) ||
+                    (currentStep === "service-details" &&
                       selectedAdditionalServices) ||
                     (currentStep === "time-date" && dateTime) ||
                     (currentStep === "contact" && contactFormData) ||
@@ -159,7 +160,7 @@ const BookingDetails = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
-              {currentStep === "building-type" && (
+              {currentStep === "property-details" && (
                 <BuildingForm
                   property={property}
                   onDataChange={handleBuildingDataChange}
@@ -169,7 +170,7 @@ const BookingDetails = ({
                   }}
                 />
               )}
-              {currentStep === "additional-services" && (
+              {currentStep === "service-details" && (
                 <AdditionalServicesForm
                   onSubmit={handleAdditionalServicesSubmit}
                   buildingCategory={

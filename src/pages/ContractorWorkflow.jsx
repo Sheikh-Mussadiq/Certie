@@ -115,21 +115,21 @@ const ContractorWorkflow = () => {
           setPostcode(propertyData.address?.postcode || "");
           setBuildingType(propertyData.property_type);
           if (propertyData.property_type) {
-            setCurrentStep("additional-services");
+            setCurrentStep("service-details");
           }
         };
         fetchProperty();
       }
 
       if (location.state?.startAtStep === 2) {
-        setCurrentStep("additional-services");
+        setCurrentStep("service-details");
       }
     }
   }, [location.state]);
 
   const handleLocationSubmit = (submittedPostcode) => {
     setPostcode(submittedPostcode);
-    setCurrentStep("building-type");
+    setCurrentStep("property-details");
   };
 
   const handleBuildingTypeSubmit = (type, name) => {
@@ -137,7 +137,7 @@ const ContractorWorkflow = () => {
     if (name) {
       setPropertyName(name);
     }
-    setCurrentStep("additional-services");
+    setCurrentStep("service-details");
   };
 
   const handleAdditionalServicesSubmit = (services) => {
@@ -237,7 +237,7 @@ const ContractorWorkflow = () => {
 
   const handleBookAnother = () => {
     setPostcode("");
-    setCurrentStep("additional-services");
+    setCurrentStep("location");
     setBuildingType("");
     setAdditionalServices([]);
     setContactDetails(null);
@@ -254,9 +254,11 @@ const ContractorWorkflow = () => {
     } else if (currentStep === "contact") {
       setCurrentStep("time-date");
     } else if (currentStep === "time-date") {
-      setCurrentStep("additional-services");
-    } else if (currentStep === "additional-services") {
-      setCurrentStep("building-type");
+      setCurrentStep("service-details");
+    } else if (currentStep === "service-details") {
+      setCurrentStep("property-details");
+    } else if (currentStep === "property-details") {
+      setCurrentStep("location");
     } else {
       setCurrentStep("location");
     }
