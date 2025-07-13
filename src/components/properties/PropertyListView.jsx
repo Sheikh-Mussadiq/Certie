@@ -36,13 +36,16 @@ const PropertyListView = ({
             />
             <div className="flex-1">
               <h3 className="text-primary-black font-medium mb-2">
-                {property.name || 'Unnamed Property'}
+                {property.name || "Unnamed Property"}
               </h3>
               <p className="text-sm text-primary-grey mb-2">
-                {property.address ? (
-                  typeof property.address === 'string' ? property.address : 
-                  `${property.address.street || ''}, ${property.address.city || ''}, ${property.address.postcode || ''}`
-                ) : 'No address available'}
+                {property.address
+                  ? typeof property.address === "string"
+                    ? property.address
+                    : `${property.address.street || ""}, ${
+                        property.address.city || ""
+                      }, ${property.address.postcode || ""}`
+                  : "No address available"}
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
@@ -66,7 +69,7 @@ const PropertyListView = ({
                     Property Type
                   </p>
                   <p className="text-sm text-primary-black">
-                    {property.property_type || 'N/A'}
+                    {property.property_type || "N/A"}
                   </p>
                 </div>
                 <div>
@@ -74,15 +77,13 @@ const PropertyListView = ({
                     Contact Number
                   </p>
                   <p className="text-sm text-primary-black">
-                    {property.contact_phone || 'N/A'}
+                    {property.contact_phone || "N/A"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-primary-grey mb-1">
-                    Manager
-                  </p>
+                  <p className="text-sm text-primary-grey mb-1">Manager</p>
                   <p className="text-sm text-primary-black">
-                    {property.manager || 'N/A'}
+                    {property.manager || "N/A"}
                   </p>
                 </div>
               </div>

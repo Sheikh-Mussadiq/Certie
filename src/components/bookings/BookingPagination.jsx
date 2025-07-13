@@ -28,7 +28,7 @@ const BookingPagination = ({
         <select
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-          className="mx-2 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-orange focus:border-primary-orange"
+          className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-orange focus:border-primary-orange"
         >
           <option value={10}>10</option>
           <option value={25}>25</option>

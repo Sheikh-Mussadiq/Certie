@@ -66,13 +66,18 @@ const TableHeader = ({
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm ${
-              currentFilters
+              currentFilters && Object.keys(currentFilters).length > 0
                 ? "text-primary-orange"
                 : "text-primary-black hover:text-primary-orange"
             }`}
           >
             <img src={Filter} alt="filter" className="w-5 h-5" />
             Filter
+            {currentFilters && Object.keys(currentFilters).length > 0 && (
+              <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-primary-orange text-white rounded-full">
+                {Object.keys(currentFilters).length}
+              </span>
+            )}
           </button>
           <FilterMenu
             isOpen={isFilterOpen}

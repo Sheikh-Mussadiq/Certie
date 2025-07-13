@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Download,
   Trash2,
+  MoreVertical,
 } from "lucide-react";
 import Sort from "../../assets/sort-a-z.png";
 import Filter from "../../assets/filter.png";
@@ -202,24 +203,24 @@ const AssessmentsTab = () => {
   const handleStatusUpdate = async (assessmentId, newStatus) => {
     try {
       await updateBookingStatus(assessmentId, newStatus);
-      
+
       // Update local state instead of refetching
-      setAssessments(prevAssessments => 
-        prevAssessments.map(assessment => 
-          assessment.id === assessmentId 
+      setAssessments((prevAssessments) =>
+        prevAssessments.map((assessment) =>
+          assessment.id === assessmentId
             ? { ...assessment, status: newStatus }
             : assessment
         )
       );
-      
+
       // Recalculate stats with updated data
-      const updatedAssessments = assessments.map(assessment => 
-        assessment.id === assessmentId 
+      const updatedAssessments = assessments.map((assessment) =>
+        assessment.id === assessmentId
           ? { ...assessment, status: newStatus }
           : assessment
       );
       calculateStats(updatedAssessments);
-      
+
       toast.success("Assessment status updated");
     } catch (error) {
       console.error("Error updating assessment status:", error);
@@ -261,7 +262,7 @@ const AssessmentsTab = () => {
     {
       label: "Total Assessments",
       value: stats.total.toString().padStart(2, "0"),
-      change: "+10.2%",
+      change: "10.2%",
       isPositive: true,
     },
     {
@@ -271,8 +272,8 @@ const AssessmentsTab = () => {
       isPositive: false,
     },
     {
-      label: "Due Soon (30 days)",
-      value: stats.nextDue.toString().padStart(2, "0"),
+      label: "Next Due",
+      value: stats.nextDue ? stats.nextDue.toString().padStart(2, "0") : "N/A",
       change: "5.75%",
       isPositive: false,
     },
@@ -412,19 +413,25 @@ const AssessmentsTab = () => {
         {statsData.map((stat, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg border border-grey-outline p-4"
+            className="bg-white rounded-xl shadow-sm p-6 relative"
           >
-            <div className="flex justify-between items-start mb-2">
-              <span className="text-sm text-primary-grey">{stat.label}</span>
-              <button className="text-primary-grey hover:text-primary-black">
-                <MoreHorizontal className="w-5 h-5" />
+            <div className="flex justify-between items-start">
+              <span className="text-sm font-medium text-gray-600">
+                {stat.label}
+              </span>
+              <button className="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
+                <MoreVertical className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex items-end gap-3">
-              <span className="text-3xl font-semibold">{stat.value}</span>
+            <div className="mt-4">
+              <div className="flex items-baseline">
+                <span className="text-4xl font-bold">{stat.value}</span>
+              </div>
+            </div>
+            <div className="absolute bottom-6 right-6">
               <span
                 className={`text-xs ${
-                  stat.isPositive ? "text-green-600" : "text-red-600"
+                  stat.isPositive ? "text-green-600" : "text-primary-orange"
                 }`}
               >
                 {stat.isPositive ? "+" : ""}
@@ -436,7 +443,7 @@ const AssessmentsTab = () => {
       </div>
 
       {/* Actions Bar */}
-      <div className="space-y-4 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+      <div className="space-y-4 bg-white rounded-xl shadow-sm overflow-hidden p-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -534,7 +541,9 @@ const AssessmentsTab = () => {
                       </td>
                       <td className="py-4 px-6 border-r border-grey-outline">
                         {currentUser?.id === property.owner_id &&
-                        (status === "pending" || status === "approved" || status === "rejected") ? (
+                        (status === "pending" ||
+                          status === "approved" ||
+                          status === "rejected") ? (
                           <select
                             value={status}
                             onChange={(e) =>
@@ -619,10 +628,7 @@ const AssessmentsTab = () => {
                 })
               ) : (
                 <tr>
-                  <td
-                    colSpan="8"
-                    className="py-12 text-center text-gray-500 border-l border-r border-grey-outline"
-                  >
+                  <td colSpan="8" className="py-12 text-center text-gray-500 ">
                     <div className="flex flex-col items-center">
                       <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
                         <Plus className="w-8 h-8 text-gray-400" />

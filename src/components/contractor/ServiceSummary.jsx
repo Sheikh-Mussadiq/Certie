@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
-import {
-  Flame,
-  Clock,
-  MapPin,
-  Building,
-  Users,
-  AlertTriangle,
-} from "lucide-react";
+import { Clock, MapPin, Building, Users } from "lucide-react";
+import { HiWrenchScrewdriver } from "react-icons/hi2";
 
 const ServiceSummary = ({
   postcode,
@@ -17,6 +11,9 @@ const ServiceSummary = ({
   contactDetails,
   tenants = "04",
 }) => {
+  // Get all services to display at the top
+  const selectedServices = additionalServices?.services || [];
+
   return (
     <motion.div
       className="bg-white rounded-xl p-6 border border-grey-outline sticky top-4"
@@ -24,12 +21,21 @@ const ServiceSummary = ({
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-8 h-8 bg-red-100 rounded flex items-center justify-center">
-          <Flame size={16} className="text-primary-orange" />
+      <div className="mb-2">
+        <div className="flex gap-3 mb-1">
+          <div className="w-8 h-8 bg-primary-orange/10 rounded flex items-center justify-center flex-shrink-0">
+            <HiWrenchScrewdriver size={16} className="text-primary-orange" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold break-words">
+              {selectedServices.length > 0
+                ? selectedServices.join(", ")
+                : "Assessment"}
+            </h3>
+          </div>
         </div>
-        <h3 className="font-semibold">Fire Risk Assessment</h3>
       </div>
+
       <p className="text-sm text-primary-grey mb-4 text-center">
         {contactDetails ? "Booking in progress" : "Not booked"}
       </p>
@@ -78,14 +84,14 @@ const ServiceSummary = ({
         <div className="flex items-center gap-3">
           <Clock size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
-            <p className="text-sm font-medium">Time:</p>
+            <p className="text-sm font-medium">Date:</p>
             <p className="text-sm ml-1 text-primary-grey">
               {dateTime
                 ? `${dateTime.date?.toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "long",
                     weekday: "long",
-                  })} - ${dateTime.time} (2 Hours)`
+                  })}`
                 : "Not scheduled yet"}
             </p>
           </div>
@@ -127,22 +133,6 @@ const ServiceSummary = ({
             <p className="text-sm font-medium">No. of Occupants:</p>
             <p className="text-sm ml-1 text-primary-grey">
               {property?.occupants || "Not specified"}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <AlertTriangle
-            size={16}
-            className="text-primary-orange flex-shrink-0"
-          />
-          <div className="flex w-full">
-            <p className="text-sm font-medium">Other assessments required:</p>
-            <p className="text-sm ml-1 text-primary-grey">
-              {additionalServices?.services &&
-              additionalServices.services.length > 0
-                ? additionalServices.services.join(", ")
-                : "None selected"}
             </p>
           </div>
         </div>

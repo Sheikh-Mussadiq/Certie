@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, X } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
   return (
-    <div className="border-b border-grey-outline py-4">
+    <div className="bg-grey-fill/50 rounded-xl p-4 m-1">
       <div
         className="flex justify-between items-center cursor-pointer"
         onClick={toggleOpen}
       >
         <h3 className="font-medium">{question}</h3>
         <button className="w-6 h-6 flex items-center justify-center">
-          {isOpen ? <X size={16} /> : <Plus size={16} />}
+          {isOpen ? <Minus size={16} /> : <Plus size={16} />}
         </button>
       </div>
 
@@ -67,7 +67,7 @@ const FAQAccordion = () => {
     >
       <h2 className="text-xl font-semibold mb-4">Frequently Asked Questions</h2>
 
-      <div className="border-t border-grey-outline">
+      <div className="">
         {faqs.map((faq, index) => (
           <FAQItem
             key={index}

@@ -3,7 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import LocationSelector from "../components/contractor/LocationSelector";
 import BookingDetails from "../components/contractor/BookingDetails";
 import AuthModal from "../components/contractor/AuthModal";
-import { getPropertyById, createProperty } from "../services/propertiesServices";
+import {
+  getPropertyById,
+  createProperty,
+} from "../services/propertiesServices";
 import { createBooking } from "../services/bookingServices";
 import ContractorNavbar from "../components/contractor/ContractorNavbar";
 import { useAuth } from "../context/AuthContext";
@@ -69,27 +72,16 @@ const ContractorWorkflow = () => {
             return;
           }
 
-          const combinedDateTime = new Date(pendingWorkflow.dateTime.date);
-          const [time, modifier] = pendingWorkflow.dateTime.time.split(" ");
-          let [hours, minutes] = time.split(":");
-          hours = parseInt(hours, 10);
-          minutes = parseInt(minutes, 10);
-
-          if (modifier.toUpperCase() === "PM" && hours < 12) {
-            hours += 12;
-          }
-          if (modifier.toUpperCase() === "AM" && hours === 12) {
-            hours = 0;
-          }
-
-          combinedDateTime.setHours(hours, minutes, 0, 0);
+          // Use the timestampz directly from dateTime object instead of recalculating
+          const bookingTimestamp =
+            pendingWorkflow.dateTime.timestampz || new Date().toISOString();
 
           const creationPromises = servicesToBook.map((service) =>
             createBooking({
               property_id: propertyIdForBooking,
               property_name:
                 propertyForBooking?.name || pendingWorkflow.propertyName,
-              assessment_time: combinedDateTime.toISOString(),
+              booked_time: bookingTimestamp,
               contact_details: pendingWorkflow.contactDetails,
               type: service,
               building_type: pendingWorkflow.buildingType,
@@ -155,6 +147,12 @@ const ContractorWorkflow = () => {
 
   const handleTimeAndDateSubmit = (data) => {
     setDateTime(data);
+    // Don't automatically change the step here
+    // The step will be changed when the user clicks Continue
+  };
+
+  const handleTimeAndDateContinue = () => {
+    // Only change the step when explicitly called from the Continue button
     setCurrentStep("contact");
   };
 
@@ -179,7 +177,9 @@ const ContractorWorkflow = () => {
         paymentDetails,
       };
       localStorage.setItem("pendingWorkflow", JSON.stringify(workflowData));
-      navigate("/", { state: { from: location.pathname, pendingWorkflow: true } });
+      navigate("/", {
+        state: { from: location.pathname, pendingWorkflow: true },
+      });
       return;
     }
 
@@ -205,29 +205,21 @@ const ContractorWorkflow = () => {
         return;
       }
 
-      const combinedDateTime = new Date(dateTime.date);
-      const [time, modifier] = dateTime.time.split(" ");
-      let [hours, minutes] = time.split(":");
-      hours = parseInt(hours, 10);
-      minutes = parseInt(minutes, 10);
+      // Use the timestampz directly from dateTime object instead of recalculating
+      const bookingTimestamp = dateTime.timestampz;
 
-      if (modifier.toUpperCase() === "PM" && hours < 12) {
-        hours += 12;
-      }
-      if (modifier.toUpperCase() === "AM" && hours === 12) {
-        hours = 0; // Midnight case
-      }
-
-      combinedDateTime.setHours(hours, minutes, 0, 0);
+      const status =
+        property.owner_id === currentUser.id ? "approved" : "pending";
 
       const creationPromises = servicesToBook.map((service) =>
         createBooking({
           property_id: propertyId,
           property_name: property.name,
-          assessment_time: combinedDateTime.toISOString(),
+          booked_time: bookingTimestamp,
           contact_details: contactDetails,
           type: service,
           building_type: buildingType,
+          status,
           // user_id: currentUser.id,
         })
       );
@@ -306,6 +298,7 @@ const ContractorWorkflow = () => {
             onBuildingTypeSubmit={handleBuildingTypeSubmit}
             onAdditionalServicesSubmit={handleAdditionalServicesSubmit}
             onTimeAndDateSubmit={handleTimeAndDateSubmit}
+            onTimeAndDateContinue={handleTimeAndDateContinue}
             onContactSubmit={handleContactSubmit}
             onPaymentSubmit={handlePaymentSubmit}
             onFinalizeBooking={handleFinalizeBooking}

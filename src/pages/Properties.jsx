@@ -13,33 +13,27 @@ import PropertyListShimmer from "../components/properties/Shimmers/PropertyListS
 import TableHeaderShimmer from "../components/properties/Shimmers/TableHeaderShimmer";
 
 const applyFilters = (properties, filters) => {
-  if (!filters) return properties;
+  if (!filters || Object.keys(filters).length === 0) return properties;
+
+  console.log("Applying filters:", filters);
 
   return properties.filter((property) => {
     let matches = true;
 
     if (filters.property_type) {
+      console.log(
+        `Checking property_type: ${property.property_type} === ${filters.property_type}`
+      );
       matches = matches && property.property_type === filters.property_type;
     }
 
     if (filters.complianceScore) {
-      const score = property.complianceScore;
+      const score = property.compliance_score || 0;
       if (filters.complianceScore === "Above 90%") {
         matches = matches && score > 90;
       } else if (filters.complianceScore === "70-90%") {
         matches = matches && score >= 70 && score <= 90;
       } else if (filters.complianceScore === "Below 70%") {
-        matches = matches && score < 70;
-      }
-    }
-
-    if (filters.trainingScore) {
-      const score = property.trainingScore;
-      if (filters.trainingScore === "Above 90%") {
-        matches = matches && score > 90;
-      } else if (filters.trainingScore === "70-90%") {
-        matches = matches && score >= 70 && score <= 90;
-      } else if (filters.trainingScore === "Below 70%") {
         matches = matches && score < 70;
       }
     }
@@ -72,7 +66,7 @@ const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("table"); // "table" or "list"
   const [currentSort, setCurrentSort] = useState(null);
-  const [currentFilters, setCurrentFilters] = useState(null);
+  const [currentFilters, setCurrentFilters] = useState({});
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -128,10 +122,20 @@ const Properties = () => {
   };
 
   const handleFilter = (field, value) => {
-    setCurrentFilters((prev) => ({
-      ...prev,
-      [field]: prev?.[field] === value ? null : value,
-    }));
+    setCurrentFilters((prev) => {
+      const newFilters = { ...prev };
+
+      // If the same filter value is selected again, remove it (toggle behavior)
+      if (newFilters[field] === value) {
+        delete newFilters[field];
+      } else {
+        newFilters[field] = value;
+      }
+
+      // Reset to first page when filters change
+      setCurrentPage(1);
+      return newFilters;
+    });
   };
 
   const handleAddProperty = (propertyData) => {

@@ -54,21 +54,19 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     >
       <div className="mb-8 border border-grey-outline rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-2">
-          Do you need any additional Services?
+          Choose which services you need
         </h3>
         <p className="text-sm text-primary-grey mb-6">
-          Enable plane backwards needle optimize synergy. Shelf-ware or hill
-          want on land bandwagon opportunity great team. Stand existing skulls
-          hammer winning unlock I loss.
+          Select the services you need from the list below.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {services.map((service) => (
             <label
               key={service}
-              className={`relative flex items-center border rounded-md p-4 cursor-pointer transition-all ${
+              className={`relative flex items-center border rounded-lg p-4 cursor-pointer transition-all ${
                 selectedServices.includes(service)
-                  ? "border-primary-orange bg-red-50"
+                  ? "border-primary-orange bg-primary-orange/10"
                   : "border-grey-outline"
               }`}
             >
@@ -89,7 +87,15 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
                   <span className="w-3 h-3 rounded-full bg-primary-orange"></span>
                 )}
               </span>
-              <span className="font-medium text-gray-700">{service}</span>
+              <span
+                className={`font-medium ${
+                  selectedServices.includes(service)
+                    ? "text-primary-black"
+                    : "text-primary-grey"
+                }`}
+              >
+                {service}
+              </span>
             </label>
           ))}
         </div>
@@ -104,7 +110,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
               value={otherService}
               onChange={handleOtherServiceChange}
               placeholder="Enter Text Here"
-              className="w-full p-4 border border-grey-outline rounded-md focus:outline-none focus:border-primary-orange"
+              className="w-full p-4 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
             />
           </div>
         )}

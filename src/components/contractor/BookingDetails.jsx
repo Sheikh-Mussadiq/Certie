@@ -19,6 +19,7 @@ const BookingDetails = ({
   onBuildingTypeSubmit,
   onAdditionalServicesSubmit,
   onTimeAndDateSubmit,
+  onTimeAndDateContinue,
   onContactSubmit,
   onPaymentSubmit,
   paymentDetails,
@@ -53,6 +54,15 @@ const BookingDetails = ({
   const handleTimeAndDateSubmit = (data) => {
     onTimeAndDateSubmit(data);
   };
+
+  // New function to handle time and date changes without navigation
+  const handleTimeAndDateChange = useCallback(
+    (data) => {
+      // Just pass the data to the parent component without triggering navigation
+      onTimeAndDateSubmit(data);
+    },
+    [onTimeAndDateSubmit]
+  );
 
   const handleContactFormSubmit = (data) => {
     if (
@@ -108,7 +118,7 @@ const BookingDetails = ({
                     ) {
                       onAdditionalServicesSubmit(selectedAdditionalServices);
                     } else if (currentStep === "time-date" && dateTime) {
-                      onTimeAndDateSubmit(dateTime);
+                      onTimeAndDateContinue();
                     } else if (currentStep === "contact" && contactFormData) {
                       onContactSubmit(contactFormData);
                     } else if (currentStep === "payment" && paymentDetails) {
@@ -170,7 +180,7 @@ const BookingDetails = ({
                 />
               )}
               {currentStep === "time-date" && (
-                <TimeAndDateForm onSubmit={onTimeAndDateSubmit} />
+                <TimeAndDateForm onDataChange={handleTimeAndDateChange} />
               )}
               {currentStep === "contact" && (
                 <ContactForm onSubmit={handleContactFormSubmit} />

@@ -2,11 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const TimeAndDateForm = ({ onSubmit }) => {
+const TimeAndDateForm = ({ onDataChange }) => {
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  // Time selection is commented out for now
+  // const [selectedTime, setSelectedTime] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
+  // Commented out time slots as they're not needed for now
+  /*
   const timeSlots = [
     "12:00 AM",
     "12:30 AM",
@@ -21,6 +24,7 @@ const TimeAndDateForm = ({ onSubmit }) => {
     "17:00 AM",
     "17:30 AM",
   ];
+  */
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -51,17 +55,30 @@ const TimeAndDateForm = ({ onSubmit }) => {
       day
     );
     setSelectedDate(selected);
-    if (selectedTime) {
-      onSubmit({ date: selected, time: selectedTime });
+
+    // Convert to timestampz format (ISO string) and pass to parent
+    if (onDataChange) {
+      // Set time to noon (12:00) to avoid timezone issues
+      selected.setHours(12, 0, 0, 0);
+      onDataChange({
+        date: selected,
+        time: "12:00 PM", // Default time since time selection is disabled
+        timestampz: selected.toISOString(), // ISO format for timestampz
+      });
     }
   };
 
+  // Commented out time selection handler
+  /*
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-    if (selectedDate) {
-      onSubmit({ date: selectedDate, time });
+    // Store selection in state only, don't submit
+    if (selectedDate && onDataChange) {
+      // Update parent component's state without triggering navigation
+      onDataChange({ date: selectedDate, time });
     }
   };
+  */
 
   const weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -72,7 +89,7 @@ const TimeAndDateForm = ({ onSubmit }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border border-grey-outline rounded-xl p-4">
+      <div className="grid grid-cols-1 gap-8 border border-grey-outline rounded-xl p-4">
         <div>
           <h3 className="font-semibold text-lg mb-4">Select a Date</h3>
           <div className="bg-white rounded-lg border border-grey-outline p-4">
@@ -125,17 +142,18 @@ const TimeAndDateForm = ({ onSubmit }) => {
               })}
             </div>
 
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <label className="block text-sm font-medium mb-2">
                 Time zone
               </label>
               <select className="w-full p-2 border border-grey-outline rounded-md">
                 <option>Central European Time (8-11pm)</option>
               </select>
-            </div>
+            </div> */}
           </div>
         </div>
 
+        {/* Time selection section commented out
         <div>
           <h3 className="font-semibold text-lg mb-4">Select a Time</h3>
           <div className="space-y-2">
@@ -154,6 +172,7 @@ const TimeAndDateForm = ({ onSubmit }) => {
             ))}
           </div>
         </div>
+        */}
       </div>
     </motion.div>
   );
