@@ -132,13 +132,13 @@ const BookingFilters = ({
             <ChevronDown className="w-5 h-5 ml-2" />
           </button>
           {isFilterOpen && (
-            <div className="absolute right-0 z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div className="py-1">
+            <div className="absolute right-0 z-10 mt-2 w-56 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="p-2">
                 {Object.entries(filterOptions).map(([key, value]) => (
                   <button
                     key={key}
                     onClick={() => handleFilterSelect(key)}
-                    className={`flex w-full items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                    className={`flex w-full items-center justify-between rounded-lg my-1 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                       filterStatus === key ? "bg-gray-100 font-semibold" : ""
                     }`}
                   >
