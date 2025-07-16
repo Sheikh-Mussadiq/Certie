@@ -30,6 +30,7 @@ const BookingFilters = ({
 
   const filterOptions = {
     all: "All Statuses",
+    assigned: "Assigned",
     approved: "Pending",
     completed: "Completed",
     cancelled: "Cancelled",
