@@ -27,6 +27,7 @@ import AssessmentsTab from "./components/properties/AssessmentsTab";
 import LogBooksTab from "./components/properties/LogBooksTab";
 import DocumentsTab from "./components/properties/DocumentsTab";
 import PropertyOverview from "./components/properties/PropertyOverview";
+import Overview from "./pages/Overview";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -99,7 +100,7 @@ const ProtectedLoginRoute = () => {
     if (localStorage.getItem("pendingWorkflow")) {
       return <Navigate to="/contractor-workflow" replace />;
     }
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/overview" replace />;
   }
 
   return <LoginSignUpPage />;
@@ -121,7 +122,15 @@ const AuthenticatedRoutes = () => {
     <MainLayout>
       <AnimatePresence mode="wait">
         <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/overview" replace />} />
+          <Route
+            path="/overview"
+            element={
+              <ProtectedLayout>
+                <Overview />
+              </ProtectedLayout>
+            }
+          />
           <Route
             path="/home"
             element={
@@ -172,7 +181,7 @@ const AuthenticatedRoutes = () => {
           <Route
             path="/documents"
             element={
-              <ProtectedLayout> 
+              <ProtectedLayout>
                 <Documents />
               </ProtectedLayout>
             }
@@ -215,10 +224,7 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<ProtectedLoginRoute />} />
-          <Route
-            path="/contractor-workflow"
-            element={<ContractorWorkflow />}
-          />
+          <Route path="/contractor-workflow" element={<ContractorWorkflow />} />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>
         <Toaster position="top-right" />
