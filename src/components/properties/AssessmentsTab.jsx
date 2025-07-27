@@ -521,9 +521,11 @@ const AssessmentsTab = () => {
                 <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Assignee
                 </th>
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
-                  Invoice
-                </th>
+                {currentUser?.id === property.owner_id && (
+                  <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                    Invoice
+                  </th>
+                )}
                 <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Assessment Time
                 </th>
@@ -604,7 +606,8 @@ const AssessmentsTab = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-6 border-r border-grey-outline">
+                      {currentUser?.id === property.owner_id && (
+                        <td className="py-4 px-6 border-r border-grey-outline">
                         {assessment.invoice_bookings && assessment.invoice_bookings.length > 0 ? (
                           <div>
                             <p className="font-medium">
@@ -626,6 +629,7 @@ const AssessmentsTab = () => {
                           "N/A"
                         )}
                       </td>
+                      )}
                       <td className="py-4 px-6 text-sm border-r border-grey-outline">
                         {formatAssessmentTime(assessment.assessment_time)}
                       </td>
