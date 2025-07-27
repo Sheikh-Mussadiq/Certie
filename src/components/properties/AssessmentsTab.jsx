@@ -21,6 +21,7 @@ import {
   updateBookingStatus,
   cancelBooking,
 } from "../../services/bookingServices";
+import { supabase } from "../../lib/supabase";
 
 const AssessmentsTab = () => {
   const { property } = useOutletContext();
@@ -222,6 +223,27 @@ const AssessmentsTab = () => {
       calculateStats(updatedAssessments);
 
       toast.success("Assessment status updated");
+
+      // If the new status is 'approved', trigger invoice creation.
+      if (newStatus === "approved") {
+        console.log(`Booking ${assessmentId} approved. Creating invoice...`);
+        try {
+          const { data: invoiceData, error: invoiceError } =
+            await supabase.functions.invoke("create-invoice", {
+              body: { bookingIds: [assessmentId] },
+            });
+
+          if (invoiceError) {
+            throw invoiceError;
+          }
+
+          console.log("Invoice created successfully:", invoiceData);
+          toast.success("Invoice created for the approved assessment.");
+        } catch (error) {
+          console.error("Failed to create invoice:", error);
+          toast.error(`Failed to create invoice: ${error.message}`);
+        }
+      }
     } catch (error) {
       console.error("Error updating assessment status:", error);
       toast.error("Failed to update assessment status");
@@ -481,32 +503,29 @@ const AssessmentsTab = () => {
 
         {/* Table */}
         <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse text-center">
             <thead>
               <tr className="bg-grey-fill/50 border-b border-grey-outline">
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Assessment Type
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Date Completed
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Next Due
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Status
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Assignee
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
-                  Document
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  Invoice
                 </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
                   Assessment Time
-                </th>
-                <th className="text-left py-4 px-6 text-sm font-medium text-primary-grey  ">
-                  Actions
                 </th>
               </tr>
             </thead>
@@ -542,7 +561,7 @@ const AssessmentsTab = () => {
                       <td className="py-4 px-6 border-r border-grey-outline">
                         {currentUser?.id === property.owner_id &&
                         (status === "pending" ||
-                          status === "approved" ||
+                          (status === "approved" && (!assessment.invoice_bookings || assessment.invoice_bookings.length === 0)) ||
                           status === "rejected") ? (
                           <select
                             value={status}
@@ -552,6 +571,7 @@ const AssessmentsTab = () => {
                             className={`px-3 py-1 text-xs font-medium rounded-full cursor-pointer ${getStatusColor(
                               status
                             )}`}
+                            disabled={status === "approved"}
                           >
                             {statusOptions.map((option) => (
                               <option key={option.value} value={option.value}>
@@ -582,53 +602,39 @@ const AssessmentsTab = () => {
                               getAssigneeInitials(assignee)
                             )}
                           </div>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium">
-                              {assignee.name || "Unassigned"}
-                            </span>
-                            {assignee.contact && (
-                              <span className="text-xs text-primary-grey">
-                                {assignee.contact}
-                              </span>
-                            )}
-                            <span className="text-xs text-primary-grey">
-                              {assignee.email}
-                            </span>
-                          </div>
                         </div>
                       </td>
                       <td className="py-4 px-6 border-r border-grey-outline">
-                        <button className="text-sm text-primary-orange hover:underline">
-                          {assessment.status === "completed" &&
-                          assessment.completed_at
-                            ? "View Document"
-                            : "N/A"}
-                        </button>
+                        {assessment.invoice_bookings && assessment.invoice_bookings.length > 0 ? (
+                          <div>
+                            <p className="font-medium">
+                              {assessment.invoice_bookings[0].invoices.status}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              £{assessment.invoice_bookings[0].invoices.amount_due / 100}
+                            </p>
+                            <a
+                              href={assessment.invoice_bookings[0].invoices.hosted_invoice_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-blue-500 hover:underline"
+                            >
+                              View Invoice
+                            </a>
+                          </div>
+                        ) : (
+                          "N/A"
+                        )}
                       </td>
                       <td className="py-4 px-6 text-sm border-r border-grey-outline">
                         {formatAssessmentTime(assessment.assessment_time)}
-                      </td>
-                      <td className="py-4 px-6 ">
-                        <div className="flex items-center gap-2">
-                          {isStatusDeletable(status) && (
-                            <button
-                              onClick={() =>
-                                handleDeleteAssessment(assessment.id)
-                              }
-                              className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
-                              title="Cancel Assessment"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
                       </td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td colSpan="8" className="py-12 text-center text-gray-500 ">
+                  <td colSpan="7" className="py-12 text-center text-gray-500 ">
                     <div className="flex flex-col items-center">
                       <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
                         <Plus className="w-8 h-8 text-gray-400" />

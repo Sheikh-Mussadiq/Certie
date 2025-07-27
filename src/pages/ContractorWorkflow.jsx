@@ -8,8 +8,10 @@ import {
   createProperty,
 } from "../services/propertiesServices";
 import { createBooking } from "../services/bookingServices";
+import { supabase } from "../lib/supabase";
 import ContractorNavbar from "../components/contractor/ContractorNavbar";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
 
 const ContractorWorkflow = () => {
   const location = useLocation();
@@ -43,6 +45,7 @@ const ContractorWorkflow = () => {
         try {
           let propertyIdForBooking = propertyId;
           let propertyForBooking = property;
+          let propertyOwnerId = currentUser.id || property?.owner_id || null;
 
           if (!propertyIdForBooking && pendingWorkflow.propertyName) {
             const newProperty = await createProperty(
@@ -55,6 +58,7 @@ const ContractorWorkflow = () => {
             );
             propertyIdForBooking = newProperty.id;
             propertyForBooking = newProperty;
+            propertyOwnerId = newProperty.owner_id;
             setProperty(newProperty);
             setPropertyId(newProperty.id);
           }
@@ -76,6 +80,7 @@ const ContractorWorkflow = () => {
           const bookingTimestamp =
             pendingWorkflow.dateTime.timestampz || new Date().toISOString();
 
+          const status = propertyOwnerId === currentUser.id ? "approved" : "pending";
           const creationPromises = servicesToBook.map((service) =>
             createBooking({
               property_id: propertyIdForBooking,
@@ -85,11 +90,43 @@ const ContractorWorkflow = () => {
               contact_details: pendingWorkflow.contactDetails,
               type: service,
               building_type: pendingWorkflow.buildingType,
-              // user_id: currentUser.id,
+              status: "approved",
             })
           );
 
-          await Promise.all(creationPromises);
+          const createdBookings = await Promise.all(creationPromises);
+
+          if (
+            createdBookings &&
+            createdBookings.length > 0 &&
+            propertyForBooking &&
+            currentUser &&
+            propertyForBooking.owner_id === currentUser.id
+          ) {
+            const bookingIds = createdBookings.map((b) => b.id);
+            console.log(
+              "Property owner creating invoice for pending workflow booking IDs:",
+              bookingIds
+            );
+
+            try {
+              const { data: invoiceData, error: invoiceError } =
+                await supabase.functions.invoke("create-invoice", {
+                  body: { bookingIds },
+                });
+
+              if (invoiceError) {
+                throw invoiceError;
+              }
+
+              console.log("Invoice created successfully:", invoiceData);
+              toast.success("Invoice created for your booking.");
+            } catch (error) {
+              console.error("Failed to create invoice:", error);
+              toast.error(`Failed to create invoice: ${error.message}`);
+            }
+          }
+
           setCurrentStep("complete");
           localStorage.removeItem("pendingWorkflow");
         } catch (error) {
@@ -101,7 +138,7 @@ const ContractorWorkflow = () => {
       }
     };
     processPendingWorkflow();
-  }, [isAuthenticated, currentUser, property, propertyId]);
+  }, [isAuthenticated, currentUser]);
 
   useEffect(() => {
     if (location.state) {
@@ -158,14 +195,40 @@ const ContractorWorkflow = () => {
 
   const handleContactSubmit = (details) => {
     setContactDetails(details);
-    setCurrentStep("payment");
+    // No longer triggers finalization from here.
   };
 
   const handlePaymentSubmit = (details) => {
     setPaymentDetails(details);
   };
 
-  const handleFinalizeBooking = async () => {
+  const handleFinalizeBookingAndInvoice = async (contactData) => {
+    // First, create the bookings
+    const createdBookings = await handleFinalizeBooking(contactData);
+
+    // Only create an invoice immediately if the current user is the property owner.
+    if (createdBookings && createdBookings.length > 0 && property && currentUser && property.owner_id === currentUser.id) {
+      const bookingIds = createdBookings.map((b) => b.id);
+      console.log("Property owner creating invoice for booking IDs:", bookingIds);
+
+      try {
+        const { data, error } = await supabase.functions.invoke("create-invoice", {
+          body: { bookingIds },
+        });
+
+        if (error) throw error;
+
+        console.log("Invoice created:", data);
+        toast.success("Bookings created and invoice is being generated.");
+      } catch (error) {
+        setBookingError(`Failed to create invoice. ${error.message}`);
+        console.error(error);
+        toast.error(`Failed to create invoice: ${error.message}`);
+      }
+    }
+  };
+
+  const handleFinalizeBooking = async (contactData) => {
     if (!isAuthenticated) {
       const workflowData = {
         postcode,
@@ -173,7 +236,7 @@ const ContractorWorkflow = () => {
         propertyName: property ? property.name : propertyName,
         additionalServices,
         dateTime,
-        contactDetails,
+        contactDetails: contactData,
         paymentDetails,
       };
       localStorage.setItem("pendingWorkflow", JSON.stringify(workflowData));
@@ -186,7 +249,7 @@ const ContractorWorkflow = () => {
     console.log("Attempting to finalize booking with data:", {
       propertyId,
       dateTime,
-      contactDetails,
+      contactDetails: contactData,
       additionalServices,
       buildingType,
       paymentDetails,
@@ -216,7 +279,7 @@ const ContractorWorkflow = () => {
           property_id: propertyId,
           property_name: property.name,
           booked_time: bookingTimestamp,
-          contact_details: contactDetails,
+          contact_details: contactData,
           type: service,
           building_type: buildingType,
           status,
@@ -224,9 +287,10 @@ const ContractorWorkflow = () => {
         })
       );
 
-      await Promise.all(creationPromises);
-      console.log("Bookings created for services:", servicesToBook);
+      const createdBookings = await Promise.all(creationPromises);
+      console.log("Bookings created:", createdBookings);
       setCurrentStep("complete");
+      return createdBookings;
     } catch (error) {
       setBookingError("Failed to create booking(s). Please try again.");
       console.error(error);
@@ -302,8 +366,8 @@ const ContractorWorkflow = () => {
             onTimeAndDateSubmit={handleTimeAndDateSubmit}
             onTimeAndDateContinue={handleTimeAndDateContinue}
             onContactSubmit={handleContactSubmit}
-            onPaymentSubmit={handlePaymentSubmit}
-            onFinalizeBooking={handleFinalizeBooking}
+            // onPaymentSubmit={handlePaymentSubmit}
+            onFinalizeBooking={handleFinalizeBookingAndInvoice}
             onBookAnother={handleBookAnother}
             paymentDetails={paymentDetails}
             dateTime={dateTime}

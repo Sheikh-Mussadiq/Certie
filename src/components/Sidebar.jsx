@@ -9,6 +9,7 @@ import {
   FileText,
   Calendar,
   Settings,
+  Folder,
 } from "lucide-react";
 import { SiOverleaf } from "react-icons/si";
 import Logo from "../assets/Logo.png";
@@ -30,6 +31,7 @@ const Sidebar = () => {
     // { icon: Users, label: "Directory", path: "/directory" },
     { icon: CalendarDays, label: "Bookings", path: "/bookings" },
     { icon: FileText, label: "Documents", path: "/documents" },
+    { icon: FileText, label: "Invoices", path: "/invoices" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];

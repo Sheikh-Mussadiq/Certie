@@ -59,17 +59,23 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
             >
               Contact Details
             </th>
-            <th
+            {/* <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Last Checked
-            </th>
+            </th> */}
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Status
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+            >
+              Invoice
             </th>
             <th
               scope="col"
@@ -116,15 +122,37 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                   "N/A"
                 )}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
+              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
                 {booking.completed_at
                   ? format(new Date(booking.completed_at), "dd MMM - yyyy")
                   : booking.assessment_time
                   ? format(new Date(booking.assessment_time), "dd MMM - yyyy")
                   : "N/A"}
-              </td>
+              </td> */}
               <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
                 <StatusBadge status={booking.status} />
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
+                {booking.invoice_bookings && booking.invoice_bookings.length > 0 ? (
+                  <div>
+                    <p className="font-medium">
+                      {booking.invoice_bookings[0].invoices.status}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      £{booking.invoice_bookings[0].invoices.amount_due / 100}
+                    </p>
+                    <a
+                      href={booking.invoice_bookings[0].invoices.hosted_invoice_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-500 hover:underline"
+                    >
+                      View Invoice
+                    </a>
+                  </div>
+                ) : (
+                  "N/A"
+                )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
                 <div className="flex items-center">

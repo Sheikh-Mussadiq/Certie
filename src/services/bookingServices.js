@@ -7,6 +7,25 @@ import { supabase } from "../lib/supabase";
  */
 export const createBooking = async (bookingData) => {
   try {
+    // If a service name ('type') is provided, find its ID
+    if (bookingData.type) {
+      const { data: service, error: serviceError } = await supabase
+        .from("services")
+        .select("id")
+        .eq("name", bookingData.type)
+        .single();
+
+      if (serviceError) {
+        console.error("Error fetching service ID:", serviceError);
+        // Decide if you want to throw an error or book without the ID
+        throw new Error(`Service with name "${bookingData.type}" not found.`);
+      }
+
+      if (service) {
+        bookingData.service_id = service.id;
+      }
+    }
+
     const { data, error } = await supabase
       .from("bookings")
       .insert([bookingData])
@@ -30,7 +49,16 @@ export const getPropertyBookings = async (propertyId) => {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .select("*")
+      .select(`
+        *,
+        invoice_bookings (
+          invoices (
+            status,
+            amount_due,
+            hosted_invoice_url
+          )
+        )
+      `)
       .eq("property_id", propertyId)
       .order("assessment_time", { ascending: true });
 
@@ -164,7 +192,17 @@ export const getAllBookings = async () => {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .select("*, properties(name)")
+      .select(`
+        *,
+        properties(name),
+        invoice_bookings (
+          invoices (
+            status,
+            amount_due,
+            hosted_invoice_url
+          )
+        )
+      `)
       .order("assessment_time", { ascending: false });
 
     if (error) throw error;

@@ -20,6 +20,7 @@ import PropertyDetails from "./pages/PropertyDetails";
 import Calendar from "./pages/Calendar";
 import Bookings from "./pages/Bookings";
 import Documents from "./pages/Documents";
+import Invoices from "./pages/Invoices";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 import Logo from "./assets/Logo.png";
 import AssessmentsTab from "./components/properties/AssessmentsTab";
@@ -173,6 +174,14 @@ const AuthenticatedRoutes = () => {
             element={
               <ProtectedLayout> 
                 <Documents />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <ProtectedLayout>
+                <Invoices />
               </ProtectedLayout>
             }
           />

@@ -21,8 +21,8 @@ const BookingDetails = ({
   onTimeAndDateSubmit,
   onTimeAndDateContinue,
   onContactSubmit,
-  onPaymentSubmit,
-  paymentDetails,
+  // onPaymentSubmit,
+  // paymentDetails,
   dateTime,
   onFinalizeBooking,
   onBookAnother,
@@ -76,9 +76,9 @@ const BookingDetails = ({
     }
   };
 
-  const handlePaymentFormSubmit = (data) => {
-    onPaymentSubmit(data);
-  };
+  // const handlePaymentFormSubmit = (data) => {
+  //   onPaymentSubmit(data);
+  // };
 
   return (
     <div className="max-w-7xl mx-auto relative">
@@ -121,8 +121,7 @@ const BookingDetails = ({
                       onTimeAndDateContinue();
                     } else if (currentStep === "contact" && contactFormData) {
                       onContactSubmit(contactFormData);
-                    } else if (currentStep === "payment" && paymentDetails) {
-                      onFinalizeBooking();
+                      onFinalizeBooking(contactFormData);
                     }
                   }}
                   disabled={
@@ -131,8 +130,7 @@ const BookingDetails = ({
                     (currentStep === "service-details" &&
                       !selectedAdditionalServices) ||
                     (currentStep === "time-date" && !dateTime) ||
-                    (currentStep === "contact" && !contactFormData) ||
-                    (currentStep === "payment" && !paymentDetails)
+                    (currentStep === "contact" && !contactFormData)
                   }
                   className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
                     (currentStep === "property-details" &&
@@ -140,8 +138,7 @@ const BookingDetails = ({
                     (currentStep === "service-details" &&
                       selectedAdditionalServices) ||
                     (currentStep === "time-date" && dateTime) ||
-                    (currentStep === "contact" && contactFormData) ||
-                    (currentStep === "payment" && paymentDetails)
+                    (currentStep === "contact" && contactFormData)
                       ? "bg-primary-black hover:bg-primary-black/80"
                       : "bg-primary-grey cursor-not-allowed"
                   }`}
@@ -185,9 +182,6 @@ const BookingDetails = ({
               )}
               {currentStep === "contact" && (
                 <ContactForm onSubmit={handleContactFormSubmit} />
-              )}
-              {currentStep === "payment" && (
-                <PaymentForm onSubmit={onPaymentSubmit} />
               )}
             </div>
 
