@@ -33,7 +33,9 @@ const RecentActivity = ({ logbooks, bookings }) => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm">
       <div className="flex items-center mb-4">
-        <List size={20} className="text-gray-600 mr-2" />
+        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
+          <List size={20} className="text-gray-600" />
+        </div>
         <h3 className="font-semibold text-gray-700">Recent Activity</h3>
         <span className="ml-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
           {allActivities.length}
@@ -44,7 +46,7 @@ const RecentActivity = ({ logbooks, bookings }) => {
           allActivities.map((activity, index) => (
             <div
               key={activity.id || index}
-              className="flex items-start space-x-3"
+              className="flex items-start space-x-3 p-2 rounded-lg bg-grey-fill"
             >
               <div className="flex-shrink-0 mt-1">
                 {activity.type === "logbook" ? (

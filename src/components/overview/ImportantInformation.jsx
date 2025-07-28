@@ -57,7 +57,9 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm">
       <div className="flex items-center mb-4">
-        <ListChecks size={20} className="text-gray-600 mr-2" />
+        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
+          <ListChecks size={20} className="text-gray-600" />
+        </div>
         <h3 className="font-semibold text-gray-700">Important Information</h3>
       </div>
       <div className="space-y-3 text-sm">

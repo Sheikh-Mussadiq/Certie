@@ -38,7 +38,10 @@ const UpcomingBookings = ({ bookings }) => {
       <div className="space-y-4">
         {upcoming.length > 0 ? (
           upcoming.map((booking, index) => (
-            <div key={booking.id || index} className="flex items-center">
+            <div
+              key={booking.id || index}
+              className="flex items-center p-2 rounded-lg bg-grey-fill"
+            >
               <div className="bg-gray-100 p-2 rounded-lg mr-4">
                 <Calendar size={20} className="text-gray-600" />
               </div>

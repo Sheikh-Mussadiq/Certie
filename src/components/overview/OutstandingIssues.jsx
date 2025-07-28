@@ -17,7 +17,9 @@ const OutstandingIssues = ({ logbooks }) => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm">
       <div className="flex items-center mb-4">
-        <Clock size={20} className="text-gray-600 mr-2" />
+        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
+          <Clock size={20} className="text-gray-600" />
+        </div>
         <h3 className="font-semibold text-gray-700">Outstanding Issues</h3>
         <span className="ml-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
           {recentChanges.length}
@@ -26,7 +28,7 @@ const OutstandingIssues = ({ logbooks }) => {
       <div className="space-y-3">
         {recentChanges.length > 0 ? (
           recentChanges.map((item, index) => (
-            <div key={index}>
+            <div key={index} className="p-2 rounded-lg bg-grey-fill">
               <div className="flex justify-between items-start">
                 <p className="font-semibold text-sm">{item.logbookName}</p>
                 <span

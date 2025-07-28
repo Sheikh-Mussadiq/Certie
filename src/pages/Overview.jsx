@@ -8,7 +8,7 @@ import ImportantInformation from "../components/overview/ImportantInformation";
 import OverdueLogbookTasks from "../components/overview/OverdueLogbookTasks";
 import RecentActivity from "../components/overview/RecentActivity";
 import PropertySummary from "../components/overview/PropertySummary";
-import DashboardHeader from "../components/overview/OverviewHeader";
+import OverviewHeader from "../components/overview/OverviewHeader";
 
 const Overview = () => {
   const { properties, bookings, documents, logbooks, loading, error } =
@@ -24,7 +24,7 @@ const Overview = () => {
 
   return (
     <div className="p-2">
-      <DashboardHeader />
+      <OverviewHeader />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

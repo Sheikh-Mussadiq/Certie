@@ -31,7 +31,9 @@ const OverdueLogbookTasks = ({ logbooks }) => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm">
       <div className="flex items-center mb-4">
-        <AlertTriangle size={20} className="text-gray-600 mr-2" />
+        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
+          <AlertTriangle size={20} className="text-gray-600" />
+        </div>
         <h3 className="font-semibold text-gray-700">Overdue Logbook Tasks</h3>
         <span className="ml-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
           {overdueTasks.length}
@@ -40,7 +42,10 @@ const OverdueLogbookTasks = ({ logbooks }) => {
       <div className="space-y-3">
         {overdueTasks.length > 0 ? (
           overdueTasks.map((task, index) => (
-            <div key={index} className="flex justify-between items-center">
+            <div
+              key={index}
+              className="flex justify-between items-center p-2 rounded-lg bg-grey-fill"
+            >
               <div>
                 <p className="font-semibold text-sm">{task.logbook_type}</p>
                 <p className="text-sm text-gray-500">{task.description}</p>
