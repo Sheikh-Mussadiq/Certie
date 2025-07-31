@@ -22,6 +22,8 @@ const ContractorWorkflow = () => {
   const [currentStep, setCurrentStep] = useState("property-details");
   const [buildingType, setBuildingType] = useState("");
   const [propertyName, setPropertyName] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
   const [floors, setFloors] = useState("");
   const [size, setSize] = useState("");
   const [tenants, setTenants] = useState("");
@@ -54,7 +56,11 @@ const ContractorWorkflow = () => {
             const newProperty = await createProperty(
               {
                 name: pendingWorkflow.propertyName,
-                address: { postcode: pendingWorkflow.postcode },
+                address: { 
+                  street: pendingWorkflow.street,
+                  city: pendingWorkflow.city,
+                  postcode: pendingWorkflow.postcode 
+                },
                 property_type: pendingWorkflow.buildingType,
                 floors: parseInt(pendingWorkflow.floors) || null,
                 square_ft: parseInt(pendingWorkflow.size) || null,
@@ -156,6 +162,8 @@ const ContractorWorkflow = () => {
           const propertyData = await getPropertyById(propId);
           setProperty(propertyData);
           setPostcode(propertyData.address?.postcode || "");
+          setStreet(propertyData.address?.street || "");
+          setCity(propertyData.address?.city || "");
           setBuildingType(propertyData.property_type);
           setFloors(propertyData.floors || "");
           setSize(propertyData.square_ft || "");
@@ -178,10 +186,19 @@ const ContractorWorkflow = () => {
     setCurrentStep("property-details");
   };
 
-  const handleBuildingTypeSubmit = (type, name, floorsValue, sizeValue, tenantsValue) => {
+  const handleBuildingTypeSubmit = (type, name, streetValue, cityValue, postcodeValue, floorsValue, sizeValue, tenantsValue) => {
     setBuildingType(type);
     if (name) {
       setPropertyName(name);
+    }
+    if (streetValue) {
+      setStreet(streetValue);
+    }
+    if (cityValue) {
+      setCity(cityValue);
+    }
+    if (postcodeValue) {
+      setPostcode(postcodeValue);
     }
     if (floorsValue) {
       setFloors(floorsValue);
@@ -250,6 +267,8 @@ const ContractorWorkflow = () => {
     if (!isAuthenticated) {
       const workflowData = {
         postcode,
+        street,
+        city,
         buildingType,
         propertyName: property ? property.name : propertyName,
         floors,
@@ -321,6 +340,8 @@ const ContractorWorkflow = () => {
 
   const handleBookAnother = () => {
     setPostcode("");
+    setStreet("");
+    setCity("");
     setCurrentStep("location");
     setBuildingType("");
     setPropertyName("");
@@ -383,6 +404,7 @@ const ContractorWorkflow = () => {
           <BookingDetails
             postcode={postcode}
             property={property}
+            buildingType={buildingType}
             propertyId={propertyId}
             currentStep={currentStep}
             onGoBack={handleGoBack}

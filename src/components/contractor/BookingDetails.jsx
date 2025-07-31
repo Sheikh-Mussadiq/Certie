@@ -29,6 +29,9 @@ const BookingDetails = ({
 }) => {
   const [selectedBuildingType, setSelectedBuildingType] = useState("");
   const [propertyName, setPropertyName] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [postcodeValue, setPostcodeValue] = useState("");
   const [floors, setFloors] = useState("");
   const [size, setSize] = useState("");
   const [tenants, setTenants] = useState("");
@@ -40,6 +43,9 @@ const BookingDetails = ({
   useEffect(() => {
     if (property?.property_type) {
       setSelectedBuildingType(property.property_type);
+      setStreet(property.address?.street || "");
+      setCity(property.address?.city || "");
+      setPostcodeValue(property.address?.postcode || "");
       setFloors(property.floors || "");
       setSize(property.square_ft || "");
       setTenants(property.occupants || "");
@@ -50,6 +56,15 @@ const BookingDetails = ({
     setSelectedBuildingType(data.buildingType);
     if (data.propertyName) {
       setPropertyName(data.propertyName);
+    }
+    if (data.street) {
+      setStreet(data.street);
+    }
+    if (data.city) {
+      setCity(data.city);
+    }
+    if (data.postcode) {
+      setPostcodeValue(data.postcode);
     }
     if (data.floors) {
       setFloors(data.floors);
@@ -83,9 +98,9 @@ const BookingDetails = ({
     if (
       data.name &&
       data.email &&
-      data.phone &&
-      data.address &&
-      data.postcode
+      data.phone
+        // data.address &&
+        // data.postcode
     ) {
       setContactFormData(data);
     }
@@ -126,7 +141,7 @@ const BookingDetails = ({
                       currentStep === "property-details" &&
                       selectedBuildingType
                     ) {
-                      onBuildingTypeSubmit(selectedBuildingType, propertyName, floors, size, tenants);
+                      onBuildingTypeSubmit(selectedBuildingType, propertyName, street, city, postcodeValue, floors, size, tenants);
                     } else if (
                       currentStep === "service-details" &&
                       selectedAdditionalServices
@@ -179,6 +194,9 @@ const BookingDetails = ({
                   initialData={{
                     buildingType: selectedBuildingType,
                     propertyName,
+                    street,
+                    city,
+                    postcode: postcodeValue,
                     floors,
                     size,
                     tenants,
@@ -199,13 +217,17 @@ const BookingDetails = ({
                 <TimeAndDateForm onDataChange={handleTimeAndDateChange} />
               )}
               {currentStep === "contact" && (
-                <ContactForm onSubmit={handleContactFormSubmit} />
+                <ContactForm onSubmit={handleContactFormSubmit} property={property} />
               )}
             </div>
 
             <div className="md:col-span-1 space-y-8">
               <ServiceSummary
                 postcode={postcode}
+                floors={floors}
+                size={size}
+                tenants={tenants}
+                address={`${street}, ${city}`}
                 property={property}
                 buildingType={selectedBuildingType}
                 additionalServices={selectedAdditionalServices}

@@ -5,6 +5,9 @@ import { ChevronDown } from 'lucide-react'
 const BuildingForm = ({ property, onDataChange, initialData }) => {
   const [buildingType, setBuildingType] = useState(initialData?.buildingType || '')
   const [propertyName, setPropertyName] = useState(initialData?.propertyName || '')
+  const [street, setStreet] = useState(initialData?.street || '')
+  const [city, setCity] = useState(initialData?.city || '')
+  const [postcode, setPostcode] = useState(initialData?.postcode || '')
   const [floors, setFloors] = useState(initialData?.floors || '')
   const [size, setSize] = useState(initialData?.size || '')
   const [tenants, setTenants] = useState(initialData?.tenants || '')
@@ -26,6 +29,9 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
   useEffect(() => {
     if (property) {
       setBuildingType(property.property_type || '')
+      setStreet(property.address?.street || '')
+      setCity(property.address?.city || '')
+      setPostcode(property.address?.postcode || '')
       setFloors(property.floors || '')
       setSize(property.square_ft || '')
       setTenants(property.occupants || '')
@@ -33,8 +39,8 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
   }, [property])
 
   useEffect(() => {
-    onDataChange({ buildingType, propertyName, floors, size, tenants })
-  }, [buildingType, propertyName, floors, size, tenants, onDataChange])
+    onDataChange({ buildingType, propertyName, street, city, postcode, floors, size, tenants })
+  }, [buildingType, propertyName, street, city, postcode, floors, size, tenants, onDataChange])
 
   return (
     <motion.div
@@ -59,6 +65,59 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
           />
         </div>
       )}
+      
+      <div className="mb-8">
+        <h3 className="font-semibold text-lg mb-2">Property Address</h3>
+        <p className="text-sm text-primary-grey mb-4">
+          Enter the complete address for this property.
+        </p>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Street Address
+            </label>
+            <input
+              type="text"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              className="w-full appearance-none bg-white border border-grey-outline rounded-md py-3 px-4 text-gray-700 focus:outline-none focus:border-primary-orange"
+              placeholder="e.g., 123 Main Street"
+              required
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full appearance-none bg-white border border-grey-outline rounded-md py-3 px-4 text-gray-700 focus:outline-none focus:border-primary-orange"
+                placeholder="e.g., London"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Postcode
+              </label>
+              <input
+                type="text"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                className="w-full appearance-none bg-white border border-grey-outline rounded-md py-3 px-4 text-gray-700 focus:outline-none focus:border-primary-orange"
+                placeholder="e.g., SW1A 1AA"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="mb-8">
         <h3 className="font-semibold text-lg mb-2">Choose your Building Type</h3>
         <p className="text-sm text-primary-grey mb-4">Enable plans buttondown rebuke nobistate synergy. Shelf-ware of hit want on land blindwhagon opportunity great team.</p>

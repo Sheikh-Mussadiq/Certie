@@ -5,11 +5,14 @@ import { HiWrenchScrewdriver } from "react-icons/hi2";
 const ServiceSummary = ({
   postcode,
   property,
+  floors,
+  size,
+  tenants,
+  address,
   buildingType,
   additionalServices = null,
   dateTime,
   contactDetails,
-  tenants = "04",
 }) => {
   // Get all services to display at the top
   const selectedServices = additionalServices?.services || [];
@@ -43,7 +46,7 @@ const ServiceSummary = ({
       <hr className="my-4 border-grey-outline" />
 
       <div className="space-y-4">
-        {property ? (
+        {property && property.address ? (
           <div className="flex items-start gap-3">
             <MapPin
               size={16}
@@ -62,7 +65,7 @@ const ServiceSummary = ({
             <div className="flex w-full">
               <p className="text-sm font-medium">Postcode:</p>
               <p className="text-sm ml-1 text-primary-grey">
-                {postcode || "Not specified"}
+                {postcode || property?.address.postcode || "Not specified"}
               </p>
             </div>
           </div>
@@ -73,10 +76,7 @@ const ServiceSummary = ({
           <div className="flex w-full">
             <p className="text-sm font-medium">Property Type:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {property?.property_type
-                ? property.property_type.charAt(0).toUpperCase() +
-                  property.property_type.slice(1)
-                : "Not specified"}
+            {buildingType ? buildingType : property?.type ? property.type : "Not specified"}
             </p>
           </div>
         </div>
@@ -96,7 +96,7 @@ const ServiceSummary = ({
             </p>
           </div>
         </div>
-
+{/* 
         <div className="flex items-center gap-3">
           <MapPin size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
@@ -105,17 +105,17 @@ const ServiceSummary = ({
               {postcode || property?.address.postcode || "Not specified"}
             </p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex items-center gap-3">
+         {!property?.address && <div className="flex items-center gap-3">
           <Building size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
             <p className="text-sm font-medium">Address:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {property?.address.city || "Not specified yet"}
+              {address || `${property?.address.street}, ${property?.address.city}` || "Not specified yet"}
             </p>
           </div>
-        </div>
+        </div>}
 
         {/* <div className="flex items-center gap-3">
           <Building size={16} className="text-primary-orange flex-shrink-0" />
@@ -132,7 +132,7 @@ const ServiceSummary = ({
           <div className="flex w-full">
             <p className="text-sm font-medium">No. of Occupants:</p>
             <p className="text-sm ml-1 text-primary-grey">
-              {property?.occupants || "Not specified"}
+              {tenants || "Not specified"}
             </p>
           </div>
         </div>

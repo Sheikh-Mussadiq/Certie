@@ -2,13 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = ({ onSubmit, property }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    address: "",
-    postcode: "",
     additionalInfo: "",
     attachments: [],
   });
@@ -25,9 +23,7 @@ const ContactForm = ({ onSubmit }) => {
     if (
       newFormData.name &&
       newFormData.email &&
-      newFormData.phone &&
-      newFormData.address &&
-      newFormData.postcode
+      newFormData.phone
     ) {
       onSubmit(newFormData);
     }
@@ -112,33 +108,7 @@ const ContactForm = ({ onSubmit }) => {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                placeholder="Enter Address"
-                className="w-full p-3 border border-grey-outline rounded-md focus:outline-none focus:border-primary-orange"
-                required
-              />
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Post Code
-              </label>
-              <input
-                type="text"
-                name="postcode"
-                value={formData.postcode}
-                onChange={handleInputChange}
-                placeholder="Enter Post Code"
-                className="w-full p-3 border border-grey-outline rounded-md focus:outline-none focus:border-primary-orange"
-                required
-              />
-            </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
@@ -154,7 +124,7 @@ const ContactForm = ({ onSubmit }) => {
               />
             </div>
           </div>
-
+          {property && (
           <div>
             <label className="block text-sm font-medium mb-2">
               Attachments
@@ -205,6 +175,7 @@ const ContactForm = ({ onSubmit }) => {
               </div>
             </div>
           </div>
+          )}
         </form>
       </div>
     </motion.div>
