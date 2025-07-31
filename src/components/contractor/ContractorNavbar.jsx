@@ -49,6 +49,12 @@ const ContractorNavbar = () => {
               </div>
             </motion.div>
           </Link>
+          <div className="flex items-center bg-primary-orange/70 border border-primary-orange-300 rounded-lg px-4 py-2 shadow-sm">
+            <span className="inline-block w-2 h-2 rounded-full bg-primary-orange mr-2 animate-pulse"></span>
+            <span className="text-primary-black text-base font-medium">
+              <span className="font-semibold">Notice:</span> We are currently operating in <span className="underline font-bold">London only</span>!
+            </span>
+          </div>
           <div className="flex items-center space-x-4">
             <ProfileDropdown />
           </div>

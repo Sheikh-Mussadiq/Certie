@@ -29,6 +29,9 @@ const BookingDetails = ({
 }) => {
   const [selectedBuildingType, setSelectedBuildingType] = useState("");
   const [propertyName, setPropertyName] = useState("");
+  const [floors, setFloors] = useState("");
+  const [size, setSize] = useState("");
+  const [tenants, setTenants] = useState("");
   const [selectedAdditionalServices, setSelectedAdditionalServices] =
     useState(null);
 
@@ -37,6 +40,9 @@ const BookingDetails = ({
   useEffect(() => {
     if (property?.property_type) {
       setSelectedBuildingType(property.property_type);
+      setFloors(property.floors || "");
+      setSize(property.square_ft || "");
+      setTenants(property.occupants || "");
     }
   }, [property]);
 
@@ -44,6 +50,15 @@ const BookingDetails = ({
     setSelectedBuildingType(data.buildingType);
     if (data.propertyName) {
       setPropertyName(data.propertyName);
+    }
+    if (data.floors) {
+      setFloors(data.floors);
+    }
+    if (data.size) {
+      setSize(data.size);
+    }
+    if (data.tenants) {
+      setTenants(data.tenants);
     }
   }, []);
 
@@ -111,7 +126,7 @@ const BookingDetails = ({
                       currentStep === "property-details" &&
                       selectedBuildingType
                     ) {
-                      onBuildingTypeSubmit(selectedBuildingType, propertyName);
+                      onBuildingTypeSubmit(selectedBuildingType, propertyName, floors, size, tenants);
                     } else if (
                       currentStep === "service-details" &&
                       selectedAdditionalServices
@@ -164,6 +179,9 @@ const BookingDetails = ({
                   initialData={{
                     buildingType: selectedBuildingType,
                     propertyName,
+                    floors,
+                    size,
+                    tenants,
                   }}
                 />
               )}

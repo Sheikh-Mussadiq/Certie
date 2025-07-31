@@ -19,9 +19,12 @@ const ContractorWorkflow = () => {
   const { isAuthenticated, currentUser } = useAuth();
 
   const [postcode, setPostcode] = useState("");
-  const [currentStep, setCurrentStep] = useState("location");
+  const [currentStep, setCurrentStep] = useState("property-details");
   const [buildingType, setBuildingType] = useState("");
   const [propertyName, setPropertyName] = useState("");
+  const [floors, setFloors] = useState("");
+  const [size, setSize] = useState("");
+  const [tenants, setTenants] = useState("");
   const [additionalServices, setAdditionalServices] = useState([]);
   const [contactDetails, setContactDetails] = useState(null);
 
@@ -53,6 +56,9 @@ const ContractorWorkflow = () => {
                 name: pendingWorkflow.propertyName,
                 address: { postcode: pendingWorkflow.postcode },
                 property_type: pendingWorkflow.buildingType,
+                floors: parseInt(pendingWorkflow.floors) || null,
+                square_ft: parseInt(pendingWorkflow.size) || null,
+                occupants: parseInt(pendingWorkflow.tenants) || null,
               },
               currentUser.id
             );
@@ -151,6 +157,9 @@ const ContractorWorkflow = () => {
           setProperty(propertyData);
           setPostcode(propertyData.address?.postcode || "");
           setBuildingType(propertyData.property_type);
+          setFloors(propertyData.floors || "");
+          setSize(propertyData.square_ft || "");
+          setTenants(propertyData.occupants || "");
           if (propertyData.property_type) {
             setCurrentStep("service-details");
           }
@@ -169,10 +178,19 @@ const ContractorWorkflow = () => {
     setCurrentStep("property-details");
   };
 
-  const handleBuildingTypeSubmit = (type, name) => {
+  const handleBuildingTypeSubmit = (type, name, floorsValue, sizeValue, tenantsValue) => {
     setBuildingType(type);
     if (name) {
       setPropertyName(name);
+    }
+    if (floorsValue) {
+      setFloors(floorsValue);
+    }
+    if (sizeValue) {
+      setSize(sizeValue);
+    }
+    if (tenantsValue) {
+      setTenants(tenantsValue);
     }
     setCurrentStep("service-details");
   };
@@ -234,6 +252,9 @@ const ContractorWorkflow = () => {
         postcode,
         buildingType,
         propertyName: property ? property.name : propertyName,
+        floors,
+        size,
+        tenants,
         additionalServices,
         dateTime,
         contactDetails: contactData,
@@ -271,8 +292,7 @@ const ContractorWorkflow = () => {
       // Use the timestampz directly from dateTime object instead of recalculating
       const bookingTimestamp = dateTime.timestampz;
 
-      const status =
-        property.owner_id === currentUser.id ? "approved" : "pending";
+      const status = property?.owner_id === currentUser?.id ? "approved" : "pending";
 
       const creationPromises = servicesToBook.map((service) =>
         createBooking({
@@ -303,6 +323,10 @@ const ContractorWorkflow = () => {
     setPostcode("");
     setCurrentStep("location");
     setBuildingType("");
+    setPropertyName("");
+    setFloors("");
+    setSize("");
+    setTenants("");
     setAdditionalServices([]);
     setContactDetails(null);
     setPropertyId(null);
@@ -321,11 +345,12 @@ const ContractorWorkflow = () => {
       setCurrentStep("service-details");
     } else if (currentStep === "service-details") {
       setCurrentStep("property-details");
-    } else if (currentStep === "property-details") {
-      setCurrentStep("location");
-    } else {
-      setCurrentStep("location");
-    }
+    } 
+    // else if (currentStep === "property-details") {
+    //   setCurrentStep("location");
+    // } else {
+    //   setCurrentStep("location");
+    // }
   };
 
   return (
