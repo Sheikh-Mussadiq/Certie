@@ -11,10 +11,11 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!buildingCategory) return;
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const servicesData = await getAllServices();
+        const servicesData = await getAllServices(buildingCategory);
         setServices(servicesData);
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -24,7 +25,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
       }
     };
     fetchServices();
-  }, []);
+  }, [buildingCategory]);
 
   const handleServiceChange = (serviceName) => {
     let newServices;

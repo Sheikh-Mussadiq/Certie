@@ -13,6 +13,7 @@ export const createBooking = async (bookingData) => {
         .from("services")
         .select("id")
         .eq("name", bookingData.type)
+        .eq("building_type", bookingData.building_type)
         .single();
 
       if (serviceError) {

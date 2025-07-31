@@ -192,11 +192,15 @@ export const addPropertyManager = async (propertyId, email) => {
     });
 
     if (error) {
-      error.code === "23505"
-        ? toast.error("This user is already a manager for this property.")
-        : toast.error("An error occurred while adding the property manager.");
+      if (error.code === '23505') {
+        toast.error('This user is already a manager for this property.');
+      } else if (error.code === 'P0001' && error.message === 'Cannot assign a property owner as a manager') {
+        toast.error('Cannot assign a property owner as a manager.');
+      } else {
+        toast.error('An error occurred while adding the manager.');
+      }
       throw error;
-    }
+   }
     return data;
   } catch (error) {
     console.error("Error adding property manager:", error);
@@ -228,11 +232,15 @@ export const addPropertySiteUser = async (propertyId, email) => {
     });
 
     if (error) {
-      error.code === "23505"
-        ? toast.error("This user is already a site user for this property.")
-        : toast.error("An error occurred while adding the site user.");
+      if (error.code === '23505') {
+        toast.error('This user is already a site user for this property.');
+      } else if (error.code === 'P0001' && error.message === 'Cannot assign a property owner as a manager') {
+        toast.error('Cannot assign a property owner as a site user.');
+      } else {
+        toast.error('An error occurred while adding the site user.');
+      }
       throw error;
-    }
+   }
     return data;
   } catch (error) {
     console.error("Error adding site user:", error);

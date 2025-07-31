@@ -591,18 +591,17 @@ const AssessmentsTab = () => {
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-6 border-r border-grey-outline">
+                      <td className="py-4 px-6 border-r border-grey-outline text-left">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
-                            {assignee.avatar ? (
-                              <img
-                                src={assignee.avatar}
-                                alt={assignee.name}
-                                className="w-full h-full rounded-full object-cover"
-                              />
-                            ) : (
-                              getAssigneeInitials(assignee)
-                            )}
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
+                              {getAssigneeInitials(assignee)}
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{assignee.name}</span>
+                              <span className="text-xs text-gray-800">{assignee.email}</span>
+                              <span className="text-xs text-gray-800">{assignee.contact}</span>
+                            </div>
                           </div>
                         </div>
                       </td>

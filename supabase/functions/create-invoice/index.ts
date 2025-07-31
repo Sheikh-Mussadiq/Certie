@@ -18,14 +18,23 @@ Deno.serve(async (req)=>{
     });
   }
   try {
-    const { bookingIds, userId } = await req.json();
+    const { bookingIds } = await req.json();
     if (!bookingIds || !Array.isArray(bookingIds) || bookingIds.length === 0) {
       throw new Error("Booking IDs are required.");
     }
-    const supabase = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_ANON_KEY"), {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error("Missing required environment variables");
+    }
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      throw new Error("Authorization header is required");
+    }
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       global: {
         headers: {
-          Authorization: req.headers.get("Authorization")
+          Authorization: authHeader
         }
       }
     });
@@ -50,7 +59,7 @@ Deno.serve(async (req)=>{
         stripe_customer_id: customerId
       }).eq("id", user.id);
     }
-    // Updated join using service_id foreign key
+    // Get bookings with basic service info
     const { data: bookings, error: bookingsError } = await supabase.from("bookings").select("*, services:service_id(*)").in("id", bookingIds);
     if (bookingsError) throw bookingsError;
     const invoice = await stripe.invoices.create({
@@ -59,13 +68,26 @@ Deno.serve(async (req)=>{
       days_until_due: 30
     });
     for (const booking of bookings){
-      if (!booking.services?.stripe_price_id) {
-        throw new Error(`Missing stripe_price_id for booking ID: ${booking.id}`);
+      if (!booking.services?.name) {
+        throw new Error(`Missing service name for booking ID: ${booking.id}`);
       }
+      if (!booking.building_type) {
+        throw new Error(`Missing building_type for booking ID: ${booking.id}`);
+      }
+      // Find the specific service record that matches both service name and building type
+      const { data: matchingService, error: serviceError } = await supabase.from("services").select("stripe_price_id, price_in_cents, name").eq("id", booking.services.id).eq("building_type", booking.building_type).single();
+      if (serviceError || !matchingService) {
+        throw new Error(`No service found for ${booking.services.name} with building type ${booking.building_type} for booking ID: ${booking.id}`);
+      }
+      if (!matchingService.stripe_price_id) {
+        throw new Error(`Missing stripe_price_id for service ${booking.services.name} with building type ${booking.building_type} for booking ID: ${booking.id}`);
+      }
+      console.log(`Adding invoice item: ${matchingService.name} - ${booking.building_type} (£${matchingService.price_in_cents / 100})`);
       await stripe.invoiceItems.create({
         customer: customerId,
-        price: booking.services.stripe_price_id,
-        invoice: invoice.id
+        price: matchingService.stripe_price_id,
+        invoice: invoice.id,
+        description: `${matchingService.name} - ${booking.building_type}`
       });
     }
     const sentInvoiceData = await stripe.invoices.sendInvoice(invoice.id);
@@ -92,8 +114,9 @@ Deno.serve(async (req)=>{
       headers: corsHeaders
     });
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(JSON.stringify({
-      error: error.message
+      error: errorMessage
     }), {
       status: 500,
       headers: corsHeaders

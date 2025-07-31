@@ -88,8 +88,10 @@ BEGIN
   INSERT INTO property_managers (property_id, user_id, email, full_name)
   VALUES (property_id, target_user_id, user_email, target_full_name);
 
-  -- Return JSON response
+  -- Return JSON response with user_id and property_id
   RETURN json_build_object(
+    'user_id', target_user_id,
+    'property_id', property_id,
     'full_name', target_full_name,
     'email', user_email
   );
@@ -142,6 +144,8 @@ BEGIN
   VALUES (property_id, target_user_id, user_email, target_full_name);
 
   RETURN json_build_object(
+    'user_id', target_user_id,
+    'property_id', property_id,
     'full_name', target_full_name,
     'email', user_email
   );
