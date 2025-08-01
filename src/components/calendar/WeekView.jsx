@@ -1,4 +1,4 @@
-const WeekView = ({ currentDate }) => {
+const WeekView = ({ currentDate, formatBookingsForCalendar, loading }) => {
   const getWeekDays = (date) => {
     const days = [];
     const startOfWeek = new Date(date);
@@ -13,81 +13,11 @@ const WeekView = ({ currentDate }) => {
     return days;
   };
 
-  // Mock events data
-  const events = [
-    {
-      title: "Call Back WeCraft",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() + 1,
-        15,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() + 1,
-        16,
-        0
-      ),
-      color: "bg-amber-100 text-amber-800 border-amber-200",
-    },
-    {
-      title: "Meeting with Cameron Williamson",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        11,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        12,
-        30
-      ),
-      color: "bg-red-100 text-red-800 border-red-200",
-    },
-    {
-      title: "Assessment Booked",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() - 1,
-        9,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() - 1,
-        10,
-        0
-      ),
-      color: "bg-blue-100 text-blue-800 border-blue-200",
-    },
-    {
-      title: "Meeting with sam",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() + 2,
-        14,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() + 2,
-        15,
-        30
-      ),
-      color: "bg-green-100 text-green-800 border-green-200",
-    },
-  ];
+  // Get real events from bookings
+  const events = formatBookingsForCalendar ? formatBookingsForCalendar() : [];
+
+  // console.log("WeekView - currentDate:", currentDate);
+  // console.log("WeekView - events:", events);
 
   // Check if a day is today
   const isToday = (date) => {
@@ -121,12 +51,25 @@ const WeekView = ({ currentDate }) => {
 
   // Function to check if event belongs to a day
   const eventBelongsToDay = (event, day) => {
-    return (
+    const belongs =
       event.start.getDate() === day.getDate() &&
       event.start.getMonth() === day.getMonth() &&
-      event.start.getFullYear() === day.getFullYear()
-    );
+      event.start.getFullYear() === day.getFullYear();
+    // console.log(
+    //   `Checking if event ${
+    //     event.title
+    //   } belongs to ${day.toDateString()}: ${belongs}`
+    // );
+    return belongs;
   };
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-primary-grey">Loading calendar events...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-auto">
@@ -152,7 +95,7 @@ const WeekView = ({ currentDate }) => {
         ))}
       </div>
 
-      <div className="relative grid grid-cols-8 min-h-[600px]">
+      <div className="relative grid grid-cols-8">
         <div className="w-20 pt-2">
           {hours.map((hour) => (
             <div
@@ -169,20 +112,23 @@ const WeekView = ({ currentDate }) => {
             </div>
           ))}
         </div>
+        {weekDays.map((day) => {
+          const dayEvents = events.filter((event) =>
+            eventBelongsToDay(event, day)
+          );
+          // console.log(`Events for ${day.toDateString()}:`, dayEvents);
 
-        {weekDays.map((day) => (
-          <div
-            key={day.toISOString()}
-            className="border-l border-grey-outline relative"
-          >
-            {hours.map((hour) => (
-              <div key={hour} className="h-12 border-b border-grey-outline" />
-            ))}
+          return (
+            <div
+              key={day.toISOString()}
+              className="border-l border-grey-outline relative"
+            >
+              {hours.map((hour) => (
+                <div key={hour} className="h-12 border-b border-grey-outline" />
+              ))}
 
-            {/* Events for this day */}
-            {events
-              .filter((event) => eventBelongsToDay(event, day))
-              .map((event, index) => {
+              {/* Events for this day */}
+              {dayEvents.map((event, index) => {
                 const style = getEventStyle(event);
                 return (
                   <div
@@ -200,8 +146,9 @@ const WeekView = ({ currentDate }) => {
                   </div>
                 );
               })}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

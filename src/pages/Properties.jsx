@@ -208,7 +208,7 @@ const Properties = () => {
                 onViewChange={setViewMode}
                 viewMode={viewMode}
               />
-              <div className="flex justify-between overflow-y-auto">
+              <div className="overflow-y-auto">
                 {viewMode === "table" ? (
                   <PropertyTable
                     properties={currentProperties}

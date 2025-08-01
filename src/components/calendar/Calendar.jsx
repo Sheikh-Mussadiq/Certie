@@ -5,10 +5,19 @@ import MonthView from "./MonthView";
 import WeekView from "./WeekView";
 import DayView from "./DayView";
 import YearView from "./YearView";
+import { useCalendarBookings } from "../../hooks/useCalendarBookings";
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("month"); // 'month', 'week', 'day', 'year'
+  const {
+    bookings,
+    loading,
+    error,
+    formatBookingsForCalendar,
+    getEventsForDate,
+    getEventsForDay,
+  } = useCalendarBookings();
 
   const handlePrevious = () => {
     setCurrentDate((prev) => {
@@ -46,8 +55,32 @@ const Calendar = () => {
     setCurrentDate(new Date());
   };
 
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className="flex flex-col h-full bg-white rounded-xl border border-grey-outline overflow-hidden">
+        <CalendarHeader
+          currentDate={currentDate}
+          view={view}
+          onViewChange={setView}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          onToday={handleToday}
+        />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-red-600 font-medium mb-2">
+              Error loading calendar events
+            </div>
+            <div className="text-sm text-primary-grey">{error.message}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-full bg-white rounded-xl border border-grey-outline overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-12rem)] bg-white rounded-xl border border-grey-outline overflow-hidden">
       <CalendarHeader
         currentDate={currentDate}
         view={view}
@@ -58,10 +91,34 @@ const Calendar = () => {
       />
 
       <div className="flex-1 overflow-hidden">
-        {view === "month" && <MonthView currentDate={currentDate} />}
-        {view === "week" && <WeekView currentDate={currentDate} />}
-        {view === "day" && <DayView currentDate={currentDate} />}
-        {view === "year" && <YearView currentDate={currentDate} />}
+        {view === "month" && (
+          <MonthView
+            currentDate={currentDate}
+            getEventsForDay={getEventsForDay}
+            loading={loading}
+          />
+        )}
+        {view === "week" && (
+          <WeekView
+            currentDate={currentDate}
+            formatBookingsForCalendar={formatBookingsForCalendar}
+            loading={loading}
+          />
+        )}
+        {view === "day" && (
+          <DayView
+            currentDate={currentDate}
+            getEventsForDate={getEventsForDate}
+            loading={loading}
+          />
+        )}
+        {view === "year" && (
+          <YearView
+            currentDate={currentDate}
+            getEventsForDay={getEventsForDay}
+            loading={loading}
+          />
+        )}
       </div>
     </div>
   );

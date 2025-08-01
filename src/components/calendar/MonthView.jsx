@@ -1,4 +1,4 @@
-const MonthView = ({ currentDate }) => {
+const MonthView = ({ currentDate, getEventsForDay, loading }) => {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -19,83 +19,12 @@ const MonthView = ({ currentDate }) => {
 
     // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
+      const dayEvents = getEventsForDay ? getEventsForDay(i, currentDate) : [];
+      
       days.push({
         date: i,
         isCurrentMonth: true,
-        events: [
-          // Mock events
-          i === 25 && {
-            title: "Assessment Booked",
-            type: "assessment",
-            color: "bg-blue-100 text-blue-800",
-          },
-          i === 27 && {
-            title: "Call Back WeCraft",
-            type: "call",
-            color: "bg-amber-100 text-amber-800",
-          },
-          i === 28 && {
-            title: "Call Back WeCraft",
-            type: "call",
-            color: "bg-amber-100 text-amber-800",
-          },
-          i === 3 && {
-            title: "Assessment Booked",
-            type: "assessment",
-            color: "bg-indigo-100 text-indigo-800",
-          },
-          i === 6 && {
-            title: "Call Back WeCraft",
-            type: "call",
-            color: "bg-amber-100 text-amber-800",
-          },
-          i === 12 && [
-            {
-              title: "Meeting with sam",
-              type: "meeting",
-              color: "bg-green-100 text-green-800",
-            },
-            {
-              title: "Call Back WeCraft",
-              type: "call",
-              color: "bg-amber-100 text-amber-800",
-            },
-            {
-              title: "+2 more",
-              type: "more",
-              color: "bg-gray-100 text-gray-800",
-            },
-          ],
-          i === 12 - 1 && [
-            {
-              title: "Meeting with sam",
-              type: "meeting",
-              color: "bg-green-100 text-green-800",
-            },
-          ],
-          i === 10 && {
-            title: "Sam's birthday party",
-            type: "event",
-            color: "bg-red-100 text-red-800",
-          },
-          i === 15 && {
-            title: "Call Back WeCraft",
-            type: "call",
-            color: "bg-amber-100 text-amber-800",
-          },
-          i === 19 && {
-            title:
-              "Meeting with Cameron Williamson about to finalize the draft",
-            type: "meeting",
-            color: "bg-red-100 text-red-800",
-          },
-          i === 20 && {
-            title:
-              "Meeting with Cameron Williamson about to finalize the draft version of wecraft marketing",
-            type: "meeting",
-            color: "bg-red-100 text-red-800",
-          },
-        ].filter(Boolean),
+        events: dayEvents,
       });
     }
 
@@ -131,6 +60,14 @@ const MonthView = ({ currentDate }) => {
     // Our weekDays array has SUN at index 0, need to match with JavaScript's getDay()
     return today.getDay() === index;
   };
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-primary-grey">Loading calendar events...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -177,26 +114,23 @@ const MonthView = ({ currentDate }) => {
             )}
 
             <div className="mt-1 space-y-1 overflow-hidden flex-1 relative z-10">
-              {Array.isArray(day.events)
-                ? day.events.map((event, eventIndex) => (
-                    <div
-                      key={eventIndex}
-                      className={`text-xs p-1 rounded ${
-                        event.color || "bg-blue-100 text-blue-800"
-                      } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
-                    >
-                      {event.title}
-                    </div>
-                  ))
-                : day.events && (
-                    <div
-                      className={`text-xs p-1 rounded ${
-                        day.events.color || "bg-blue-100 text-blue-800"
-                      } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
-                    >
-                      {day.events.title}
-                    </div>
-                  )}
+              {day.events && day.events.length > 0 ? (
+                day.events.slice(0, 3).map((event, eventIndex) => (
+                  <div
+                    key={eventIndex}
+                    className={`text-xs p-1 rounded ${
+                      event.color || "bg-blue-100 text-blue-800"
+                    } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
+                  >
+                    {event.title}
+                  </div>
+                ))
+              ) : null}
+              {day.events && day.events.length > 3 && (
+                <div className="text-xs p-1 rounded bg-gray-100 text-gray-800 truncate">
+                  +{day.events.length - 3} more
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end items-end relative z-10">

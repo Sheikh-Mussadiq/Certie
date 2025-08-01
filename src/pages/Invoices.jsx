@@ -291,9 +291,15 @@ const Invoices = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-secondary-black">
-          Invoices
-        </h1>
+        <div className="flex flex-col">
+          <h1 className="text-2xl font-semibold text-secondary-black">
+            Invoices
+          </h1>
+          <p className="text-sm text-primary-grey mt-1">
+            Manage and track all your property-related invoices and payment
+            statuses
+          </p>
+        </div>
         <div className="flex gap-3">
           <button className="px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors flex items-center gap-2">
             <Download className="w-4 h-4" />

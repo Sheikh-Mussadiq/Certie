@@ -1,4 +1,4 @@
-const YearView = ({ currentDate }) => {
+const YearView = ({ currentDate, getEventsForDay, loading }) => {
   const months = [
     "January",
     "February",
@@ -43,7 +43,25 @@ const YearView = ({ currentDate }) => {
     );
   };
 
+  // Check if a day has events
+  const hasEvents = (day, month) => {
+    if (!getEventsForDay || !day) return false;
+    const events = getEventsForDay(
+      day,
+      new Date(currentDate.getFullYear(), month, 1)
+    );
+    return events && events.length > 0;
+  };
+
   const year = currentDate.getFullYear();
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-primary-grey">Loading calendar events...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 overflow-auto">
@@ -69,15 +87,20 @@ const YearView = ({ currentDate }) => {
               {getMonthDays(year, monthIndex).map((day, dayIndex) => (
                 <div
                   key={dayIndex}
-                  className={`text-[10px] h-5 w-5 flex items-center justify-center ${
+                  className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
                     day === null
                       ? ""
                       : isToday(day, monthIndex)
                       ? "bg-primary-black text-white font-bold rounded-md"
+                      : hasEvents(day, monthIndex)
+                      ? "bg-blue-100 text-blue-800 font-medium rounded-md"
                       : "text-primary-black"
                   }`}
                 >
                   {day}
+                  {day && hasEvents(day, monthIndex) && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                  )}
                 </div>
               ))}
             </div>

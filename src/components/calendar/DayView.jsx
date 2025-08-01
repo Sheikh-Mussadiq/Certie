@@ -1,63 +1,11 @@
-const DayView = ({ currentDate }) => {
+const DayView = ({ currentDate, getEventsForDate, loading }) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  // Mock events data
-  const events = [
-    {
-      title: "Call Back WeCraft",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        15,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        16,
-        0
-      ),
-      color: "bg-amber-100 text-amber-800 border-amber-200",
-    },
-    {
-      title: "Meeting with Cameron Williamson",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        11,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        12,
-        30
-      ),
-      color: "bg-red-100 text-red-800 border-red-200",
-    },
-    {
-      title: "Assessment Booked",
-      start: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        9,
-        0
-      ),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate(),
-        10,
-        0
-      ),
-      color: "bg-blue-100 text-blue-800 border-blue-200",
-    },
-  ];
+  // Get real events for the current date
+  const events = getEventsForDate ? getEventsForDate(currentDate) : [];
+
+  // console.log("DayView - currentDate:", currentDate);
+  // console.log("DayView - events:", events);
 
   // Function to position events in the grid
   const getEventStyle = (event) => {
@@ -86,6 +34,14 @@ const DayView = ({ currentDate }) => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-primary-grey">Loading calendar events...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 overflow-auto">
       <div className="grid grid-cols-2 border-b border-grey-outline">
@@ -108,7 +64,7 @@ const DayView = ({ currentDate }) => {
         </div>
       </div>
 
-      <div className="relative grid grid-cols-2 min-h-[600px]">
+      <div className="relative grid grid-cols-2">
         <div className="w-20 pt-2">
           {hours.map((hour) => (
             <div
@@ -125,7 +81,6 @@ const DayView = ({ currentDate }) => {
             </div>
           ))}
         </div>
-
         <div className="border-l border-grey-outline relative">
           {hours.map((hour) => (
             <div key={hour} className="h-12 border-b border-grey-outline" />
