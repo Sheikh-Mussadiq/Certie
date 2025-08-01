@@ -5,7 +5,9 @@ import { supabase } from "../lib/supabase";
  * @returns {Promise} Array of invoices
  */
 export const getInvoicesForUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     throw new Error("User not authenticated");
   }
@@ -13,7 +15,7 @@ export const getInvoicesForUser = async () => {
   try {
     const { data, error } = await supabase
       .from("invoices")
-      .select("*, invoice_bookings(*, bookings(*))")
+      .select("*, invoice_bookings(*, bookings(*)), invoice_pdf")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
