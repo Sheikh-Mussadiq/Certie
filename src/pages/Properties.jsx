@@ -147,7 +147,7 @@ const Properties = () => {
   return (
     <div className="">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-primary-black">
+        <h1 className="text-xl font-semibold text-secondary-black">
           Properties
         </h1>
         <div className="flex gap-3">

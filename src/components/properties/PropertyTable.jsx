@@ -70,10 +70,12 @@ const PropertyTable = ({
               />
             </td> */}
             <td className="px-6 py-4 border-r border-grey-outline">
-              <div className="text-sm text-primary-black">{property.name}</div>
+              <div className="text-sm text-secondary-black">
+                {property.name}
+              </div>
             </td>
             <td className="px-6 py-4 border-r border-grey-outline">
-              <div className="text-sm text-primary-black">
+              <div className="text-sm text-secondary-black">
                 {property.address
                   ? typeof property.address === "string"
                     ? property.address
@@ -87,7 +89,7 @@ const PropertyTable = ({
               <div className="flex items-center gap-2">
                 <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-green-500 rounded-full"
+                    className="h-full bg-primary-green rounded-full"
                     style={{ width: `${property.compliance_score || 0}%` }}
                   />
                 </div>
@@ -97,7 +99,7 @@ const PropertyTable = ({
               </div>
             </td>
             <td className="px-6 py-4 border-r border-grey-outline">
-              <div className="text-sm text-primary-black">
+              <div className="text-sm text-secondary-black">
                 {property.property_type || "N/A"}
               </div>
             </td>
@@ -116,7 +118,9 @@ const PropertyTable = ({
                     </div>
                   ))
                 ) : (
-                  <div className="text-sm text-primary-black">No managers</div>
+                  <div className="text-sm text-secondary-black">
+                    No managers
+                  </div>
                 )}
               </div>
             </td>

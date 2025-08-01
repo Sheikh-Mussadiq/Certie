@@ -1,4 +1,5 @@
 import { Clock } from "lucide-react";
+import WatchLaterIcon from "@mui/icons-material/WatchLater";
 
 const OutstandingIssues = ({ logbooks }) => {
   const recentChanges = logbooks
@@ -15,29 +16,31 @@ const OutstandingIssues = ({ logbooks }) => {
     .slice(0, 3);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
+    <div className="bg-white p-4 rounded-xl">
       <div className="flex items-center mb-4">
-        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
-          <Clock size={20} className="text-gray-600" />
+        <div className="p-2 rounded-lg bg-grey-fill/50 border border-grey-outline mr-2">
+          <WatchLaterIcon size={20} className="text-primary-grey" />
         </div>
-        <h3 className="font-semibold text-gray-700">Outstanding Issues</h3>
-        <span className="ml-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
+        <h3 className="font-semibold text-lg text-secondary-black">
+          Outstanding Issues
+        </h3>
+        <span className="ml-2 bg-grey-fill/50 text-secondary-black text-xs font-semibold px-2 py-1 rounded-full border border-grey-outline">
           {recentChanges.length}
         </span>
       </div>
       <div className="space-y-3">
         {recentChanges.length > 0 ? (
           recentChanges.map((item, index) => (
-            <div key={index} className="p-2 rounded-lg bg-grey-fill">
+            <div key={index} className="p-2 rounded-lg bg-grey-fill/50">
               <div className="flex justify-between items-start">
                 <p className="font-semibold text-sm">{item.logbookName}</p>
                 <span
-                  className={`text-xs px-2 py-1 rounded-full ${
+                  className={`text-xs px-2 py-1 rounded-md border ${
                     item.completion_status === "Completed"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-green-100 text-green-700 border-green-200"
                       : item.completion_status === "Issue Identified"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      ? "bg-red-100 text-red-700 border-red-200"
+                      : "bg-yellow-100 text-yellow-700 border-yellow-200"
                   }`}
                 >
                   {item.completion_status}

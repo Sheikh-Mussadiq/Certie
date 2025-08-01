@@ -1,4 +1,5 @@
 import { List, Calendar, FileText } from "lucide-react";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import { format } from "date-fns";
 
 const RecentActivity = ({ logbooks, bookings }) => {
@@ -31,13 +32,15 @@ const RecentActivity = ({ logbooks, bookings }) => {
     .slice(0, 4);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
+    <div className="bg-white p-4 rounded-xl">
       <div className="flex items-center mb-4">
-        <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
-          <List size={20} className="text-gray-600" />
+        <div className="p-2 rounded-lg bg-grey-fill/50 border border-grey-outline mr-2">
+          <ListAltIcon size={20} className="text-primary-grey" />
         </div>
-        <h3 className="font-semibold text-gray-700">Recent Activity</h3>
-        <span className="ml-2 bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full">
+        <h3 className="font-semibold text-lg text-secondary-black">
+          Recent Activity
+        </h3>
+        <span className="ml-2 bg-grey-fill/50 text-secondary-black text-xs font-semibold px-2 py-1 rounded-full border border-grey-outline">
           {allActivities.length}
         </span>
       </div>
@@ -46,52 +49,58 @@ const RecentActivity = ({ logbooks, bookings }) => {
           allActivities.map((activity, index) => (
             <div
               key={activity.id || index}
-              className="flex items-start space-x-3 p-2 rounded-lg bg-grey-fill"
+              className="flex items-start space-x-3 p-2 rounded-lg bg-grey-fill/50"
             >
-              <div className="flex-shrink-0 mt-1">
+              {/* <div className="flex-shrink-0 mt-1">
                 {activity.type === "logbook" ? (
                   <FileText size={16} className="text-blue-600" />
                 ) : (
                   <Calendar size={16} className="text-green-600" />
                 )}
-              </div>
+              </div> */}
               <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start">
-                  <p className="font-semibold text-sm truncate">
-                    {activity.type === "logbook"
-                      ? activity.logbookName
-                      : activity.title}
-                  </p>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full ml-2 ${
-                      activity.type === "logbook"
-                        ? activity.completion_status === "Completed"
-                          ? "bg-green-100 text-green-700"
-                          : activity.completion_status === "Issue Identified"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                        : activity.status === "assigned"
-                        ? "bg-blue-100 text-blue-700"
-                        : activity.status === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {activity.type === "logbook"
-                      ? activity.completion_status
-                      : activity.status}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500 truncate">
-                  {activity.type === "logbook"
-                    ? activity.issue_comment || "Task completed"
-                    : `${activity.property} • ${
-                        activity.assignee || "Unassigned"
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <p className="font-semibold text-sm truncate">
+                      {activity.type === "logbook"
+                        ? activity.logbookName
+                        : activity.title}
+                    </p>
+                    <div>
+                      <p className="text-sm text-gray-500 truncate">
+                        {activity.type === "logbook"
+                          ? activity.issue_comment || "Task completed"
+                          : `${activity.property} • ${
+                              activity.assignee || "Unassigned"
+                            }`}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {format(new Date(activity.date), "MMM dd, yyyy")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="">
+                    <span
+                      className={`text-xs px-2 py-1 rounded-md border ml-2 ${
+                        activity.type === "logbook"
+                          ? activity.completion_status === "Completed"
+                            ? "bg-green-100 text-green-700 border-green-200"
+                            : activity.completion_status === "Issue Identified"
+                            ? "bg-red-100 text-red-700 border-red-200"
+                            : "bg-yellow-100 text-yellow-700 border-yellow-200"
+                          : activity.status === "assigned"
+                          ? "bg-blue-100 text-blue-700 border-blue-200"
+                          : activity.status === "pending"
+                          ? "bg-yellow-100 text-yellow-700 border-yellow-200"
+                          : "bg-gray-100 text-gray-700 border-gray-200"
                       }`}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {format(new Date(activity.date), "MMM dd, yyyy")}
-                </p>
+                    >
+                      {activity.type === "logbook"
+                        ? activity.completion_status
+                        : activity.status}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ))

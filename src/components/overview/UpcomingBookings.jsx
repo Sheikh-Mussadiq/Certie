@@ -1,6 +1,7 @@
-import { MoreVertical, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { useEffect } from "react";
+import { MoreVertical, Calendar } from "lucide-react";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 const UpcomingBookings = ({ bookings }) => {
   const upcoming = bookings
@@ -28,10 +29,12 @@ const UpcomingBookings = ({ bookings }) => {
   }, [upcoming]);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
+    <div className="bg-white p-4 rounded-xl">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-gray-700">Upcoming Bookings</h3>
-        <button className="bg-white p-2 rounded-lg shadow-sm border border-grey-outline text-primary-black">
+        <h3 className="font-semibold text-secondary-black text-lg">
+          Upcoming Bookings
+        </h3>
+        <button className="bg-white p-2 rounded-lg shadow-sm border border-grey-outline text-secondary-black">
           <MoreVertical size={20} />
         </button>
       </div>
@@ -43,7 +46,7 @@ const UpcomingBookings = ({ bookings }) => {
               className="flex items-center p-2 rounded-lg bg-grey-fill"
             >
               <div className="bg-gray-100 p-2 rounded-lg mr-4">
-                <Calendar size={20} className="text-gray-600" />
+                <ListAltIcon size={20} className="text-primary-grey" />
               </div>
               <div className="flex-grow">
                 <p className="font-semibold">{booking.type}</p>

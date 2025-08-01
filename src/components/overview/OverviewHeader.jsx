@@ -4,7 +4,9 @@ const OverviewHeader = () => {
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
-        <h1 className="text-3xl font-bold text-primary-black">Dashboard</h1>
+        <h1 className="text-xl font-semibold text-secondary-black">
+          Dashboard
+        </h1>
         <p className="text-primary-grey">
           A summary of your properties and activities.
         </p>

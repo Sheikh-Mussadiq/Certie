@@ -6,12 +6,14 @@ export default {
       colors: {
         "primary-orange": "#FF5436",
         "primary-black": "#151718",
+        "secondary-black": "#2A2A2A",
         "fill-black": "#121212",
         "grey-outline": "#E8E8E9",
         "grey-fill": "#F6F6F6",
         "primary-grey": "#757575",
         "primary-red": "#FF0000",
-        "primary-green": "#00FF00",
+        "primary-green": "#23D60C",
+        "secondary-green": "#0C9100",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

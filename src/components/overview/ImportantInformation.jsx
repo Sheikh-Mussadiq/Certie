@@ -5,6 +5,7 @@ import {
   ClipboardList,
   MapPin,
 } from "lucide-react";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 const InfoItem = ({ icon: Icon, label, value }) => (
   <div className="flex items-start text-sm">
@@ -55,12 +56,14 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
     properties.length > 0 ? properties[0].local_fire_station : "N/A";
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
+    <div className="bg-white p-4 rounded-xl">
       <div className="flex items-center mb-4">
         <div className="p-2 rounded-lg bg-grey-fill border border-grey-outline mr-2">
-          <ListChecks size={20} className="text-gray-600" />
+          <ChecklistIcon size={20} className="text-primary-grey" />
         </div>
-        <h3 className="font-semibold text-gray-700">Important Information</h3>
+        <h3 className="font-semibold text-lg text-secondary-black">
+          Important Information
+        </h3>
       </div>
       <div className="space-y-3 text-sm">
         <InfoItem

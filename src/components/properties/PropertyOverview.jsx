@@ -313,10 +313,12 @@ const PropertyOverview = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        {manager.name || manager.email || 'Unknown Manager'}
+                        {manager.name || manager.email || "Unknown Manager"}
                       </p>
                       {manager.email && (
-                        <p className="text-xs text-primary-grey">{manager.email}</p>
+                        <p className="text-xs text-primary-grey">
+                          {manager.email}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -327,7 +329,9 @@ const PropertyOverview = () => {
                     <UserCog className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-primary-grey">No managers assigned</p>
+                    <p className="text-sm text-primary-grey">
+                      No managers assigned
+                    </p>
                   </div>
                 </div>
               )}
@@ -349,10 +353,12 @@ const PropertyOverview = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium">
-                        {siteUser.name || siteUser.email || 'Unknown User'}
+                        {siteUser.name || siteUser.email || "Unknown User"}
                       </p>
                       {siteUser.email && (
-                        <p className="text-xs text-primary-grey">{siteUser.email}</p>
+                        <p className="text-xs text-primary-grey">
+                          {siteUser.email}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -363,7 +369,9 @@ const PropertyOverview = () => {
                     <UserCheck className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-primary-grey">No site users assigned</p>
+                    <p className="text-sm text-primary-grey">
+                      No site users assigned
+                    </p>
                   </div>
                 </div>
               )}
@@ -398,7 +406,7 @@ const PropertyOverview = () => {
                 {asset.lastChecked}
               </div>
               <div className="p-4 text-sm">
-                <span className="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">
+                <span className="px-2 py-1 text-xs font-medium text-primary-green bg-green-100 rounded-full">
                   {asset.status}
                 </span>
               </div>
