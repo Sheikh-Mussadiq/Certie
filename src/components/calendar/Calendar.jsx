@@ -80,7 +80,7 @@ const Calendar = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] bg-white rounded-xl border border-grey-outline overflow-hidden">
+    <div className="flex flex-col h-full bg-white rounded-xl border border-grey-outline overflow-hidden">
       <CalendarHeader
         currentDate={currentDate}
         view={view}

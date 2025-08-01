@@ -2,7 +2,7 @@ import CalendarComponent from "../components/calendar/Calendar";
 
 const Calendar = () => {
   return (
-    <div className=" flex flex-col h-screen overflow-hidden">
+    <div className=" flex flex-col h-full overflow-hidden">
       <div className="mb-4">
         <h1 className="text-2xl font-semibold text-primary-black">Calendar</h1>
         <p className="text-sm text-primary-grey">
