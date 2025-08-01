@@ -40,7 +40,7 @@ const TableHeader = ({
   }, []);
 
   return (
-    <div className="flex justify-between items-center p-4 border-b border-grey-outline">
+    <div className="flex justify-between items-center p-4">
       <div className="flex items-center gap-4">
         <div ref={sortRef} className="relative">
           <button

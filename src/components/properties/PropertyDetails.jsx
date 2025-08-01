@@ -112,9 +112,9 @@ const PropertyDetails = ({ property, setProperty }) => {
             to={tab.path}
             end={tab.path.endsWith(`/properties/${id}`)}
             className={({ isActive }) =>
-              `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
                 isActive
-                  ? "bg-white text-primary-black border border-grey-outline shadow-sm"
+                  ? "bg-white text-secondary-black border border-grey-outline shadow-sm"
                   : "bg-grey-fill text-primary-grey hover:text-primary-black"
               }`
             }

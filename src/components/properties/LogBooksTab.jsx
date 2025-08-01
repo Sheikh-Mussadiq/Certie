@@ -71,11 +71,9 @@ const LogBooksTab = () => {
         await activateLogbook(logbook.id);
       }
       // Update local state instead of refetching
-      setLogbooks(prevLogbooks => 
-        prevLogbooks.map(lb => 
-          lb.id === logbook.id 
-            ? { ...lb, active: !lb.active }
-            : lb
+      setLogbooks((prevLogbooks) =>
+        prevLogbooks.map((lb) =>
+          lb.id === logbook.id ? { ...lb, active: !lb.active } : lb
         )
       );
     } catch (err) {
@@ -94,15 +92,15 @@ const LogBooksTab = () => {
     setModalLoading(true);
     setModalError(null);
     try {
-      const newLogbook = await createLogbook({ 
-        ...form, 
-        property_id: property.id 
+      const newLogbook = await createLogbook({
+        ...form,
+        property_id: property.id,
       });
       setShowModal(false);
       setForm({ logbook_type: "", description: "", frequency: "Monthly" });
       // Add new logbook to local state instead of refetching
       if (newLogbook) {
-        setLogbooks(prevLogbooks => [...prevLogbooks, newLogbook]);
+        setLogbooks((prevLogbooks) => [...prevLogbooks, newLogbook]);
       }
     } catch (err) {
       setModalError("Failed to create logbook");
@@ -119,13 +117,13 @@ const LogBooksTab = () => {
 
   const handleDeleteLogbook = async () => {
     if (!logbookToDelete) return;
-    
+
     setDeleteLoading(true);
     try {
       await deleteLogbook(logbookToDelete.id);
       // Remove from local state
-      setLogbooks(prevLogbooks => 
-        prevLogbooks.filter(lb => lb.id !== logbookToDelete.id)
+      setLogbooks((prevLogbooks) =>
+        prevLogbooks.filter((lb) => lb.id !== logbookToDelete.id)
       );
       setShowDeleteModal(false);
       setLogbookToDelete(null);
@@ -169,12 +167,13 @@ const LogBooksTab = () => {
         <div>
           <h2 className="text-xl font-semibold text-primary-black">LogBooks</h2>
           <p className="text-sm text-primary-grey">
-            Easily manage, track, and organize all your property logbooks in one place.
+            Easily manage, track, and organize all your property logbooks in one
+            place.
           </p>
         </div>
         {currentUser.id === property.owner_id && (
           <button
-            className="flex items-center gap-2 px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-secondary-black text-white rounded-xl hover:bg-secondary-black/90 transition-colors"
             onClick={() => setShowModal(true)}
           >
             <Plus className="w-4 h-4" />
@@ -183,17 +182,17 @@ const LogBooksTab = () => {
         )}
       </div>
 
-      <div className="flex mb-4 bg-gray-100 p-0.5 rounded-md w-fit">
+      <div className="flex mb-4 bg-gray-100  rounded-lg w-fit">
         {["Active", "In Active"].map((tab) => (
           <motion.button
             key={tab}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
               activeTab === tab
-                ? "bg-white text-primary-black shadow-sm border border-grey-outline"
-                : "text-primary-grey hover:text-primary-black"
+                ? "bg-white text-secondary-black border border-grey-outline"
+                : "text-primary-grey hover:text-secondary-black"
             }`}
           >
             {tab}
@@ -201,13 +200,13 @@ const LogBooksTab = () => {
         ))}
       </div>
 
-      <div className="relative">
+      <div className="relative w-1/2">
         <input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+          className="w-1/2 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
         />
       </div>
       {loading ? (
@@ -403,8 +402,9 @@ const LogBooksTab = () => {
               </div>
             </div>
             <p className="text-sm text-primary-grey mb-6">
-              Are you sure you want to delete "<strong>{logbookToDelete?.name}</strong>"? 
-              This will permanently remove the logbook and all its entries.
+              Are you sure you want to delete "
+              <strong>{logbookToDelete?.name}</strong>"? This will permanently
+              remove the logbook and all its entries.
             </p>
             <div className="flex gap-3">
               <button

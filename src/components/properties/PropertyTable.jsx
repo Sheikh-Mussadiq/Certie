@@ -26,19 +26,19 @@ const PropertyTable = ({
               }}
             />
           </th> */}
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
+          <th className="px-6 py-4 text-left text-sm  text-primary-grey border border-grey-outline">
             Property Name
           </th>
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
+          <th className="px-6 py-4 text-left text-sm  text-primary-grey border border-grey-outline">
             Address
           </th>
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
+          <th className="px-6 py-4 text-left text-sm  text-primary-grey border border-grey-outline">
             Compliance Score
           </th>
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black border-r border-grey-outline">
+          <th className="px-6 py-4 text-left text-sm  text-primary-grey border border-grey-outline">
             Property Type
           </th>
-          <th className="px-6 py-4 text-left text-sm font-medium text-primary-black">
+          <th className="px-6 py-4 text-left text-sm  text-primary-grey border border-grey-outline">
             Manager
           </th>
         </tr>
@@ -69,7 +69,7 @@ const PropertyTable = ({
                 }}
               />
             </td> */}
-            <td className="px-6 py-4 border-r border-grey-outline">
+            <td className="px-6 py-4 border-r border-l border-grey-outline">
               <div className="text-sm text-secondary-black">
                 {property.name}
               </div>
@@ -103,7 +103,7 @@ const PropertyTable = ({
                 {property.property_type || "N/A"}
               </div>
             </td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4 border-r border-grey-outline">
               {/* <div className="text-sm text-primary-black">
                 {property.manager || 'N/A'}
               </div> */}

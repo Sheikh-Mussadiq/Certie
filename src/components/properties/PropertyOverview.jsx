@@ -295,7 +295,7 @@ const PropertyOverview = () => {
       </div>
 
       {/* Property Team Section */}
-      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4 mt-4">
         <h3 className="text-lg font-semibold mb-4">Property Team</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           {/* Property Managers */}

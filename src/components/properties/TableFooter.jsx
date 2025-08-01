@@ -18,9 +18,9 @@ const TableFooter = ({
   return (
     <div className="flex justify-between items-center p-4 border-t border-grey-outline">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-primary-grey">Show entries</span>
+        <span className="text-sm text-secondary-black">Show entries</span>
         <select
-          className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-orange focus:border-primary-orange"
+          className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
         >

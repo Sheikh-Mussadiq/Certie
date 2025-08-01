@@ -9,6 +9,8 @@ import {
   Download,
   Trash2,
   MoreVertical,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import Sort from "../../assets/sort-a-z.png";
 import Filter from "../../assets/filter.png";
@@ -435,29 +437,35 @@ const AssessmentsTab = () => {
         {statsData.map((stat, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl shadow-sm p-6 relative"
+            className="flex justify-between bg-white rounded-xl shadow-sm p-6 relative"
           >
-            <div className="flex justify-between items-start">
-              <span className="text-sm font-medium text-gray-600">
+            <div className="flex flex-col justify-between items-start gap-4">
+              <span className="text-lg font-semibold text-secondary-black">
                 {stat.label}
               </span>
-              {/* <button className="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
+              {/* <button clavssName="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
                 <MoreVertical className="w-5 h-5" />
               </button> */}
-            </div>
-            <div className="mt-4">
-              <div className="flex items-baseline">
-                <span className="text-4xl font-bold">{stat.value}</span>
+              <div className="mt-4">
+                <div className="flex items-baseline">
+                  <span className="text-4xl font-bold">{stat.value}</span>
+                </div>
               </div>
             </div>
-            <div className="absolute bottom-6 right-6">
+            <div className="flex items-end">
               <span
-                className={`text-xs ${
+                className={`text-xs flex items-center gap-1 ${
                   stat.isPositive ? "text-green-600" : "text-primary-orange"
                 }`}
               >
-                {stat.isPositive ? "+" : ""}
-                {stat.change} vs last month
+                {stat.isPositive ? (
+                  <ArrowUp className="w-5 h-5 text-white bg-secondary-green rounded-full p-1" />
+                ) : (
+                  <ArrowDown className="w-5 h-5 text-white bg-primary-orange rounded-full p-1" />
+                )}
+
+                {stat.change}
+                <span className="text-xs text-primary-grey">vs last month</span>
               </span>
             </div>
           </div>
@@ -465,8 +473,8 @@ const AssessmentsTab = () => {
       </div>
 
       {/* Actions Bar */}
-      <div className="space-y-4 bg-white rounded-xl shadow-sm overflow-hidden p-4">
-        <div className="flex justify-between items-center">
+      <div className="space-y-4 bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="flex justify-between items-center p-4">
           <div className="flex items-center gap-4">
             <div className="relative">
               <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
@@ -502,36 +510,36 @@ const AssessmentsTab = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
-          <table className="w-full border-collapse text-center">
-            <thead>
-              <tr className="bg-grey-fill/50 border-b border-grey-outline">
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+        <div className="bg-white shadow-sm overflow-hidden">
+          <table className="w-full border-collapse">
+            <thead className="bg-grey-fill">
+              <tr className="border-b border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                   Assessment Type
                 </th>
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                   Date Completed
                 </th>
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                   Next Due
                 </th>
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                   Status
                 </th>
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                   Assignee
                 </th>
                 {currentUser?.id === property.owner_id && (
-                  <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                  <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
                     Invoice
                   </th>
                 )}
-                <th className="py-4 px-6 text-sm font-medium text-primary-grey border-r border-grey-outline">
+                <th className="px-6 py-4 text-left text-sm text-primary-grey">
                   Assessment Time
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-grey-outline">
               {currentAssessments.length > 0 ? (
                 currentAssessments.map((assessment) => {
                   const status = getAssessmentStatus(assessment);
@@ -539,14 +547,11 @@ const AssessmentsTab = () => {
                   console.log("Assessment Data:", assessment);
 
                   return (
-                    <tr
-                      key={assessment.id}
-                      className="border-b border-grey-outline last:border-0 hover:bg-grey-fill/50"
-                    >
-                      <td className="py-4 px-6 text-sm font-medium  border-r border-grey-outline">
+                    <tr key={assessment.id} className="hover:bg-grey-fill/50">
+                      <td className="px-6 py-4 border-r border-grey-outline text-sm text-secondary-black font-medium">
                         {assessment.type || "Assessment"}
                       </td>
-                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                      <td className="px-6 py-4 border-r border-grey-outline text-sm">
                         {assessment.completed_at
                           ? new Date(
                               assessment.completed_at
@@ -557,13 +562,15 @@ const AssessmentsTab = () => {
                             })
                           : "Not completed"}
                       </td>
-                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                      <td className="px-6 py-4 border-r border-grey-outline text-sm">
                         {getNextDueDate(assessment.completed_at)}
                       </td>
-                      <td className="py-4 px-6 border-r border-grey-outline">
+                      <td className="px-6 py-4 border-r border-grey-outline">
                         {currentUser?.id === property.owner_id &&
                         (status === "pending" ||
-                          (status === "approved" && (!assessment.invoice_bookings || assessment.invoice_bookings.length === 0)) ||
+                          (status === "approved" &&
+                            (!assessment.invoice_bookings ||
+                              assessment.invoice_bookings.length === 0)) ||
                           status === "rejected") ? (
                           <select
                             value={status}
@@ -591,45 +598,57 @@ const AssessmentsTab = () => {
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-6 border-r border-grey-outline text-left">
+                      <td className="px-6 py-4 border-r border-grey-outline text-left">
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
                               {getAssigneeInitials(assignee)}
                             </div>
                             <div className="flex flex-col">
-                              <span className="font-medium">{assignee.name}</span>
-                              <span className="text-xs text-gray-800">{assignee.email}</span>
-                              <span className="text-xs text-gray-800">{assignee.contact}</span>
+                              <span className="font-medium">
+                                {assignee.name}
+                              </span>
+                              <span className="text-xs text-gray-800">
+                                {assignee.email}
+                              </span>
+                              <span className="text-xs text-gray-800">
+                                {assignee.contact}
+                              </span>
                             </div>
                           </div>
                         </div>
                       </td>
                       {currentUser?.id === property.owner_id && (
-                        <td className="py-4 px-6 border-r border-grey-outline">
-                        {assessment.invoice_bookings && assessment.invoice_bookings.length > 0 ? (
-                          <div>
-                            <p className="font-medium">
-                              {assessment.invoice_bookings[0].invoices.status}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              £{assessment.invoice_bookings[0].invoices.amount_due / 100}
-                            </p>
-                            <a
-                              href={assessment.invoice_bookings[0].invoices.hosted_invoice_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-blue-500 hover:underline"
-                            >
-                              View Invoice
-                            </a>
-                          </div>
-                        ) : (
-                          "N/A"
-                        )}
-                      </td>
+                        <td className="px-6 py-4 border-r border-grey-outline">
+                          {assessment.invoice_bookings &&
+                          assessment.invoice_bookings.length > 0 ? (
+                            <div>
+                              <p className="font-medium">
+                                {assessment.invoice_bookings[0].invoices.status}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                £
+                                {assessment.invoice_bookings[0].invoices
+                                  .amount_due / 100}
+                              </p>
+                              <a
+                                href={
+                                  assessment.invoice_bookings[0].invoices
+                                    .hosted_invoice_url
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-500 hover:underline"
+                              >
+                                View Invoice
+                              </a>
+                            </div>
+                          ) : (
+                            "N/A"
+                          )}
+                        </td>
                       )}
-                      <td className="py-4 px-6 text-sm border-r border-grey-outline">
+                      <td className="px-6 py-4 text-sm">
                         {formatAssessmentTime(assessment.assessment_time)}
                       </td>
                     </tr>
@@ -637,7 +656,7 @@ const AssessmentsTab = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="7" className="py-12 text-center text-gray-500 ">
+                  <td colSpan="7" className="py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center">
                       <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
                         <Plus className="w-8 h-8 text-gray-400" />
@@ -672,9 +691,11 @@ const AssessmentsTab = () => {
           {assessments.length > itemsPerPage && (
             <div className="flex justify-between items-center p-4 border-t border-grey-outline">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-primary-grey">Show</span>
+                <span className="text-sm text-secondary-black">
+                  Show entries
+                </span>
                 <select
-                  className="px-2 py-1 border border-grey-outline rounded text-sm"
+                  className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
                   value={itemsPerPage}
                   onChange={(e) => {
                     setItemsPerPage(Number(e.target.value));
@@ -686,7 +707,6 @@ const AssessmentsTab = () => {
                   <option value={50}>50</option>
                   <option value={100}>100</option>
                 </select>
-                <span className="text-sm text-primary-grey">items</span>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -694,7 +714,7 @@ const AssessmentsTab = () => {
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
                   disabled={currentPage === 1}
-                  className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
+                  className="p-2 rounded-md border border-grey-outline text-primary-grey hover:bg-grey-fill disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -704,10 +724,10 @@ const AssessmentsTab = () => {
                     <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
-                        pageNum === currentPage
-                          ? "bg-primary-orange text-white"
-                          : "text-primary-black hover:bg-grey-fill"
+                      className={`px-3 py-1 rounded-md border border-grey-outline hover:bg-grey-fill ${
+                        currentPage === pageNum
+                          ? "bg-grey-fill text-primary-black"
+                          : "bg-white text-primary-grey"
                       }`}
                     >
                       {pageNum}
@@ -719,10 +739,10 @@ const AssessmentsTab = () => {
                     <span className="text-primary-grey">...</span>
                     <button
                       onClick={() => setCurrentPage(totalPages)}
-                      className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
-                        totalPages === currentPage
-                          ? "bg-primary-orange text-white"
-                          : "text-primary-black hover:bg-grey-fill"
+                      className={`px-3 py-1 rounded-md border border-grey-outline hover:bg-grey-fill ${
+                        currentPage === totalPages
+                          ? "bg-grey-fill text-primary-black"
+                          : "bg-white text-primary-grey"
                       }`}
                     >
                       {totalPages}
@@ -734,7 +754,7 @@ const AssessmentsTab = () => {
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className="p-1 text-primary-grey hover:text-primary-black disabled:text-gray-300"
+                  className="p-2 rounded-md border border-grey-outline text-primary-grey hover:bg-grey-fill disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>

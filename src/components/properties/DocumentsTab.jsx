@@ -252,7 +252,7 @@ const DocumentsTab = () => {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="border border-grey-outline p-2 rounded-xl overflow-hidden"
+              className="border border-grey-outline p-2 rounded-lg overflow-hidden"
             >
               <div className="flex items-center p-3">
                 <Shimmer className="h-5 w-5 mr-3" />
@@ -294,14 +294,14 @@ const DocumentsTab = () => {
   return (
     <div className="space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
       <div className="flex items-center justify-between mb-8">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary-black" />
           <input
             type="text"
             placeholder="Search documents..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+            className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-secondary-black"
           />
         </div>
         {currentUser.id === property.owner_id ||

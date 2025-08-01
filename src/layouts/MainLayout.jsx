@@ -20,7 +20,7 @@ const MainLayout = ({ children }) => {
             <Navbar />
           </div>
           {/* Main content with padding and overflow handling */}
-          <main className="flex-grow p-4 bg-grey-fill overflow-x-auto">
+          <main className="flex-grow p-4 bg-grey-fill overflow-x-auto h-[calc(100vh-10rem)]">
             <AnimatePresence mode="wait">{children}</AnimatePresence>
           </main>
         </div>

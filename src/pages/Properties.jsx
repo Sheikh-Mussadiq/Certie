@@ -146,7 +146,7 @@ const Properties = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold text-secondary-black">
           Properties
         </h1>
@@ -176,7 +176,7 @@ const Properties = () => {
           {error}
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-grey-outline overflow-hidden">
+        <div className="bg-white rounded-xl flex flex-col">
           {loading ? (
             <>
               <TableHeaderShimmer />
@@ -208,19 +208,21 @@ const Properties = () => {
                 onViewChange={setViewMode}
                 viewMode={viewMode}
               />
-              {viewMode === "table" ? (
-                <PropertyTable
-                  properties={currentProperties}
-                  selectedProperties={selectedProperties}
-                  onSelectProperty={setSelectedProperties}
-                />
-              ) : (
-                <PropertyListView
-                  properties={currentProperties}
-                  selectedProperties={selectedProperties}
-                  onSelectProperty={setSelectedProperties}
-                />
-              )}
+              <div className="flex justify-between overflow-y-auto">
+                {viewMode === "table" ? (
+                  <PropertyTable
+                    properties={currentProperties}
+                    selectedProperties={selectedProperties}
+                    onSelectProperty={setSelectedProperties}
+                  />
+                ) : (
+                  <PropertyListView
+                    properties={currentProperties}
+                    selectedProperties={selectedProperties}
+                    onSelectProperty={setSelectedProperties}
+                  />
+                )}
+              </div>
               <TableFooter
                 totalItems={filteredProperties.length}
                 itemsPerPage={itemsPerPage}
