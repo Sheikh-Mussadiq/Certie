@@ -43,19 +43,19 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
             </th> */}
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Service
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Property
             </th>
-             <th
+            <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Contact Details
             </th>
@@ -67,28 +67,31 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
             </th> */}
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Status
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Invoice
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
               Assessor Details
             </th>
             {currentUser.role === "super_admin" && (
-              <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-grey uppercase tracking-wider border-r border-grey-outline">
+              <th
+                scope="col"
+                className="px-6 py-3 text-center text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
+              >
                 {/* <span className="px-6 py-3 text-left text-xs font-medium text-primary-grey uppercase tracking-wider  border-grey-outline"> */}
                 Actions
-              {/* </span> */}
-            </th>
+                {/* </span> */}
+              </th>
             )}
           </tr>
         </thead>
@@ -105,21 +108,30 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                 {booking.type ||
                   (booking.service_name ? booking.service_name : "N/A")}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange hover:underline" onClick={() => {navigate(`/properties/${booking.property_id}`)}}>
+              <td
+                className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange hover:underline"
+                onClick={() => {
+                  navigate(`/properties/${booking.property_id}`);
+                }}
+              >
                 {booking.properties?.name || booking.property_name || "N/A"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
                 {booking.contact_details ? (
                   <div className="space-y-1">
-                    <div className="font-medium"> Name: {booking.contact_details.name}</div>
+                    <div className="font-medium">
+                      Name: {booking.contact_details.name || "-"}
+                    </div>
                     <div className="text-xs text-primary-grey">
-                      <div>Email: {booking.contact_details.email}</div>
-                      <div>Phone: {booking.contact_details.phone}</div>
-                      <div className="truncate max-w-xs">Address: {booking.contact_details.address}</div>
+                      <div>Email: {booking.contact_details.email || "-"}</div>
+                      <div>Phone: {booking.contact_details.phone || "-"}</div>
+                      <div className="truncate max-w-xs">
+                        Address: {booking.contact_details.address || "-"}
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  "N/A"
+                  "-"
                 )}
               </td>
               {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
@@ -133,7 +145,8 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                 <StatusBadge status={booking.status} />
               </td>
               <td className="px-6 py-4 whitespace-nowrap border-r border-grey-outline">
-                {booking.invoice_bookings && booking.invoice_bookings.length > 0 ? (
+                {booking.invoice_bookings &&
+                booking.invoice_bookings.length > 0 ? (
                   <div>
                     <p className="font-medium">
                       {booking.invoice_bookings[0].invoices.status}
@@ -142,7 +155,9 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                       £{booking.invoice_bookings[0].invoices.amount_due / 100}
                     </p>
                     <a
-                      href={booking.invoice_bookings[0].invoices.hosted_invoice_url}
+                      href={
+                        booking.invoice_bookings[0].invoices.hosted_invoice_url
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-500 hover:underline"
@@ -174,15 +189,15 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                   </div>
                 </div>
               </td>
-               {currentUser.role === "super_admin" && (
-              <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                <button 
-                  className="text-primary-grey hover:text-primary-black"
-                  onClick={() => handleOpenModal(booking)}
-                >
-                  <MoreHorizontal className="h-5 w-5" />
-                </button>
-              </td>
+              {currentUser.role === "super_admin" && (
+                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                  <button
+                    className="text-primary-grey hover:text-primary-black"
+                    onClick={() => handleOpenModal(booking)}
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+                </td>
               )}
             </tr>
           ))}

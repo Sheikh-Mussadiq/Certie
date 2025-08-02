@@ -101,7 +101,7 @@
 import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
-import { ChevronDown, User, Leaf, LogOut, Settings } from "lucide-react";
+import { ChevronDown, User, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 
@@ -166,10 +166,10 @@ const ProfileDropdown = () => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 mt-2 w-56 rounded-xl bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-100">
-                <p className="text-sm text-gray-500">Signed in as</p>
-                <p className="text-sm font-medium text-gray-900 truncate">
+            <Menu.Items className="absolute right-0 mt-2 w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden">
+              <div className="px-4 py-3 border-b border-grey-outline">
+                <p className="text-sm text-primary-grey">Signed in as</p>
+                <p className="text-sm font-semibold text-secondary-black truncate">
                   {currentUser?.email}
                 </p>
               </div>
@@ -177,9 +177,9 @@ const ProfileDropdown = () => {
               <Menu.Item>
                 {({ active }) => (
                   <Link
-                    to="/user"
+                    to="/settings"
                     className={`${
-                      active ? "bg-gray-100" : ""
+                      active ? "bg-grey-fill/50 rounded-lg" : ""
                     } flex items-center px-4 py-3 text-sm text-gray-700 transition-colors`}
                   >
                     <User className="mr-3 h-5 w-5 text-primary-500" />
@@ -210,17 +210,15 @@ const ProfileDropdown = () => {
                 )}
               </Menu.Item> */}
 
-              <div className="border-t border-gray-100 mt-1"></div>
-
               <Menu.Item>
                 {({ active }) => (
                   <button
                     onClick={logout}
                     className={`${
-                      active ? "bg-gray-100" : ""
-                    } flex w-full items-center px-4 py-3 text-sm text-red-600 transition-colors`}
+                      active ? "bg-primary-red/10 rounded-lg" : ""
+                    } flex w-full items-center px-4 py-3 text-sm text-primary-red transition-colors`}
                   >
-                    <LogOut className="mr-3 h-5 w-5 text-red-500" />
+                    <LogOut className="mr-3 h-5 w-5 text-primary-red" />
                     Logout
                   </button>
                 )}

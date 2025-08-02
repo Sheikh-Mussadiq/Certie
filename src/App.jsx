@@ -28,6 +28,7 @@ import LogBooksTab from "./components/properties/LogBooksTab";
 import DocumentsTab from "./components/properties/DocumentsTab";
 import PropertyOverview from "./components/properties/PropertyOverview";
 import Overview from "./pages/Overview";
+import Settings from "./pages/Settings";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -199,6 +200,14 @@ const AuthenticatedRoutes = () => {
             element={
               <ProtectedLayout>
                 <Calendar />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedLayout>
+                <Settings />
               </ProtectedLayout>
             }
           />

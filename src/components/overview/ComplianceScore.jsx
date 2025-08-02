@@ -11,13 +11,13 @@ const ComplianceScore = ({ properties }) => {
 
   return (
     <div className="bg-white p-4 rounded-xl">
-      <div className="flex justify-between items-center mb-10">
+      <div className="flex justify-between items-center mb-12">
         <h3 className="font-semibold text-secondary-black text-lg">
           Compliance Score
         </h3>
-        <button className="bg-white p-2 rounded-lg shadow-sm border border-grey-outline text-secondary-black">
+        {/* <button className="bg-white p-2 rounded-lg shadow-sm border border-grey-outline text-secondary-black">
           <MoreVertical size={20} />
-        </button>
+        </button> */}
       </div>
       <div className="flex justify-between items-baseline">
         <span className="text-4xl font-bold">{Math.round(averageScore)}%</span>

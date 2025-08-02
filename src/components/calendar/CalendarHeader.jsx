@@ -19,14 +19,14 @@ const CalendarHeader = ({
   return (
     <div className="flex items-center justify-between p-4 ">
       <div className="flex items-center gap-4">
-        <div className="flex bg-grey-fill rounded-md p-1">
+        <div className="flex bg-grey-fill rounded-lg">
           {["Day", "Week", "Month", "Year"].map((viewOption) => (
             <button
               key={viewOption}
               onClick={() => onViewChange(viewOption.toLowerCase())}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-3 py-1.5 text-sm font-semibold rounded-lg transition-colors ${
                 view === viewOption.toLowerCase()
-                  ? "bg-white text-primary-black shadow-sm"
+                  ? "bg-white text-secondary-black border border-grey-outline"
                   : "text-primary-grey hover:text-primary-black"
               }`}
             >

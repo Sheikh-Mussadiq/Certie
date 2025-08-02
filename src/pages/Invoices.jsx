@@ -300,12 +300,12 @@ const Invoices = () => {
             statuses
           </p>
         </div>
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <button className="px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors flex items-center gap-2">
             <Download className="w-4 h-4" />
             Export
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats Section */}

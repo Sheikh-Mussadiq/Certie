@@ -33,7 +33,7 @@ const Sidebar = () => {
     { icon: FileText, label: "Documents", path: "/documents" },
     { icon: FileText, label: "Invoices", path: "/invoices" },
     { icon: Calendar, label: "Calendar", path: "/calendar" },
-    // { icon: Settings, label: "Settings", path: "/settings" },
+    { icon: Settings, label: "Settings", path: "/settings" },
   ];
 
   return (
@@ -83,7 +83,7 @@ const Sidebar = () => {
         </ul>
       </nav>
 
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         <div className="bg-[#1E1F20] rounded-lg p-4 text-sm text-gray-400">
           <div className="flex justify-between items-center mb-2">
             <span>20 days left</span>
@@ -96,7 +96,7 @@ const Sidebar = () => {
             View plan
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

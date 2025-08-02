@@ -20,7 +20,7 @@ const MonthView = ({ currentDate, getEventsForDay, loading }) => {
     // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
       const dayEvents = getEventsForDay ? getEventsForDay(i, currentDate) : [];
-      
+
       days.push({
         date: i,
         isCurrentMonth: true,
@@ -75,7 +75,7 @@ const MonthView = ({ currentDate, getEventsForDay, loading }) => {
         {weekDays.map((day, index) => (
           <div
             key={day}
-            className="py-2 text-xs font-medium text-center border-b border-grey-outline text-primary-grey flex justify-center items-center"
+            className="py-2 text-sm font-semibold text-center border-b border-grey-outline text-primary-grey flex justify-center items-center"
           >
             <span
               className={`px-3 py-1 rounded-md ${
@@ -114,18 +114,18 @@ const MonthView = ({ currentDate, getEventsForDay, loading }) => {
             )}
 
             <div className="mt-1 space-y-1 overflow-hidden flex-1 relative z-10">
-              {day.events && day.events.length > 0 ? (
-                day.events.slice(0, 3).map((event, eventIndex) => (
-                  <div
-                    key={eventIndex}
-                    className={`text-xs p-1 rounded ${
-                      event.color || "bg-blue-100 text-blue-800"
-                    } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
-                  >
-                    {event.title}
-                  </div>
-                ))
-              ) : null}
+              {day.events && day.events.length > 0
+                ? day.events.slice(0, 3).map((event, eventIndex) => (
+                    <div
+                      key={eventIndex}
+                      className={`text-xs p-1 rounded ${
+                        event.color || "bg-blue-100 text-blue-800"
+                      } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
+                    >
+                      {event.title}
+                    </div>
+                  ))
+                : null}
               {day.events && day.events.length > 3 && (
                 <div className="text-xs p-1 rounded bg-gray-100 text-gray-800 truncate">
                   +{day.events.length - 3} more

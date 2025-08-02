@@ -156,10 +156,10 @@ const Properties = () => {
               <Upload className="w-4 h-4" />
               Import
             </button> */}
-            <button className="px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors flex items-center gap-2">
+            {/* <button className="px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors flex items-center gap-2">
               <Download className="w-4 h-4" />
               Export
-            </button>
+            </button> */}
           </div>
           <button
             onClick={() => navigate("/properties/add")}

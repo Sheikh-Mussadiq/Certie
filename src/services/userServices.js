@@ -1,29 +1,28 @@
-import { supabase } from '../lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
+import { supabase } from "../lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 export const createUserProfile = async (fullName, avatarUrl = null) => {
   try {
-    
     const { data, error } = await supabase
-      .from('users')
+      .from("users")
       .insert([
         {
           full_name: fullName,
           avatar_url: avatarUrl,
-        }
+        },
       ])
       .select()
       .single();
 
     if (error) {
-      console.error('Supabase error creating profile:', error);
+      console.error("Supabase error creating profile:", error);
       throw error;
     }
-    
-    console.log('Created user profile:', data);
+
+    console.log("Created user profile:", data);
     return data;
   } catch (error) {
-    console.error('Error creating user profile:', error);
+    console.error("Error creating user profile:", error);
     throw error;
   }
 };
@@ -31,15 +30,15 @@ export const createUserProfile = async (fullName, avatarUrl = null) => {
 export const getUserProfile = async (userId) => {
   try {
     const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
+      .from("users")
+      .select("*")
+      .eq("id", userId)
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error("Error fetching user profile:", error);
     throw error;
   }
 };
@@ -47,16 +46,36 @@ export const getUserProfile = async (userId) => {
 export const updateUserFullName = async (userId, fullName) => {
   try {
     const { data, error } = await supabase
-      .from('users')
+      .from("users")
       .update({ full_name: fullName })
-      .eq('id', userId)
+      .eq("id", userId)
       .select()
       .single();
 
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Error updating user full name:', error);
+    console.error("Error updating user full name:", error);
+    throw error;
+  }
+};
+
+export const updateUserProfile = async (userId, profileData) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .update({
+        full_name: profileData.profileName,
+        email: profileData.email,
+      })
+      .eq("id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
     throw error;
   }
 };
@@ -64,57 +83,62 @@ export const updateUserFullName = async (userId, fullName) => {
 export const uploadAvatar = async (userId, file) => {
   try {
     // Generate unique file name
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const fileName = `${userId}/${uuidv4()}.${fileExt}`;
     const filePath = `${fileName}`;
 
     // Delete old avatar if exists
-    const { data: oldFiles } = await supabase
-      .storage
-      .from('avatars')
-      .list(userId);
+    try {
+      const { data: oldFiles } = await supabase.storage
+        .from("avatars")
+        .list(userId);
 
-    if (oldFiles?.length) {
-      await supabase
-        .storage
-        .from('avatars')
-        .remove(oldFiles.map(f => `${userId}/${f.name}`));
+      if (oldFiles?.length) {
+        await supabase.storage
+          .from("avatars")
+          .remove(oldFiles.map((f) => `${userId}/${f.name}`));
+      }
+    } catch (error) {
+      console.warn("Could not delete old avatar:", error);
     }
 
     // Upload new avatar
-    const { data, error: uploadError } = await supabase
-      .storage
-      .from('avatars')
+    const { data, error: uploadError } = await supabase.storage
+      .from("avatars")
       .upload(filePath, file);
 
-    if (uploadError) throw uploadError;
+    if (uploadError) {
+      console.error("Upload error:", uploadError);
+      throw uploadError;
+    }
 
     // Get public URL
-    const { data: { publicUrl } } = supabase
-      .storage
-      .from('avatars')
-      .getPublicUrl(filePath);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
     // Update user profile
     const { data: userData, error: updateError } = await supabase
-      .from('users')
+      .from("users")
       .update({ avatar_url: publicUrl })
-      .eq('id', userId)
+      .eq("id", userId)
       .select()
       .single();
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error("Update error:", updateError);
+      throw updateError;
+    }
 
     return userData;
   } catch (error) {
-    console.error('Error uploading avatar:', error);
+    console.error("Error uploading avatar:", error);
     throw error;
   }
 };
 
 export const handleAuthUser = async (session) => {
   try {
-    
     // Extract user from session correctly
     const authUser = session?.user || session;
     if (!authUser?.id) {
@@ -127,22 +151,21 @@ export const handleAuthUser = async (session) => {
       if (existingProfile) {
         return existingProfile;
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     // Create new profile if doesn't exist
     const userData = {
-      fullName: authUser.user_metadata?.full_name || 
-                authUser.raw_user_meta_data?.full_name ||
-                authUser.user_metadata?.name ||
-                authUser.email?.split('@')[0] ||
-                'Unknown',
-      avatarUrl: authUser.user_metadata?.avatar_url ||
-                 authUser.raw_user_meta_data?.avatar_url
+      fullName:
+        authUser.user_metadata?.full_name ||
+        authUser.raw_user_meta_data?.full_name ||
+        authUser.user_metadata?.name ||
+        authUser.email?.split("@")[0] ||
+        "Unknown",
+      avatarUrl:
+        authUser.user_metadata?.avatar_url ||
+        authUser.raw_user_meta_data?.avatar_url,
     };
 
-    
     const newProfile = await createUserProfile(
       userData.fullName,
       userData.avatarUrl
@@ -150,7 +173,7 @@ export const handleAuthUser = async (session) => {
 
     return newProfile;
   } catch (error) {
-    console.error('Error in handleAuthUser:', error);
+    console.error("Error in handleAuthUser:", error);
     throw error;
   }
 };

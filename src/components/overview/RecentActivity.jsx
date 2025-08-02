@@ -1,8 +1,12 @@
 import { List, Calendar, FileText } from "lucide-react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const RecentActivity = ({ logbooks, bookings }) => {
+  const navigate = useNavigate();
+
   // Get recent logbook activities
   const logbookActivities = logbooks.flatMap((logbook) =>
     (logbook.logbook_entries || []).map((entry) => ({
@@ -10,6 +14,7 @@ const RecentActivity = ({ logbooks, bookings }) => {
       type: "logbook",
       logbookName: logbook.logbook_type,
       date: entry.performed_at,
+      property_id: logbook.property_id,
     }))
   );
 
@@ -31,25 +36,48 @@ const RecentActivity = ({ logbooks, bookings }) => {
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 4);
 
+  const handleActivityClick = (activity) => {
+    if (activity.type === "logbook" && activity.property_id) {
+      navigate(`/properties/${activity.property_id}/logbooks`);
+    } else if (activity.type === "booking") {
+      navigate("/bookings");
+    }
+  };
+
+  const handleViewAllClick = () => {
+    // Navigate to a general activity or properties page
+    navigate("/properties");
+  };
+
   return (
     <div className="bg-white p-4 rounded-xl">
-      <div className="flex items-center mb-4">
-        <div className="p-2 rounded-lg bg-grey-fill/50 border border-grey-outline mr-2">
-          <ListAltIcon size={20} className="text-primary-grey" />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <div className="p-2 rounded-lg bg-grey-fill/50 border border-grey-outline mr-2">
+            <ListAltIcon size={20} className="text-primary-grey" />
+          </div>
+          <h3 className="font-semibold text-lg text-secondary-black">
+            Recent Activity
+          </h3>
+          <span className="ml-2 bg-grey-fill/50 text-secondary-black text-xs font-semibold px-2 py-1 rounded-full border border-grey-outline">
+            {allActivities.length}
+          </span>
         </div>
-        <h3 className="font-semibold text-lg text-secondary-black">
-          Recent Activity
-        </h3>
-        <span className="ml-2 bg-grey-fill/50 text-secondary-black text-xs font-semibold px-2 py-1 rounded-full border border-grey-outline">
-          {allActivities.length}
-        </span>
+        {/* <button
+          onClick={handleViewAllClick}
+          className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-grey-outline text-secondary-black hover:bg-grey-fill transition-colors text-sm"
+        >
+          <span>View All</span>
+          <ArrowRight size={16} />
+        </button> */}
       </div>
       <div className="space-y-4">
         {allActivities.length > 0 ? (
           allActivities.map((activity, index) => (
             <div
               key={activity.id || index}
-              className="flex items-start space-x-3 p-2 rounded-lg bg-grey-fill/50"
+              onClick={() => handleActivityClick(activity)}
+              className="flex items-start space-x-3 p-3 rounded-lg bg-grey-fill/50 hover:bg-grey-fill cursor-pointer transition-all duration-200 hover:shadow-md"
             >
               {/* <div className="flex-shrink-0 mt-1">
                 {activity.type === "logbook" ? (
@@ -105,7 +133,16 @@ const RecentActivity = ({ logbooks, bookings }) => {
             </div>
           ))
         ) : (
-          <p className="text-sm text-gray-500">No recent activity.</p>
+          <div className="text-center py-6">
+            <ListAltIcon className="mx-auto text-gray-400 mb-2" size={24} />
+            <p className="text-sm text-gray-500">No recent activity.</p>
+            <button
+              onClick={handleViewAllClick}
+              className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
+            >
+              View all properties
+            </button>
+          </div>
         )}
       </div>
     </div>

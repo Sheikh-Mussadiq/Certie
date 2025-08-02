@@ -6,9 +6,17 @@ import {
   MapPin,
 } from "lucide-react";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import { useNavigate } from "react-router-dom";
 
-const InfoItem = ({ icon: Icon, label, value }) => (
-  <div className="flex items-start text-sm">
+const InfoItem = ({ icon: Icon, label, value, onClick, clickable = false }) => (
+  <div
+    className={`flex items-start text-sm ${
+      clickable
+        ? "hover:bg-grey-fill/50 cursor-pointer transition-colors p-1 rounded"
+        : ""
+    }`}
+    onClick={clickable ? onClick : undefined}
+  >
     <div className="flex-shrink-0 w-8 text-center">
       <Icon className="w-5 h-5 text-gray-500 inline-block" />
     </div>
@@ -20,6 +28,8 @@ const InfoItem = ({ icon: Icon, label, value }) => (
 );
 
 const ImportantInformation = ({ properties, logbooks, bookings }) => {
+  const navigate = useNavigate();
+
   const totalProperties = properties.length;
   const sitesWithIssues = new Set(
     logbooks
@@ -55,6 +65,28 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
   const fireStation =
     properties.length > 0 ? properties[0].local_fire_station : "N/A";
 
+  const handlePropertiesClick = () => {
+    navigate("/properties");
+  };
+
+  const handleIssuesClick = () => {
+    navigate("/properties");
+  };
+
+  const handleComplianceClick = () => {
+    navigate("/properties");
+  };
+
+  const handleLowestComplianceClick = () => {
+    if (lowestComplianceProperty) {
+      navigate(`/properties/${lowestComplianceProperty.id}`);
+    }
+  };
+
+  const handleTasksClick = () => {
+    navigate("/bookings");
+  };
+
   return (
     <div className="bg-white p-4 rounded-xl">
       <div className="flex items-center mb-4">
@@ -70,16 +102,22 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
           icon={ListChecks}
           label="Total Properties"
           value={totalProperties}
+          onClick={handlePropertiesClick}
+          clickable={true}
         />
         <InfoItem
           icon={AlertTriangle}
           label="Sites with Outstanding Issues"
           value={sitesWithIssues}
+          onClick={handleIssuesClick}
+          // clickable={true}
         />
         <InfoItem
           icon={ChevronsDown}
           label="Average Compliance Score"
           value={`${averageCompliance}%`}
+          onClick={handleComplianceClick}
+          clickable={true}
         />
         <InfoItem
           icon={ChevronsDown}
@@ -89,11 +127,15 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
               ? `${lowestComplianceProperty.name} ${lowestCompliance}%`
               : "N/A"
           }
+          onClick={handleLowestComplianceClick}
+          clickable={!!lowestComplianceProperty}
         />
         <InfoItem
           icon={ClipboardList}
           label="Total Open Tasks"
           value={totalOpenTasks}
+          onClick={handleTasksClick}
+          clickable={true}
         />
         {/* <InfoItem
           icon={MapPin}

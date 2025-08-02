@@ -64,26 +64,30 @@ const YearView = ({ currentDate, getEventsForDay, loading }) => {
   }
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 overflow-auto">
+    <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 overflow-auto h-full">
       {months.map((monthName, monthIndex) => (
         <div
           key={monthName}
           className="border border-grey-outline rounded-lg overflow-hidden"
         >
           <div className="bg-grey-fill px-3 py-2 border-b border-grey-outline">
-            <h3 className="text-sm font-medium">{monthName}</h3>
+            <h3 className="text-sm font-semibold text-secondary-black">
+              {monthName}
+            </h3>
           </div>
           <div className="p-2">
             <div className="grid grid-cols-7 gap-1">
+              {/* Day Headers */}
               {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
                 <div
                   key={i}
-                  className="text-[10px] text-primary-grey text-center"
+                  className="text-[10px] text-primary-grey font-semibold h-5 w-5 flex items-center justify-center"
                 >
                   {day}
                 </div>
               ))}
 
+              {/* Calendar Days */}
               {getMonthDays(year, monthIndex).map((day, dayIndex) => (
                 <div
                   key={dayIndex}

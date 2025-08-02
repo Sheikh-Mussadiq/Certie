@@ -72,18 +72,19 @@ const WeekView = ({ currentDate, formatBookingsForCalendar, loading }) => {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
-      <div className="grid grid-cols-8 border-b border-grey-outline">
+    <div className="flex-1 flex flex-col">
+      {/* Fixed Week Header */}
+      <div className="grid grid-cols-8 border-b border-grey-outline bg-white sticky top-0 z-20">
         <div className="w-20" /> {/* Time column */}
         {weekDays.map((day) => (
           <div key={day.toISOString()} className="py-2 text-center">
-            <div className="text-xs font-medium text-primary-grey">
+            <div className="text-sm font-semibold text-primary-grey">
               {day
                 .toLocaleDateString("en-US", { weekday: "short" })
                 .toUpperCase()}
             </div>
             <div
-              className={`text-sm font-medium ${
+              className={`text-sm font-semibold ${
                 isToday(day)
                   ? "h-6 w-8 flex items-center justify-center bg-primary-black text-white rounded-md mx-auto"
                   : "text-primary-black"
@@ -95,60 +96,68 @@ const WeekView = ({ currentDate, formatBookingsForCalendar, loading }) => {
         ))}
       </div>
 
-      <div className="relative grid grid-cols-8">
-        <div className="w-20 pt-2">
-          {hours.map((hour) => (
-            <div
-              key={hour}
-              className="h-12 border-b border-grey-outline text-xs text-primary-grey pr-2 text-right"
-            >
-              {hour === 0
-                ? "12 AM"
-                : hour < 12
-                ? `${hour} AM`
-                : hour === 12
-                ? "12 PM"
-                : `${hour - 12} PM`}
-            </div>
-          ))}
-        </div>
-        {weekDays.map((day) => {
-          const dayEvents = events.filter((event) =>
-            eventBelongsToDay(event, day)
-          );
-          // console.log(`Events for ${day.toDateString()}:`, dayEvents);
+      {/* Scrollable Time Grid */}
+      <div className="flex-1 overflow-auto">
+        <div className="relative grid grid-cols-8 min-h-[1152px]">
+          {" "}
+          {/* 24 hours * 48px = 1152px */}
+          <div className="w-20 pt-2 bg-white">
+            {hours.map((hour) => (
+              <div
+                key={hour}
+                className="h-12 border-b border-grey-outline text-xs text-primary-grey pr-2 text-right flex items-center justify-end"
+              >
+                {hour === 0
+                  ? "12 AM"
+                  : hour < 12
+                  ? `${hour} AM`
+                  : hour === 12
+                  ? "12 PM"
+                  : `${hour - 12} PM`}
+              </div>
+            ))}
+          </div>
+          {weekDays.map((day) => {
+            const dayEvents = events.filter((event) =>
+              eventBelongsToDay(event, day)
+            );
+            // console.log(`Events for ${day.toDateString()}:`, dayEvents);
 
-          return (
-            <div
-              key={day.toISOString()}
-              className="border-l border-grey-outline relative"
-            >
-              {hours.map((hour) => (
-                <div key={hour} className="h-12 border-b border-grey-outline" />
-              ))}
-
-              {/* Events for this day */}
-              {dayEvents.map((event, index) => {
-                const style = getEventStyle(event);
-                return (
+            return (
+              <div
+                key={day.toISOString()}
+                className="border-l border-grey-outline relative bg-white"
+              >
+                {hours.map((hour) => (
                   <div
-                    key={index}
-                    className={`absolute left-0 right-0 mx-1 p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90`}
-                    style={style}
-                  >
-                    <div className="font-medium truncate">{event.title}</div>
-                    <div className="text-[10px] truncate">
-                      {event.start.getHours().toString().padStart(2, "0")}:
-                      {event.start.getMinutes().toString().padStart(2, "0")} -
-                      {event.end.getHours().toString().padStart(2, "0")}:
-                      {event.end.getMinutes().toString().padStart(2, "0")}
+                    key={hour}
+                    className="h-12 border-b border-grey-outline"
+                  />
+                ))}
+
+                {/* Events for this day */}
+                {dayEvents.map((event, index) => {
+                  const style = getEventStyle(event);
+                  return (
+                    <div
+                      key={index}
+                      className={`absolute left-0 right-0 mx-1 p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
+                      style={style}
+                    >
+                      <div className="font-medium truncate">{event.title}</div>
+                      <div className="text-[10px] truncate">
+                        {event.start.getHours().toString().padStart(2, "0")}:
+                        {event.start.getMinutes().toString().padStart(2, "0")} -
+                        {event.end.getHours().toString().padStart(2, "0")}:
+                        {event.end.getMinutes().toString().padStart(2, "0")}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
