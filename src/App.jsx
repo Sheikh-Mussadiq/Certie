@@ -21,6 +21,7 @@ import Calendar from "./pages/Calendar";
 import Bookings from "./pages/Bookings";
 import Documents from "./pages/Documents";
 import Invoices from "./pages/Invoices";
+import Logbooks from "./pages/Logbooks";
 import ContractorWorkflow from "./pages/ContractorWorkflow";
 import Logo from "./assets/Logo.png";
 import AssessmentsTab from "./components/properties/AssessmentsTab";
@@ -184,6 +185,22 @@ const AuthenticatedRoutes = () => {
             element={
               <ProtectedLayout>
                 <Documents />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/logbooks"
+            element={
+              <ProtectedLayout>
+                <Logbooks />
+              </ProtectedLayout>
+            }
+          />
+          <Route
+            path="/logbooks/:propertyId"
+            element={
+              <ProtectedLayout>
+                <Logbooks />
               </ProtectedLayout>
             }
           />

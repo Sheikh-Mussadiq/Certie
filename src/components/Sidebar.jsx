@@ -26,7 +26,7 @@ const Sidebar = () => {
   const menuItems = [
     { icon: LayoutGrid, label: "Overview", path: "/overview" },
     { icon: Building2, label: "Properties", path: "/properties" },
-    // { icon: BookText, label: "Logbooks", path: "/logbooks" },
+    { icon: BookText, label: "Logbooks", path: "/logbooks" },
     // { icon: BookText, label: "Logbooks", path: "/logbooks", badge: "2" },
     // { icon: Users, label: "Directory", path: "/directory" },
     { icon: CalendarDays, label: "Bookings", path: "/bookings" },
