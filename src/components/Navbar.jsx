@@ -5,10 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Leaf, Menu, X } from "lucide-react";
 import ProfileDropdown from "./ProfileDropdown";
 import { SiOverleaf } from "react-icons/si";
+import NotificationBell from "./notifications/NotificationBell";
+import NotificationPanel from "./notifications/NotificationPanel";
+
 const Navbar = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const isActive = (path) => location.pathname === path;
 
@@ -97,7 +101,11 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+            <NotificationBell onClick={() => setShowNotifications((v) => !v)} />
             <ProfileDropdown />
+            {showNotifications && (
+              <NotificationPanel onClose={() => setShowNotifications(false)} />
+            )}
 
             {/* Mobile menu button */}
             {/* <div className="sm:hidden flex items-center">
