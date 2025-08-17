@@ -101,7 +101,10 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <NotificationBell onClick={() => setShowNotifications((v) => !v)} />
+            <NotificationBell
+              onClick={() => setShowNotifications((v) => !v)}
+              isOpen={showNotifications}
+            />
             <ProfileDropdown />
             {showNotifications && (
               <NotificationPanel onClose={() => setShowNotifications(false)} />

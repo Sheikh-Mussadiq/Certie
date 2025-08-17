@@ -208,8 +208,13 @@ export default function NotificationPanel({ onClose }) {
   // Handle click outside to close panel
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Check if the click is outside the panel
       if (panelRef.current && !panelRef.current.contains(event.target)) {
-        onClose();
+        // Also check if the click is not on the notification bell
+        const bellButton = event.target.closest("[data-notification-bell]");
+        if (!bellButton) {
+          onClose();
+        }
       }
     };
 

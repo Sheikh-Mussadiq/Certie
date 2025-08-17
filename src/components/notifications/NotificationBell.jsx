@@ -6,7 +6,7 @@ import {
   subscribeToNotifications,
 } from "../../services/notificationServices";
 
-export default function NotificationBell({ onClick }) {
+export default function NotificationBell({ onClick, isOpen }) {
   const [unread, setUnread] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -47,19 +47,33 @@ export default function NotificationBell({ onClick }) {
 
   return (
     <motion.button
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="relative p-2.5 rounded-full hover:bg-gray-100 transition-colors duration-200 group"
+      className={`relative p-2.5 rounded-full transition-colors duration-200 group ${
+        isOpen
+          ? "bg-primary-orange/10 text-primary-orange"
+          : "hover:bg-gray-100 text-gray-600"
+      }`}
       aria-label="Notifications"
+      data-notification-bell="true"
     >
       <motion.div
         animate={{ rotate: isHovered ? [0, -10, 10, 0] : 0 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        <Bell className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors duration-200" />
+        <Bell
+          className={`w-5 h-5 transition-colors duration-200 ${
+            isOpen
+              ? "text-primary-orange"
+              : "text-gray-600 group-hover:text-gray-800"
+          }`}
+        />
       </motion.div>
 
       <AnimatePresence>
