@@ -337,7 +337,7 @@ export default function NotificationPanel({ onClose }) {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: -20 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute right-24 top-16 w-[420px] max-h-[75vh] z-[60]"
+      className="absolute right-24 top-16 w-[420px] h-[75vh] max-h-[600px] min-h-[400px] z-[60]"
     >
       <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-grey-outline/20">
         {/* Header */}
@@ -383,7 +383,7 @@ export default function NotificationPanel({ onClose }) {
         ) : (
           <div
             ref={containerRef}
-            className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+            className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 min-h-0"
           >
             <AnimatePresence mode="popLayout">
               {items.length === 0 && (
