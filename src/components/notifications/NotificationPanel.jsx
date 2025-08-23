@@ -68,6 +68,12 @@ function getTypeMeta(type) {
         color: "from-orange-500 to-orange-600",
         label: "Service Due",
       };
+      case "logbook_due":
+        return {
+          icon: AlertTriangle,
+          color: "from-rose-500 to-rose-600",
+          label: "Logbook Due",
+        };
     default:
       return {
         icon: BellRing,
@@ -92,6 +98,13 @@ function highlightBody(n) {
       </span>
     );
   }
+    if (n.type === "logbook_due" && meta.property_name) {
+      return (
+        <span className="text-xs text-gray-600 leading-relaxed">
+    <strong className="text-gray-800">{meta.logbook_type || 'Logbook'}</strong> (<span className="text-gray-700">{meta.frequency}</span>) for <strong className="text-gray-800">{meta.property_name}</strong> is due <strong className="text-gray-800">tomorrow</strong>.
+        </span>
+      );
+    }
   return n.body ? (
     <span className="text-xs text-gray-600 leading-relaxed">{n.body}</span>
   ) : null;
