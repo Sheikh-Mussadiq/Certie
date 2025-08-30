@@ -313,18 +313,26 @@ const ContractorWorkflow = () => {
 
       const status = property?.owner_id === currentUser?.id ? "approved" : "pending";
 
-      const creationPromises = servicesToBook.map((service) =>
-        createBooking({
+      const creationPromises = servicesToBook.map((service) => {
+        const bookingData = {
           property_id: propertyId,
-          property_name: property.name,
+          property_name: property ? property.name : propertyName,
           booked_time: bookingTimestamp,
           contact_details: contactData,
           type: service,
           building_type: buildingType,
           status,
-          // user_id: currentUser.id,
-        })
-      );
+        };
+
+        // Add service-specific meta data
+        if (service === "PAT Testing" && additionalServices.meta?.devices) {
+          bookingData.meta = { devices: additionalServices.meta.devices };
+        } else if (service === "Fire Door Inspection" && additionalServices.meta?.doors) {
+          bookingData.meta = { doors: additionalServices.meta.doors };
+        }
+
+        return createBooking(bookingData);
+      });
 
       const createdBookings = await Promise.all(creationPromises);
       console.log("Bookings created:", createdBookings);

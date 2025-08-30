@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   X,
   CheckCheck,
@@ -68,12 +69,12 @@ function getTypeMeta(type) {
         color: "from-orange-500 to-orange-600",
         label: "Service Due",
       };
-      case "logbook_due":
-        return {
-          icon: AlertTriangle,
-          color: "from-rose-500 to-rose-600",
-          label: "Logbook Due",
-        };
+    case "logbook_due":
+      return {
+        icon: AlertTriangle,
+        color: "from-rose-500 to-rose-600",
+        label: "Logbook Due",
+      };
     default:
       return {
         icon: BellRing,
@@ -98,19 +99,24 @@ function highlightBody(n) {
       </span>
     );
   }
-    if (n.type === "logbook_due" && meta.property_name) {
-      return (
-        <span className="text-xs text-gray-600 leading-relaxed">
-    <strong className="text-gray-800">{meta.logbook_type || 'Logbook'}</strong> (<span className="text-gray-700">{meta.frequency}</span>) for <strong className="text-gray-800">{meta.property_name}</strong> is due <strong className="text-gray-800">tomorrow</strong>.
-        </span>
-      );
-    }
+  if (n.type === "logbook_due" && meta.property_name) {
+    return (
+      <span className="text-xs text-gray-600 leading-relaxed">
+        <strong className="text-gray-800">
+          {meta.logbook_type || "Logbook"}
+        </strong>{" "}
+        (<span className="text-gray-700">{meta.frequency}</span>) for{" "}
+        <strong className="text-gray-800">{meta.property_name}</strong> is due{" "}
+        <strong className="text-gray-800">tomorrow</strong>.
+      </span>
+    );
+  }
   return n.body ? (
     <span className="text-xs text-gray-600 leading-relaxed">{n.body}</span>
   ) : null;
 }
 
-function NotificationItem({ n, onToggle, index }) {
+function NotificationItem({ n, onToggle, index, onNavigate }) {
   const { icon: Icon, color, label } = getTypeMeta(n.type);
   const unread = !n.read_at;
 
@@ -137,6 +143,7 @@ function NotificationItem({ n, onToggle, index }) {
         y: -2,
         transition: { duration: 0.2 },
       }}
+      onClick={() => onNavigate(n)}
       className={clsx(
         "group relative flex gap-4 rounded-xl p-4 transition-all duration-200 cursor-pointer",
         unread
@@ -210,6 +217,7 @@ let __notificationCacheEnd = false;
 const PAGE_SIZE = 20;
 
 export default function NotificationPanel({ onClose }) {
+  const navigate = useNavigate();
   const [items, setItems] = useState(() => __notificationCache || []);
   const [loading, setLoading] = useState(!__notificationCache);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -333,6 +341,76 @@ export default function NotificationPanel({ onClose }) {
     } catch {}
   };
 
+  // Navigation handler based on notification type
+  const handleNavigate = (notification) => {
+    // Mark as read when navigating
+    if (!notification.read_at) {
+      handleToggle(notification);
+    }
+
+    const meta = notification.meta || {};
+
+    // Handle different notification types
+    switch (notification.type) {
+      case "invoice_created":
+        // Navigate to invoices page
+        navigate("/invoices");
+        break;
+
+      case "booking_created":
+      case "booking_status_changed":
+        // Navigate to bookings page, potentially with filter for the specific booking
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/assessments`);
+        } else {
+          navigate("/bookings");
+        }
+        break;
+
+      case "service_due":
+        // Navigate to property page if property_id is available
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/assessments`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+      case "logbook_due":
+        // Navigate to property page if property_id is available
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/logbooks`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      case "document_uploaded":
+        // Navigate to documents page
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/documents`);
+        } else {
+          navigate("/documents");
+        }
+        break;
+
+      case "property_assigned":
+        // Navigate to properties page
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      default:
+        // Default to dashboard for unknown notification types
+        navigate("/");
+    }
+
+    // Close notification panel after navigation
+    onClose();
+  };
+
   // Infinite scroll
   useEffect(() => {
     const el = containerRef.current;
@@ -426,6 +504,7 @@ export default function NotificationPanel({ onClose }) {
                   key={n.id}
                   n={n}
                   onToggle={handleToggle}
+                  onNavigate={handleNavigate}
                   index={index}
                 />
               ))}

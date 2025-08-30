@@ -13,7 +13,7 @@ export const createBooking = async (bookingData) => {
         .from("services")
         .select("id")
         .eq("name", bookingData.type)
-        .eq("building_type", bookingData.building_type)
+        // .eq("building_type", bookingData.building_type)
         .single();
 
       if (serviceError) {
@@ -50,7 +50,8 @@ export const getPropertyBookings = async (propertyId) => {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .select(`
+      .select(
+        `
         *,
         invoice_bookings (
           invoices (
@@ -59,7 +60,8 @@ export const getPropertyBookings = async (propertyId) => {
             hosted_invoice_url
           )
         )
-      `)
+      `
+      )
       .eq("property_id", propertyId)
       .order("assessment_time", { ascending: true });
 
@@ -193,7 +195,8 @@ export const getAllBookings = async () => {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .select(`
+      .select(
+        `
         *,
         properties(name),
         invoice_bookings (
@@ -203,7 +206,8 @@ export const getAllBookings = async () => {
             hosted_invoice_url
           )
         )
-      `)
+      `
+      )
       .order("assessment_time", { ascending: false });
 
     if (error) throw error;

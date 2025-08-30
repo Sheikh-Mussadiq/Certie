@@ -23,10 +23,16 @@ const LogbookGrid = ({
         >
           <div className="flex flex-col items-start justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg bg-grey-fill flex items-center justify-center">
-                <span className="w-6 h-6 rounded bg-primary-orange/10 text-primary-orange text-xs flex items-center justify-center font-semibold">
-                  {logbook.name?.charAt(0) || "L"}
-                </span>
+              <div 
+                className="w-12 h-12 rounded-lg flex items-center justify-center" 
+                style={{ backgroundColor: logbook.color + '20' }} // Add 20 for 12.5% opacity
+              >
+                <div 
+                  className="flex items-center justify-center w-8 h-8 rounded-md text-white font-medium text-xs"
+                  style={{ backgroundColor: logbook.color }}
+                >
+                  {logbook.initials}
+                </div>
               </div>
               <div>
                 <h3 className="font-medium text-primary-black">

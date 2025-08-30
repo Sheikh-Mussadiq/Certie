@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -7,6 +7,7 @@ const TimeAndDateForm = ({ onDataChange }) => {
   // Time selection is commented out for now
   // const [selectedTime, setSelectedTime] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [today] = useState(new Date()); // Store today's date for comparison
 
   // Commented out time slots as they're not needed for now
   /*
@@ -37,9 +38,13 @@ const TimeAndDateForm = ({ onDataChange }) => {
   const { days, firstDay } = getDaysInMonth(currentMonth);
 
   const handlePrevMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
-    );
+    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
+    
+    // Don't allow navigating to months before the current month
+    if (newMonth.getMonth() >= today.getMonth() || 
+        newMonth.getFullYear() > today.getFullYear()) {
+      setCurrentMonth(newMonth);
+    }
   };
 
   const handleNextMonth = () => {
@@ -48,23 +53,35 @@ const TimeAndDateForm = ({ onDataChange }) => {
     );
   };
 
+  const isDateInPast = (year, month, day) => {
+    // Create date at noon to avoid time-of-day issues
+    const date = new Date(year, month, day, 12, 0, 0, 0);
+    const todayNoon = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0, 0);
+    return date < todayNoon;
+  };
+
   const handleDateSelect = (day) => {
+    // Create the selected date
     const selected = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
       day
     );
-    setSelectedDate(selected);
+    
+    // Only allow selection if date is today or in the future
+    if (!isDateInPast(currentMonth.getFullYear(), currentMonth.getMonth(), day)) {
+      setSelectedDate(selected);
 
-    // Convert to timestampz format (ISO string) and pass to parent
-    if (onDataChange) {
-      // Set time to noon (12:00) to avoid timezone issues
-      selected.setHours(12, 0, 0, 0);
-      onDataChange({
-        date: selected,
-        time: "12:00 PM", // Default time since time selection is disabled
-        timestampz: selected.toISOString(), // ISO format for timestampz
-      });
+      // Convert to timestampz format (ISO string) and pass to parent
+      if (onDataChange) {
+        // Set time to noon (12:00) to avoid timezone issues
+        selected.setHours(12, 0, 0, 0);
+        onDataChange({
+          date: selected,
+          time: "12:00 PM", // Default time since time selection is disabled
+          timestampz: selected.toISOString(), // ISO format for timestampz
+        });
+      }
     }
   };
 
@@ -128,13 +145,24 @@ const TimeAndDateForm = ({ onDataChange }) => {
                 const isSelected =
                   selectedDate?.getDate() === day &&
                   selectedDate?.getMonth() === currentMonth.getMonth();
+                
+                const isPastDate = isDateInPast(
+                  currentMonth.getFullYear(), 
+                  currentMonth.getMonth(), 
+                  day
+                );
+                
                 return (
                   <button
                     key={day}
                     onClick={() => handleDateSelect(day)}
-                    className={`p-2 text-center rounded-full hover:bg-red-50 ${
-                      isSelected ? "bg-primary-orange text-white" : ""
-                    }`}
+                    disabled={isPastDate}
+                    className={`p-2 text-center rounded-full
+                      ${isSelected ? "bg-primary-orange text-white" : ""}
+                      ${isPastDate 
+                        ? "text-gray-300 cursor-not-allowed" 
+                        : "hover:bg-red-50"}
+                    `}
                   >
                     {day}
                   </button>

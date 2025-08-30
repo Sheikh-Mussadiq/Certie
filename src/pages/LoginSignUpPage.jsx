@@ -99,13 +99,13 @@ const LoginSignUpPage = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="hidden lg:block lg:w-1/2 lg:fixed lg:right-0 lg:top-0 lg:bottom-0 p-8"
+          className="hidden lg:block lg:fixed lg:right-0 lg:top-0 lg:bottom-0 p-4"
         >
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             <img
               src={LoginPageBG}
               alt="Login background"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         </motion.div>

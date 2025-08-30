@@ -84,15 +84,68 @@ const Logbooks = () => {
     return selectedProperty.owner_id === currentUser.id;
   }, [selectedProperty, currentUser]);
 
+  // Function to extract initials from logbook name
+  const getLogbookInitials = (name) => {
+    if (!name) return "LB";
+    
+    // Clean the name by removing any brackets and their contents
+    const cleanName = name.replace(/\s*\([^)]*\)\s*$/, '').replace(/\s*\)\s*$/, '').trim();
+    
+    // Split by spaces to get words
+    const words = cleanName.split(/\s+/);
+    
+    if (words.length === 1) {
+      // For single word, take first and last letter if possible
+      const word = words[0];
+      if (word.length >= 2) {
+        return (word.charAt(0) + word.charAt(word.length - 1)).toUpperCase();
+      }
+      return word.charAt(0).toUpperCase() + word.charAt(0).toUpperCase();
+    } else {
+      // For multiple words, take first letter of first and last word
+      return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    }
+  };
+  
+  // Function to generate a color based on the logbook name
+  const getLogbookColor = (name) => {
+    if (!name) return "#4F46E5"; // Default color
+    
+    // List of colors to choose from
+    const colors = [
+      "#4F46E5", // Indigo
+      "#0EA5E9", // Sky blue
+      "#10B981", // Emerald
+      "#6366F1", // Violet
+      "#8B5CF6", // Purple
+      "#EC4899", // Pink
+      "#F43F5E", // Rose
+      "#F59E0B", // Amber
+      "#84CC16", // Lime
+      "#14B8A6", // Teal
+    ];
+    
+    // Use the sum of character codes as a consistent hash
+    const hash = name.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    
+    // Use the hash to pick a color
+    return colors[hash % colors.length];
+  };
+
   const mappedLogbooks = useMemo(
     () =>
-      (logbooks || []).map((lb) => ({
-        id: lb.id,
-        name: lb.logbook_type,
-        frequency: lb.frequency,
-        description: lb.description,
-        isActive: lb.active,
-      })),
+      (logbooks || []).map((lb) => {
+        const name = lb.logbook_type;
+        return {
+          id: lb.id,
+          name,
+          initials: getLogbookInitials(name),
+          color: getLogbookColor(name),
+          frequency: lb.frequency,
+          description: lb.description,
+          isActive: lb.active,
+        };
+      }),
     [logbooks]
   );
 

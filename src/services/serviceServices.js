@@ -4,9 +4,9 @@ import { supabase } from "../lib/supabase";
  * Get all services
  * @returns {Promise} Array of services
  */
-export const getAllServices = async (buildingCategory) => {
+export const getAllServices = async () => {
   try {
-    const { data, error } = await supabase.from("services").select("*").eq("building_type", buildingCategory);
+    const { data, error } = await supabase.from("services").select("*");
 
     if (error) throw error;
     return data;

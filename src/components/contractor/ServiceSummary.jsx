@@ -16,6 +16,22 @@ const ServiceSummary = ({
 }) => {
   // Get all services to display at the top
   const selectedServices = additionalServices?.services || [];
+  const meta = additionalServices?.meta || {};
+
+  // Price calculation functions (duplicate from AdditionalServicesForm)
+  const calculatePatTestingPrice = (devices) => {
+    const basePrice = 99; // £99 for 100 devices
+    const additionalDevices = Math.max(0, devices - 100);
+    const additionalCost = additionalDevices * 0.89; // 89p per additional device
+    return basePrice + additionalCost;
+  };
+  
+  const calculateFireDoorPrice = (doors) => {
+    const basePrice = 180; // £180 for 10 doors
+    const additionalDoors = Math.max(0, doors - 10);
+    const additionalCost = additionalDoors * 15; // £15 per additional door
+    return basePrice + additionalCost;
+  };
 
   return (
     <motion.div
@@ -46,6 +62,57 @@ const ServiceSummary = ({
       <hr className="my-4 border-grey-outline" />
 
       <div className="space-y-4">
+        {/* Display quantities and prices for specific services */}
+        {selectedServices.includes("PAT Testing") && meta.devices && (
+          <div className="flex items-start gap-3">
+            <HiWrenchScrewdriver 
+              size={16} 
+              className="text-primary-orange flex-shrink-0 mt-1" 
+            />
+            <div className="flex flex-col w-full">
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">PAT Testing: </p>
+                <p className="text-sm font-semibold text-primary-orange">
+                  £{calculatePatTestingPrice(meta.devices).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-primary-grey">
+                  {meta.devices} devices
+                </p>
+                <p className="text-xs text-primary-grey">
+                  (£99 base + 89p per additional)
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {selectedServices.includes("Fire Door Inspection") && meta.doors && (
+          <div className="flex items-start gap-3">
+            <HiWrenchScrewdriver 
+              size={16} 
+              className="text-primary-orange flex-shrink-0 mt-1" 
+            />
+            <div className="flex flex-col w-full">
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">Fire Door Inspection: </p>
+                <p className="text-sm font-semibold text-primary-orange">
+                  £{calculateFireDoorPrice(meta.doors).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-primary-grey">
+                  {meta.doors} doors
+                </p>
+                <p className="text-xs text-primary-grey">
+                  (£180 base + £15 per additional)
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {property && property.address ? (
           <div className="flex items-start gap-3">
             <MapPin

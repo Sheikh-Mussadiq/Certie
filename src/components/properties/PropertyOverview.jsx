@@ -380,7 +380,7 @@ const PropertyOverview = () => {
         </div>
       </div>
 
-      <div className="py-8 mt-4 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+      {/* <div className="py-8 mt-4 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
         <h3 className="text-lg font-semibold mb-4">Protection Assets</h3>
         <div className="bg-white rounded-2xl border border-grey-outline overflow-hidden">
           <div className="grid grid-cols-3 border-b border-grey-outline">
@@ -413,7 +413,7 @@ const PropertyOverview = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

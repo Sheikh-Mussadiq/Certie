@@ -1,5 +1,5 @@
 import StatusBadge from "./StatusBadge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, CheckCircle, Clock, FileText, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -11,6 +11,37 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { currentUser } = useAuth();
+  
+  // Status styling function similar to Invoices.jsx
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "paid":
+        return "bg-primary-green/10 text-primary-green border-primary-green/30";
+      case "open":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      case "draft":
+        return "bg-grey-fill text-primary-grey border-grey-outline";
+      case "void":
+        return "bg-primary-red/10 text-primary-red border-primary-red/30";
+      default:
+        return "bg-grey-fill text-primary-grey border-grey-outline";
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "paid":
+        return <CheckCircle className="w-4 h-4" />;
+      case "open":
+        return <Clock className="w-4 h-4" />;
+      case "draft":
+        return <FileText className="w-4 h-4" />;
+      case "void":
+        return <AlertCircle className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
+    }
+  };
   const handleOpenModal = (booking) => {
     setSelectedBooking(booking);
     setIsModalOpen(true);
@@ -148,9 +179,18 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                 {booking.invoice_bookings &&
                 booking.invoice_bookings.length > 0 ? (
                   <div>
-                    <p className="font-medium">
-                      {booking.invoice_bookings[0].invoices.status}
-                    </p>
+                    {/* Updated invoice status with styling to match Invoices page */}
+                    <div className="mb-2">
+                      <span
+                        className={`inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-md border ${getStatusColor(
+                          booking.invoice_bookings[0].invoices.status
+                        )}`}
+                      >
+                        {getStatusIcon(booking.invoice_bookings[0].invoices.status)}
+                        {booking.invoice_bookings[0].invoices.status.charAt(0).toUpperCase() +
+                          booking.invoice_bookings[0].invoices.status.slice(1)}
+                      </span>
+                    </div>
                     <p className="text-sm text-gray-500">
                       £{booking.invoice_bookings[0].invoices.amount_due / 100}
                     </p>
