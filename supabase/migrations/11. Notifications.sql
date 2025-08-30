@@ -238,7 +238,7 @@ BEGIN
         NEW.booked_by,
         'booking_status_changed',
         'Booking status updated',
-        'Status changed from ' || COALESCE(OLD.status::text,'?') || ' to ' || NEW.status::text || '.',
+        'Status changed from ' || COALESCE(OLD.status::text,'?') || ' to ' || NEW.status::text || ' for property ' || COALESCE(NEW.property_name, 'Unknown'),
         'bookings', NEW.id,
         jsonb_build_object('old_status', OLD.status, 'new_status', NEW.status, 'property_id', NEW.property_id, 'property_name', NEW.property_name)
       );
@@ -307,35 +307,55 @@ END; $$;
 CREATE OR REPLACE FUNCTION public.trg_property_manager_assigned_notify()
 RETURNS TRIGGER
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
+DECLARE
+  v_property_name text;
 BEGIN
+  SELECT name INTO v_property_name
+  FROM public.properties
+  WHERE id = NEW.property_id;
+
   PERFORM public.create_notification(
     NEW.user_id,
     'property_assigned',
     'Assigned to property',
-    'You have been assigned as manager.',
+    'You have been assigned as manager for property ' || coalesce(v_property_name, ''),
     'properties', NEW.property_id,
-    jsonb_build_object('role','manager')
+    jsonb_build_object('role','manager', 'property_name', v_property_name)
   );
+
   RETURN NEW;
-END; $$;
+END;
+$$;
+
 
 -- Property site user assignment
 CREATE OR REPLACE FUNCTION public.trg_property_site_user_assigned_notify()
 RETURNS TRIGGER
 LANGUAGE plpgsql
+SECURITY DEFINER
 AS $$
+DECLARE
+  v_property_name text;
 BEGIN
+  SELECT name INTO v_property_name
+  FROM public.properties
+  WHERE id = NEW.property_id;
+
   PERFORM public.create_notification(
     NEW.user_id,
     'property_assigned',
     'Assigned to property',
-    'You have been added as a site user.',
+    'You have been added as a site user for property ' || coalesce(v_property_name, ''),
     'properties', NEW.property_id,
-    jsonb_build_object('role','site_user')
+    jsonb_build_object('role','site_user', 'property_name', v_property_name)
   );
+
   RETURN NEW;
-END; $$;
+END;
+$$;
+
 
 -- 7. Attach Triggers (idempotent creation)
 DO $$ BEGIN
