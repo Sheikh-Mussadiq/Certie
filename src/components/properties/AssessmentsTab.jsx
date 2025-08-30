@@ -11,6 +11,10 @@ import {
   MoreVertical,
   ArrowUp,
   ArrowDown,
+  CheckCircle,
+  Clock,
+  FileText,
+  AlertCircle,
 } from "lucide-react";
 import Sort from "../../assets/sort-a-z.png";
 import Filter from "../../assets/filter.png";
@@ -177,8 +181,32 @@ const AssessmentsTab = () => {
         return "bg-red-50 text-red-600";
       case "missing":
         return "bg-gray-100 text-gray-800";
+      // Invoice status colors
+      case "paid":
+        return "bg-primary-green/10 text-primary-green border-primary-green/30";
+      case "open":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      case "draft":
+        return "bg-grey-fill text-primary-grey border-grey-outline";
+      case "void":
+        return "bg-primary-red/10 text-primary-red border-primary-red/30";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getInvoiceStatusIcon = (status) => {
+    switch (status.toLowerCase()) {
+      case "paid":
+        return <CheckCircle className="w-4 h-4" />;
+      case "open":
+        return <Clock className="w-4 h-4" />;
+      case "draft":
+        return <FileText className="w-4 h-4" />;
+      case "void":
+        return <AlertCircle className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
     }
   };
 
@@ -623,9 +651,17 @@ const AssessmentsTab = () => {
                           {assessment.invoice_bookings &&
                           assessment.invoice_bookings.length > 0 ? (
                             <div>
-                              <p className="font-medium">
-                                {assessment.invoice_bookings[0].invoices.status}
-                              </p>
+                              <div className="mb-2">
+                                <span
+                                  className={`inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-md border ${getStatusColor(
+                                    assessment.invoice_bookings[0].invoices.status
+                                  )}`}
+                                >
+                                  {getInvoiceStatusIcon(assessment.invoice_bookings[0].invoices.status)}
+                                  {assessment.invoice_bookings[0].invoices.status.charAt(0).toUpperCase() +
+                                    assessment.invoice_bookings[0].invoices.status.slice(1)}
+                                </span>
+                              </div>
                               <p className="text-sm text-gray-500">
                                 £
                                 {assessment.invoice_bookings[0].invoices

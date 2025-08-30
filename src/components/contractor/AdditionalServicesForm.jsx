@@ -11,9 +11,9 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({
     devices: 100, // Default value for PAT Testing
-    doors: 10,    // Default value for Fire Door Inspection
+    doors: 10, // Default value for Fire Door Inspection
   });
-  
+
   // Price calculation functions
   const calculatePatTestingPrice = (devices) => {
     const basePrice = 99; // £99 for 100 devices
@@ -21,7 +21,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     const additionalCost = additionalDevices * 0.89; // 89p per additional device
     return basePrice + additionalCost;
   };
-  
+
   const calculateFireDoorPrice = (doors) => {
     const basePrice = 180; // £180 for 10 doors
     const additionalDoors = Math.max(0, doors - 10);
@@ -62,12 +62,12 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
 
   const handleQuantityChange = (type, value) => {
     // Validate minimum values
-    if (type === 'devices' && value < 100) return;
-    if (type === 'doors' && value < 10) return;
-    
-    setQuantities(prev => ({
+    if (type === "devices" && value < 100) return;
+    if (type === "doors" && value < 10) return;
+
+    setQuantities((prev) => ({
       ...prev,
-      [type]: value
+      [type]: value,
     }));
   };
 
@@ -90,7 +90,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     onSubmit({
       services: finalServices,
       buildingCategory: buildingCategory,
-      meta: meta
+      meta: meta,
     });
   }, [selectedServices, otherService, quantities, onSubmit, buildingCategory]);
 
@@ -136,7 +136,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
                     className="sr-only"
                   />
                   <span
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 inline-block ${
+                    className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${
                       selectedServices.includes(service.name)
                         ? "border-primary-orange"
                         : "border-grey-outline"
@@ -168,7 +168,9 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
         {selectedServices.includes("PAT Testing") && (
           <div className="mt-4 p-4 border border-grey-outline rounded-lg">
             <div className="flex justify-between items-start mb-3">
-              <label className="text-primary-black font-medium">Number of Devices (Minimum 100)</label>
+              <label className="text-primary-black font-medium">
+                Number of Devices (Minimum 100)
+              </label>
               <div className="text-right">
                 <div className="font-semibold text-primary-orange">
                   £{calculatePatTestingPrice(quantities.devices).toFixed(2)}
@@ -179,24 +181,36 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
               </div>
             </div>
             <div className="flex items-center">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="px-3 py-1 border border-grey-outline rounded-l-lg"
-                onClick={() => handleQuantityChange('devices', Math.max(100, quantities.devices - 1))}
+                onClick={() =>
+                  handleQuantityChange(
+                    "devices",
+                    Math.max(100, quantities.devices - 1)
+                  )
+                }
               >
                 -
               </button>
-              <input 
-                type="number" 
-                value={quantities.devices} 
-                onChange={(e) => handleQuantityChange('devices', parseInt(e.target.value) || 100)}
+              <input
+                type="number"
+                value={quantities.devices}
+                onChange={(e) =>
+                  handleQuantityChange(
+                    "devices",
+                    parseInt(e.target.value) || 100
+                  )
+                }
                 className="w-20 border-t border-b border-grey-outline text-center"
                 min="100"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="px-3 py-1 border border-grey-outline rounded-r-lg"
-                onClick={() => handleQuantityChange('devices', quantities.devices + 1)}
+                onClick={() =>
+                  handleQuantityChange("devices", quantities.devices + 1)
+                }
               >
                 +
               </button>
@@ -207,7 +221,9 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
         {selectedServices.includes("Fire Door Inspection") && (
           <div className="mt-4 p-4 border border-grey-outline rounded-lg">
             <div className="flex justify-between items-start mb-3">
-              <label className="text-primary-black font-medium">Number of Doors (Minimum 10)</label>
+              <label className="text-primary-black font-medium">
+                Number of Doors (Minimum 10)
+              </label>
               <div className="text-right">
                 <div className="font-semibold text-primary-orange">
                   £{calculateFireDoorPrice(quantities.doors).toFixed(2)}
@@ -218,24 +234,33 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
               </div>
             </div>
             <div className="flex items-center">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="px-3 py-1 border border-grey-outline rounded-l-lg"
-                onClick={() => handleQuantityChange('doors', Math.max(10, quantities.doors - 1))}
+                onClick={() =>
+                  handleQuantityChange(
+                    "doors",
+                    Math.max(10, quantities.doors - 1)
+                  )
+                }
               >
                 -
               </button>
-              <input 
-                type="number" 
-                value={quantities.doors} 
-                onChange={(e) => handleQuantityChange('doors', parseInt(e.target.value) || 10)}
+              <input
+                type="number"
+                value={quantities.doors}
+                onChange={(e) =>
+                  handleQuantityChange("doors", parseInt(e.target.value) || 10)
+                }
                 className="w-20 border-t border-b border-grey-outline text-center"
                 min="10"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="px-3 py-1 border border-grey-outline rounded-r-lg"
-                onClick={() => handleQuantityChange('doors', quantities.doors + 1)}
+                onClick={() =>
+                  handleQuantityChange("doors", quantities.doors + 1)
+                }
               >
                 +
               </button>
