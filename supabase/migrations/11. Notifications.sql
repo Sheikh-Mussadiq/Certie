@@ -322,7 +322,7 @@ BEGIN
     'Assigned to property',
     'You have been assigned as manager for property ' || coalesce(v_property_name, ''),
     'properties', NEW.property_id,
-    jsonb_build_object('role','manager', 'property_name', v_property_name)
+    jsonb_build_object('role','manager', 'property_name', v_property_name, 'property_id', NEW.property_id)
   );
 
   RETURN NEW;
@@ -349,7 +349,7 @@ BEGIN
     'Assigned to property',
     'You have been added as a site user for property ' || coalesce(v_property_name, ''),
     'properties', NEW.property_id,
-    jsonb_build_object('role','site_user', 'property_name', v_property_name)
+    jsonb_build_object('role','site_user', 'property_name', v_property_name, 'property_id', NEW.property_id)
   );
 
   RETURN NEW;
