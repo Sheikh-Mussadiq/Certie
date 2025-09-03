@@ -2,17 +2,37 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { getAllServices } from "../../services/serviceServices";
+import { updatePropertyBuildingType } from "../../services/propertiesServices";
 import { toast } from "react-hot-toast";
+import fraPricingData from "../../assets/FRA_Pricing.json";
 
-const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
+const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildingTypeUpdate }) => {
+  // Allowed building types
+  const allowedBuildingTypes = [
+    'Residential Block',
+    'Single Residential Dwelling', 
+    'Commercial Office',
+    'Mixed-Use Building',
+    'School / Education',
+    'Retail Unit',
+    'Warehouse / Industrial',
+    'HMO (House in Multiple Occupation)',
+    'Care Facility',
+    'Hotel'
+  ];
+  
   const [selectedServices, setSelectedServices] = useState([]);
   const [otherService, setOtherService] = useState("");
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentBuildingType, setCurrentBuildingType] = useState(buildingCategory || "");
+  const [isUpdatingBuildingType, setIsUpdatingBuildingType] = useState(false);
   const [quantities, setQuantities] = useState({
     devices: 100, // Default value for PAT Testing
     doors: 10, // Default value for Fire Door Inspection
   });
+  const [fraOption, setFraOption] = useState(""); // Fire Risk Assessment option
+  const [fraNumericValue, setFraNumericValue] = useState(""); // For numeric inputs
 
   // Price calculation functions
   const calculatePatTestingPrice = (devices) => {
@@ -29,8 +49,72 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     return basePrice + additionalCost;
   };
 
+  // Fire Risk Assessment helper functions
+  const getFraBuildingType = () => {
+    return fraPricingData.buildingTypes.find(type => type.id === currentBuildingType);
+  };
+
+  const getFraOptionById = (optionId) => {
+    const buildingType = getFraBuildingType();
+    if (!buildingType) return null;
+    return buildingType.options.find(option => option.id === optionId);
+  };
+
+  const findFraOptionByNumericValue = (value) => {
+    const buildingType = getFraBuildingType();
+    if (!buildingType || !value) return null;
+    
+    const numValue = parseInt(value);
+    return buildingType.options.find(option => {
+      if (option.min !== undefined && option.max !== undefined) {
+        return numValue >= option.min && numValue <= option.max;
+      } else if (option.min !== undefined && option.max === null) {
+        return numValue >= option.min;
+      }
+      return false;
+    });
+  };
+
+  const getFraPrice = (option) => {
+    if (!option) return null;
+    if (option.poa) return "POA (please contact sales)";
+    return `${fraPricingData.currencySymbol}${option.price}`;
+  };
+
+  // Handle building type update
+  const handleBuildingTypeChange = async (newBuildingType) => {
+    if (!property?.id || newBuildingType === currentBuildingType) return;
+    
+    setIsUpdatingBuildingType(true);
+    try {
+      await updatePropertyBuildingType(property.id, newBuildingType);
+      setCurrentBuildingType(newBuildingType);
+      
+      // Clear FRA selection when building type changes as options may be different
+      setFraOption("");
+      setFraNumericValue("");
+      
+      // Notify parent component about the building type change
+      if (onBuildingTypeUpdate) {
+        onBuildingTypeUpdate(newBuildingType);
+      }
+      
+      toast.success("Building type updated successfully");
+    } catch (error) {
+      console.error("Error updating building type:", error);
+      toast.error("Failed to update building type");
+    } finally {
+      setIsUpdatingBuildingType(false);
+    }
+  };
+
+  // Sync current building type with prop changes
   useEffect(() => {
-    if (!buildingCategory) return;
+    setCurrentBuildingType(buildingCategory || "");
+  }, [buildingCategory]);
+
+  useEffect(() => {
+    if (!currentBuildingType) return;
     const fetchServices = async () => {
       try {
         setLoading(true);
@@ -44,12 +128,17 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
       }
     };
     fetchServices();
-  }, [buildingCategory]);
+  }, [currentBuildingType]);
 
   const handleServiceChange = (serviceName) => {
     let newServices;
     if (selectedServices.includes(serviceName)) {
       newServices = selectedServices.filter((s) => s !== serviceName);
+      // Clear related state when service is deselected
+      if (serviceName === "Fire Risk Assessment") {
+        setFraOption("");
+        setFraNumericValue("");
+      }
     } else {
       newServices = [...selectedServices, serviceName];
     }
@@ -71,6 +160,20 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     }));
   };
 
+  const handleFraOptionChange = (optionId) => {
+    setFraOption(optionId);
+    setFraNumericValue(""); // Clear numeric input when selecting from dropdown
+  };
+
+  const handleFraNumericChange = (value) => {
+    setFraNumericValue(value);
+    // Find matching option based on numeric value
+    const matchingOption = findFraOptionByNumericValue(value);
+    if (matchingOption) {
+      setFraOption(matchingOption.id);
+    }
+  };
+
   useEffect(() => {
     let finalServices = [...selectedServices];
     const otherIndex = finalServices.indexOf("Others");
@@ -86,13 +189,38 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
     if (selectedServices.includes("Fire Door Inspection")) {
       meta.doors = quantities.doors;
     }
+    if (selectedServices.includes("Fire Risk Assessment")) {
+      if (!fraOption) {
+        console.warn("Fire Risk Assessment selected but no option chosen");
+      } else {
+        const buildingTypeData = getFraBuildingType();
+        if (!buildingTypeData) {
+          console.warn(`No FRA pricing data found for building type: ${currentBuildingType}`);
+          meta.fraError = `No pricing available for building type: ${currentBuildingType}`;
+        } else {
+          const selectedOption = getFraOptionById(fraOption);
+          console.log("FRA Debug:", {
+            fraOption,
+            currentBuildingType,
+            selectedOption,
+            buildingTypeFound: buildingTypeData
+          });
+          if (selectedOption) {
+            meta.option = selectedOption;
+          } else {
+            console.warn("Selected option is null for fraOption:", fraOption);
+            meta.fraError = "Selected option not found";
+          }
+        }
+      }
+    }
 
     onSubmit({
       services: finalServices,
-      buildingCategory: buildingCategory,
+      buildingCategory: currentBuildingType,
       meta: meta,
     });
-  }, [selectedServices, otherService, quantities, onSubmit, buildingCategory]);
+  }, [selectedServices, otherService, quantities, fraOption, onSubmit, currentBuildingType]);
 
   if (loading) {
     return (
@@ -163,6 +291,45 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
             </label>
           ))}
         </div>
+
+        {/* Building Type Selector - Show only if property exists */}
+        {property?.id && (
+          <div className="mt-6 p-4 border border-grey-outline rounded-lg bg-blue-50">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <h4 className="font-semibold text-lg text-primary-black">
+                  Update Building Type
+                </h4>
+                <p className="text-sm text-primary-grey mt-1">
+                  You can update your property's building type if it was selected incorrectly.
+                </p>
+              </div>
+            </div>
+            <div className="relative">
+              <select
+                value={currentBuildingType}
+                onChange={(e) => handleBuildingTypeChange(e.target.value)}
+                disabled={isUpdatingBuildingType}
+                className="w-full appearance-none bg-white border border-grey-outline rounded-lg py-3 px-4 pr-10 text-gray-700 cursor-pointer focus:outline-none focus:border-primary-orange disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="">Select building type</option>
+                {allowedBuildingTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <ChevronDown className="h-5 w-5 text-gray-400" />
+              </div>
+              {isUpdatingBuildingType && (
+                <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-orange"></div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Quantity inputs for specific services */}
         {selectedServices.includes("PAT Testing") && (
@@ -265,6 +432,129 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory }) => {
                 +
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Fire Risk Assessment inputs */}
+        {selectedServices.includes("Fire Risk Assessment") && (
+          <div className="mt-4 p-4 border border-grey-outline rounded-lg">
+            {(() => {
+              const buildingType = getFraBuildingType();
+              if (!buildingType) {
+                return (
+                  <div className="text-center text-primary-grey">
+                    Fire Risk Assessment not available for this building type
+                  </div>
+                );
+              }
+
+              const selectedOption = getFraOptionById(fraOption);
+              const price = getFraPrice(selectedOption);
+
+              return (
+                <>
+                  <div className="flex justify-between items-start mb-3">
+                    <label className="text-primary-black font-medium">
+                      {buildingType.promptLabel}
+                    </label>
+                    {price && (
+                      <div className="text-right">
+                        <div className="font-semibold text-primary-orange">
+                          Price: {price}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Show only ranges for now - numeric input commented out */}
+                  {/* TODO: Uncomment below for numeric input functionality */}
+                  {/* 
+                  {buildingType.inputType === "units" || 
+                   buildingType.inputType === "rooms" || 
+                   buildingType.inputType === "size" || 
+                   buildingType.inputType === "sqft" ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Enter number of {buildingType.inputType}
+                        </label>
+                        <input
+                          type="number"
+                          value={fraNumericValue}
+                          onChange={(e) => handleFraNumericChange(e.target.value)}
+                          className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                          placeholder={`Enter number of ${buildingType.inputType}`}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Or select from ranges:
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={fraOption}
+                            onChange={(e) => handleFraOptionChange(e.target.value)}
+                            className="w-full appearance-none bg-white border border-grey-outline rounded-lg py-3 px-4 pr-10 text-gray-700 cursor-pointer focus:outline-none focus:border-primary-orange"
+                          >
+                            <option value="">Select a range</option>
+                            {buildingType.options.map((option) => (
+                              <option key={option.id} value={option.id}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                            <ChevronDown className="h-5 w-5 text-gray-400" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : ( */}
+
+                  {/* Show ranges as radio buttons for all input types */}
+                  <div className="space-y-3">
+                    {buildingType.options.map((option) => (
+                      <label
+                        key={option.id}
+                        className={`relative flex items-center justify-between border rounded-lg p-3 cursor-pointer transition-all ${
+                          fraOption === option.id
+                            ? "border-primary-orange bg-primary-orange/10"
+                            : "border-grey-outline"
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            name="fraOption"
+                            value={option.id}
+                            checked={fraOption === option.id}
+                            onChange={() => handleFraOptionChange(option.id)}
+                            className="sr-only"
+                          />
+                          <span
+                            className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${
+                              fraOption === option.id
+                                ? "border-primary-orange"
+                                : "border-grey-outline"
+                            }`}
+                          >
+                            {fraOption === option.id && (
+                              <span className="w-3 h-3 rounded-full bg-primary-orange"></span>
+                            )}
+                          </span>
+                          <span className="font-medium">{option.label}</span>
+                        </div>
+                        <span className="font-semibold text-primary-orange">
+                          {getFraPrice(option)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {/* )} */}
+                </>
+              );
+            })()}
           </div>
         )}
 

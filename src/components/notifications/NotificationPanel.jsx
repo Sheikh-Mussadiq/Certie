@@ -214,7 +214,7 @@ function NotificationItem({ n, onToggle, index, onNavigate }) {
 // Module-level simple cache to avoid re-fetching every open/close
 let __notificationCache = null;
 let __notificationCacheEnd = false;
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 export default function NotificationPanel({ onClose }) {
   const navigate = useNavigate();

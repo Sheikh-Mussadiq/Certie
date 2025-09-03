@@ -237,6 +237,17 @@ const ContractorWorkflow = () => {
     setPaymentDetails(details);
   };
 
+  const handleBuildingTypeUpdate = (newBuildingType) => {
+    setBuildingType(newBuildingType);
+    // Update property state if it exists
+    if (property) {
+      setProperty(prev => ({
+        ...prev,
+        property_type: newBuildingType
+      }));
+    }
+  };
+
   const handleFinalizeBookingAndInvoice = async (contactData) => {
     // First, create the bookings
     const createdBookings = await handleFinalizeBooking(contactData);
@@ -329,6 +340,9 @@ const ContractorWorkflow = () => {
           bookingData.meta = { devices: additionalServices.meta.devices };
         } else if (service === "Fire Door Inspection" && additionalServices.meta?.doors) {
           bookingData.meta = { doors: additionalServices.meta.doors };
+        } else if (service === "Fire Risk Assessment" && additionalServices.meta?.option) {
+          const selectedOption = additionalServices.meta.option;
+          bookingData.meta = { fraMeta: selectedOption };
         }
 
         return createBooking(bookingData);
@@ -417,6 +431,7 @@ const ContractorWorkflow = () => {
             currentStep={currentStep}
             onGoBack={handleGoBack}
             onBuildingTypeSubmit={handleBuildingTypeSubmit}
+            onBuildingTypeUpdate={handleBuildingTypeUpdate}
             onAdditionalServicesSubmit={handleAdditionalServicesSubmit}
             onTimeAndDateSubmit={handleTimeAndDateSubmit}
             onTimeAndDateContinue={handleTimeAndDateContinue}

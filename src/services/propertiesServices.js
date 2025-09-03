@@ -274,3 +274,20 @@ export const deleteProperty = async (id) => {
     throw error;
   }
 };
+
+export const updatePropertyBuildingType = async (propertyId, buildingType) => {
+  try {
+    const { data, error } = await supabase
+      .from("properties")
+      .update({ property_type: buildingType })
+      .eq("id", propertyId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error updating property building type:", error);
+    throw error;
+  }
+};

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CustomSelect from "../ui/CustomSelect";
+import { updatePropertyBuildingType } from "../../services/propertiesServices";
+import { toast } from "react-hot-toast";
 
-const BuildingForm = ({ property, onDataChange, initialData }) => {
+const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdate }) => {
   const [buildingType, setBuildingType] = useState(
     initialData?.buildingType || ""
   );
@@ -15,6 +17,7 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
   const [floors, setFloors] = useState(initialData?.floors || "");
   const [size, setSize] = useState(initialData?.size || "");
   const [tenants, setTenants] = useState(initialData?.tenants || "");
+  const [isUpdatingBuildingType, setIsUpdatingBuildingType] = useState(false);
 
   const property_types = [
     { value: "Residential Block", label: "Residential Block" },
@@ -33,7 +36,6 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
     },
     { value: "Care Facility", label: "Care Facility" },
     { value: "Hotel", label: "Hotel" },
-    { value: "Other", label: "Other" },
   ];
 
   useEffect(() => {
@@ -47,6 +49,32 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
       setTenants(property.occupants || "");
     }
   }, [property]);
+
+  const handleBuildingTypeChange = async (newBuildingType) => {
+    setBuildingType(newBuildingType);
+    
+    // If property exists, update it in the database
+    if (property?.id && newBuildingType !== property.property_type) {
+      setIsUpdatingBuildingType(true);
+      try {
+        await updatePropertyBuildingType(property.id, newBuildingType);
+        
+        // Notify parent component about the building type change
+        if (onBuildingTypeUpdate) {
+          onBuildingTypeUpdate(newBuildingType);
+        }
+        
+        toast.success("Building type updated successfully");
+      } catch (error) {
+        console.error("Error updating building type:", error);
+        toast.error("Failed to update building type");
+        // Revert the change on error
+        setBuildingType(property.property_type || "");
+      } finally {
+        setIsUpdatingBuildingType(false);
+      }
+    }
+  };
 
   useEffect(() => {
     onDataChange({
@@ -150,16 +178,23 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
       <div className="mb-8">
         <CustomSelect
           value={buildingType}
-          onChange={setBuildingType}
+          onChange={handleBuildingTypeChange}
           options={property_types}
           placeholder="Select a building type"
           required
           label="Building Type"
-          description="Enable plans buttondown rebuke nobistate synergy. Shelf-ware of hit want on land blindwhagon opportunity great team."
+          description="Select the type of building for your property. This affects available services and pricing."
+          disabled={isUpdatingBuildingType}
         />
+        {isUpdatingBuildingType && (
+          <div className="mt-2 flex items-center text-sm text-primary-orange">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-orange mr-2"></div>
+            Updating building type...
+          </div>
+        )}
       </div>
 
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h3 className="font-bold text-lg mb-2">How many floors do you have?</h3>
         <p className="text-sm text-primary-grey mb-4">
           This helps determine the time needed and helps us to assign the right
@@ -211,7 +246,7 @@ const BuildingForm = ({ property, onDataChange, initialData }) => {
           min="0"
           max="10000"
         />
-      </div>
+      </div> */}
     </motion.div>
   );
 };

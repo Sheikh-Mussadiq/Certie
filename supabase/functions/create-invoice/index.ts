@@ -192,6 +192,23 @@ function parseCount(value) {
         });
         continue;
       }
+
+      if (serviceName === "Fire Risk Assessment") {
+        const meta = typeof booking.meta === "string" ? JSON.parse(booking.meta) : booking.meta;
+        if (meta.fraMeta === null || meta.fraMeta.price === null) {
+          throw new Error(`Invalid or missing FRA meta information for booking ID: ${booking.id}`);
+        }
+        const amountPence = meta.fraMeta.price * 100;
+        console.log(`Fire Risk Assessment: booking=${booking.id} price=${meta.fraMeta.price} amount=£${(amountPence / 100).toFixed(2)}`);
+        await stripe.invoiceItems.create({
+          customer: customerId,
+          invoice: invoice.id,
+          amount: amountPence,
+          currency: "gbp",
+          description: `Fire Risk Assessment, for Property: ${booking.property_name}. ${meta.fraMeta.label || ""}`
+        });
+        continue;
+      }
       // --- Other services (original behavior: match by building_type + service id) ---
       if (!booking.building_type) {
         throw new Error(`Missing building_type for booking ID: ${booking.id}`);

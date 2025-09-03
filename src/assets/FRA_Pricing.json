@@ -1,0 +1,172 @@
+{
+  "version": "1.0",
+  "currency": "GBP",
+  "currencySymbol": "£",
+  "categories": {
+    "byUnits": "units",
+    "byRooms": "rooms",
+    "bySize": "size",
+    "bySqFt": "sqft"
+  },
+  "buildingTypes": [
+    {
+      "id": "Residential Block",
+      "displayName": "Residential Block",
+      "inputType": "units",
+      "promptLabel": "Please select number of units / flats",
+      "options": [
+        { "id": "2-6", "label": "2–6 flats", "min": 2, "max": 6, "price": 450 },
+        { "id": "7-15", "label": "7–15 flats", "min": 7, "max": 15, "price": 600 },
+        { "id": "16-29", "label": "16–29 flats", "min": 16, "max": 29, "price": 800 },
+        { "id": "30-49", "label": "30–49 flats", "min": 30, "max": 49, "price": 1000 },
+        { "id": "50-74", "label": "50–74 flats", "min": 50, "max": 74, "price": 1250 },
+        { "id": "75-99", "label": "75–99 flats", "min": 75, "max": 99, "price": 1500 },
+        { "id": "100-150", "label": "100–150 flats", "min": 100, "max": 150, "price": 1800 },
+        { "id": "150+", "label": "150+ flats", "min": 151, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "HMO (House in Multiple Occupation)",
+      "displayName": "HMO (House in Multiple Occupation)",
+      "inputType": "rooms",
+      "promptLabel": "Please select number of rooms",
+      "options": [
+        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 350 },
+        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 450 },
+        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 550 },
+        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 650 },
+        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 750 },
+        { "id": "40+", "label": "40+ rooms", "min": 41, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "Care Facility",
+      "displayName": "Care Facility",
+      "inputType": "rooms",
+      "promptLabel": "Please select number of rooms / beds",
+      "options": [
+        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 475 },
+        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 600 },
+        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 800 },
+        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 1050 },
+        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 1350 },
+        { "id": "40+", "label": "40+ rooms", "min": 41, "max": null, "price": 1700 },
+        { "id": "40+_poa", "label": "Large / specialist (POA)", "min": 200, "max": null, "poa": true, "note": "Use POA for very large or specialist facilities" }
+      ]
+    },
+
+    {
+      "id": "Hotel",
+      "displayName": "Hotel",
+      "inputType": "rooms",
+      "promptLabel": "Please select number of rooms",
+      "options": [
+        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 500 },
+        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 650 },
+        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 875 },
+        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 1150 },
+        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 1450 },
+        { "id": "40+", "label": "40+ rooms", "min": 41, "max": null, "price": 1850 },
+        { "id": "40+_poa", "label": "Very large / complex (POA)", "min": 200, "max": null, "poa": true, "note": "Verify top-tier POA entries from source if needed" }
+      ],
+      "note": "Top-tier / POA rows were partially ambiguous in the image; confirm with authoritative pricing table if needed."
+    },
+
+    {
+      "id": "Single Residential Dwelling",
+      "displayName": "Single Residential Dwelling",
+      "inputType": "size",
+      "promptLabel": "Please select dwelling size (sq m or sq ft based on your app)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 (size units)", "min": 0, "max": 1000, "price": 250 },
+        { "id": "1001-2500", "label": "1,001–2,500", "min": 1001, "max": 2500, "price": 325 },
+        { "id": "2501-5000", "label": "2,501–5,000", "min": 2501, "max": 5000, "price": 375 },
+        { "id": "5001-10000", "label": "5,001–10,000", "min": 5001, "max": 10000, "price": 450 },
+        { "id": "10001+", "label": "10,001+ (POA)", "min": 10001, "max": null, "poa": true }
+      ],
+      "note": "Sizes in original chart were shown generically; convert to the units you use (sq ft / sq m) consistently."
+    },
+
+    {
+      "id": "Commercial Office",
+      "displayName": "Commercial Office",
+      "inputType": "sqft",
+      "promptLabel": "Please select building size (sq ft)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 sq ft", "min": 0, "max": 1000, "price": 375 },
+        { "id": "1001-2500", "label": "1,001–2,500 sq ft", "min": 1001, "max": 2500, "price": 475 },
+        { "id": "2501-5000", "label": "2,501–5,000 sq ft", "min": 2501, "max": 5000, "price": 650 },
+        { "id": "5001-10000", "label": "5,001–10,000 sq ft", "min": 5001, "max": 10000, "price": 800 },
+        { "id": "10001-25000", "label": "10,001–25,000 sq ft", "min": 10001, "max": 25000, "price": 1050 },
+        { "id": "25001-50000", "label": "25,001–50,000 sq ft", "min": 25001, "max": 50000, "price": 1350 },
+        { "id": "50001+", "label": "50,001+ sq ft (POA)", "min": 50001, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "Mixed-Use Building",
+      "displayName": "Mixed-Use Building",
+      "inputType": "sqft",
+      "promptLabel": "Please select building size (sq ft)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 sq ft", "min": 0, "max": 1000, "price": 450 },
+        { "id": "1001-2500", "label": "1,001–2,500 sq ft", "min": 1001, "max": 2500, "price": 575 },
+        { "id": "2501-5000", "label": "2,501–5,000 sq ft", "min": 2501, "max": 5000, "price": 750 },
+        { "id": "5001-10000", "label": "5,001–10,000 sq ft", "min": 5001, "max": 10000, "price": 950 },
+        { "id": "10001-25000", "label": "10,001–25,000 sq ft", "min": 10001, "max": 25000, "price": 1250 },
+        { "id": "25001-50000", "label": "25,001–50,000 sq ft", "min": 25001, "max": 50000, "price": 1600 },
+        { "id": "50001+", "label": "50,001+ sq ft (POA)", "min": 50001, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "School / Education",
+      "displayName": "School / Education",
+      "inputType": "sqft",
+      "promptLabel": "Please select building size (sq ft)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 sq ft", "min": 0, "max": 1000, "price": 425 },
+        { "id": "1001-2500", "label": "1,001–2,500 sq ft", "min": 1001, "max": 2500, "price": 525 },
+        { "id": "2501-5000", "label": "2,501–5,000 sq ft", "min": 2501, "max": 5000, "price": 700 },
+        { "id": "5001-10000", "label": "5,001–10,000 sq ft", "min": 5001, "max": 10000, "price": 900 },
+        { "id": "10001-25000", "label": "10,001–25,000 sq ft", "min": 10001, "max": 25000, "price": 1150 },
+        { "id": "25001-50000", "label": "25,001–50,000 sq ft", "min": 25001, "max": 50000, "price": 1550 },
+        { "id": "50001+", "label": "50,001+ sq ft (POA)", "min": 50001, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "Retail Unit",
+      "displayName": "Retail Unit",
+      "inputType": "sqft",
+      "promptLabel": "Please select unit size (sq ft)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 sq ft", "min": 0, "max": 1000, "price": 325 },
+        { "id": "1001-2500", "label": "1,001–2,500 sq ft", "min": 1001, "max": 2500, "price": 400 },
+        { "id": "2501-5000", "label": "2,501–5,000 sq ft", "min": 2501, "max": 5000, "price": 525 },
+        { "id": "5001-10000", "label": "5,001–10,000 sq ft", "min": 5001, "max": 10000, "price": 675 },
+        { "id": "10001-25000", "label": "10,001–25,000 sq ft", "min": 10001, "max": 25000, "price": 900 },
+        { "id": "25001-50000", "label": "25,001–50,000 sq ft", "min": 25001, "max": 50000, "price": 1200 },
+        { "id": "50001+", "label": "50,001+ sq ft (POA)", "min": 50001, "max": null, "poa": true }
+      ]
+    },
+
+    {
+      "id": "Warehouse / Industrial",
+      "displayName": "Warehouse / Industrial",
+      "inputType": "sqft",
+      "promptLabel": "Please select building size (sq ft)",
+      "options": [
+        { "id": "0-1000", "label": "0–1,000 sq ft", "min": 0, "max": 1000, "price": 350 },
+        { "id": "1001-2500", "label": "1,001–2,500 sq ft", "min": 1001, "max": 2500, "price": 450 },
+        { "id": "2501-5000", "label": "2,501–5,000 sq ft", "min": 2501, "max": 5000, "price": 550 },
+        { "id": "5001-10000", "label": "5,001–10,000 sq ft", "min": 5001, "max": 10000, "price": 650 },
+        { "id": "10001-25000", "label": "10,001–25,000 sq ft", "min": 10001, "max": 25000, "price": 700 },
+        { "id": "25001-50000", "label": "25,001–50,000 sq ft", "min": 25001, "max": 50000, "price": 950 },
+        { "id": "50001+", "label": "50,001+ sq ft (POA)", "min": 50001, "max": null, "poa": true }
+      ]
+    }
+  ]
+}

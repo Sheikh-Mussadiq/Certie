@@ -17,6 +17,7 @@ const BookingDetails = ({
   currentStep,
   onGoBack,
   onBuildingTypeSubmit,
+  onBuildingTypeUpdate,
   onAdditionalServicesSubmit,
   onTimeAndDateSubmit,
   onTimeAndDateContinue,
@@ -80,6 +81,14 @@ const BookingDetails = ({
   const handleAdditionalServicesSubmit = useCallback((data) => {
     setSelectedAdditionalServices(data);
   }, []);
+
+  const handleBuildingTypeUpdate = useCallback((newBuildingType) => {
+    setSelectedBuildingType(newBuildingType);
+    // Call parent callback if provided
+    if (onBuildingTypeUpdate) {
+      onBuildingTypeUpdate(newBuildingType);
+    }
+  }, [onBuildingTypeUpdate]);
 
   const handleTimeAndDateSubmit = (data) => {
     onTimeAndDateSubmit(data);
@@ -191,6 +200,7 @@ const BookingDetails = ({
                 <BuildingForm
                   property={property}
                   onDataChange={handleBuildingDataChange}
+                  onBuildingTypeUpdate={handleBuildingTypeUpdate}
                   initialData={{
                     buildingType: selectedBuildingType,
                     propertyName,
@@ -211,6 +221,8 @@ const BookingDetails = ({
                       ? selectedBuildingType.type
                       : selectedBuildingType
                   }
+                  property={property}
+                  onBuildingTypeUpdate={handleBuildingTypeUpdate}
                 />
               )}
               {currentStep === "time-date" && (

@@ -94,7 +94,7 @@ const AdditionalServices = ({ onSubmit }) => {
           </label>
         </div>
 
-        <div className="space-y-6">
+        {/* <div className="space-y-6">
           <div>
             <h3 className="font-semibold text-lg mb-2">
               How many floors do you have?
@@ -162,7 +162,7 @@ const AdditionalServices = ({ onSubmit }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {selectedType && floors && size && tenants && (
           <div className="mt-6">
