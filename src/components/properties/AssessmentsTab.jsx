@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { motion } from "framer-motion";
+import { Listbox, Transition } from "@headlessui/react";
 import {
   MoreHorizontal,
   Plus,
@@ -15,6 +16,7 @@ import {
   Clock,
   FileText,
   AlertCircle,
+  Check,
 } from "lucide-react";
 import Sort from "../../assets/sort-a-z.png";
 import Filter from "../../assets/filter.png";
@@ -35,15 +37,51 @@ const AssessmentsTab = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [sortBy, setSortBy] = useState("assessment_time");
+  const [sortDirection, setSortDirection] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
   const [assessments, setAssessments] = useState([]);
+  const [filteredAssessments, setFilteredAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState("");
+  const [filterType, setFilterType] = useState("");
   const [stats, setStats] = useState({
     total: 0,
     overdue: 0,
     nextDue: 0,
   });
+
+  // Available sorting options
+  const sortOptions = [
+    { value: "assessment_time", label: "Assessment Time" },
+    { value: "completed_at", label: "Date Completed" },
+    { value: "type", label: "Assessment Type" },
+    { value: "status", label: "Status" },
+  ];
+
+  // Available filter options
+  const statusFilterOptions = [
+    { value: "", label: "All Statuses" },
+    { value: "pending", label: "Pending" },
+    { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
+    { value: "complete", label: "Complete" },
+    { value: "overdue", label: "Overdue" },
+    { value: "due soon", label: "Due Soon" },
+  ];
+
+  // Get unique assessment types for filter dropdown
+  const getAssessmentTypes = () => {
+    const types = assessments
+      .map((assessment) => assessment.type)
+      .filter((type) => type) // Filter out undefined/null
+      .filter((value, index, self) => self.indexOf(value) === index); // Unique values
+
+    return [
+      { value: "", label: "All Types" },
+      ...types.map((type) => ({ value: type, label: type })),
+    ];
+  };
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
@@ -57,6 +95,95 @@ const AssessmentsTab = () => {
     }
   }, [propertyId]);
 
+  useEffect(() => {
+    // Apply filters and sorting whenever assessment data or filter criteria change
+    if (assessments.length > 0) {
+      let filtered = [...assessments];
+
+      // Apply status filter
+      if (filterStatus) {
+        filtered = filtered.filter((assessment) => {
+          const status = getAssessmentStatus(assessment);
+          return status.toLowerCase() === filterStatus.toLowerCase();
+        });
+      }
+
+      // Apply type filter
+      if (filterType) {
+        filtered = filtered.filter(
+          (assessment) =>
+            assessment.type &&
+            assessment.type.toLowerCase() === filterType.toLowerCase()
+        );
+      }
+
+      // Apply sorting
+      filtered = sortAssessments(filtered, sortBy, sortDirection);
+
+      setFilteredAssessments(filtered);
+      // Reset to first page when filters change
+      setCurrentPage(1);
+    }
+  }, [assessments, filterStatus, filterType, sortBy, sortDirection]);
+
+  // Function to handle sorting based on field and direction
+  const sortAssessments = (data, field, direction) => {
+    return [...data].sort((a, b) => {
+      let valA, valB;
+
+      // Special handling for status which requires calculation
+      if (field === "status") {
+        valA = getAssessmentStatus(a);
+        valB = getAssessmentStatus(b);
+      } else {
+        valA = a[field];
+        valB = b[field];
+      }
+
+      // Handle null/undefined values
+      if (valA === null || valA === undefined)
+        return direction === "asc" ? -1 : 1;
+      if (valB === null || valB === undefined)
+        return direction === "asc" ? 1 : -1;
+
+      // Convert dates for comparison
+      if (field === "assessment_time" || field === "completed_at") {
+        valA = new Date(valA).getTime();
+        valB = new Date(valB).getTime();
+      } else {
+        // For string comparison
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      }
+
+      // Sort based on direction
+      if (direction === "asc") {
+        return valA > valB ? 1 : -1;
+      } else {
+        return valA < valB ? 1 : -1;
+      }
+    });
+  };
+
+  // Handle sort change
+  const handleSortChange = (value) => {
+    setSortBy(value);
+  };
+
+  // Toggle sort direction
+  const toggleSortDirection = () => {
+    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
+
+  // Handle filter change
+  const handleStatusFilterChange = (value) => {
+    setFilterStatus(value);
+  };
+
+  const handleTypeFilterChange = (value) => {
+    setFilterType(value);
+  };
+
   const fetchAssessments = async () => {
     try {
       setLoading(true);
@@ -68,6 +195,10 @@ const AssessmentsTab = () => {
       // );
 
       setAssessments(bookingsData);
+      // Initialize filteredAssessments with the sorted data
+      setFilteredAssessments(
+        sortAssessments(bookingsData, sortBy, sortDirection)
+      );
       calculateStats(bookingsData);
     } catch (error) {
       console.error("Error fetching assessments:", error);
@@ -305,10 +436,10 @@ const AssessmentsTab = () => {
   };
 
   // Pagination
-  const totalPages = Math.ceil(assessments.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredAssessments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentAssessments = assessments.slice(startIndex, endIndex);
+  const currentAssessments = filteredAssessments.slice(startIndex, endIndex);
 
   const statsData = [
     {
@@ -504,18 +635,204 @@ const AssessmentsTab = () => {
       <div className="space-y-4 bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="flex justify-between items-center p-4">
           <div className="flex items-center gap-4">
+            {/* Sort Dropdown */}
             <div className="relative">
-              <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
-                <img src={Sort} alt="sort" className="w-5 h-5" />
-                <span>Sort by</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
+              <Listbox value={sortBy} onChange={handleSortChange}>
+                <div className="relative">
+                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
+                    <img src={Sort} alt="sort" className="w-5 h-5" />
+                    <span>Sort</span>
+                    {/* Only show badge if not using default sort option (assessment_time) */}
+                    {sortBy !== "assessment_time" && (
+                      <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary-orange text-xs font-bold text-white">
+                        1
+                      </span>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleSortDirection();
+                      }}
+                      className="ml-1"
+                    >
+                      {sortDirection === "asc" ? (
+                        <ArrowUp className="w-4 h-4" />
+                      ) : (
+                        <ArrowDown className="w-4 h-4" />
+                      )}
+                    </button>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
+                      {sortOptions.map((option) => (
+                        <Listbox.Option
+                          key={option.value}
+                          value={option.value}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "bg-primary-orange/10 text-primary-orange rounded-md"
+                                : "text-gray-700"
+                            }
+                            cursor-pointer select-none relative py-2 pl-3 pr-9`
+                          }
+                        >
+                          {({ active, selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {option.label}
+                              </span>
+                              {selected && (
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-primary-orange">
+                                  <Check
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
-              <img src={Filter} alt="filter" className="w-5 h-5" />
-              <span>Filter</span>
-              <ChevronDown className="w-4 h-4" />
-            </button>
+
+            {/* Filter Status Dropdown */}
+            <div className="relative">
+              <Listbox value={filterStatus} onChange={handleStatusFilterChange}>
+                <div className="relative">
+                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
+                    <img src={Filter} alt="filter" className="w-5 h-5" />
+                    <span>Status</span>
+                    {/* Only show badge if a status filter is applied (not the default empty string) */}
+                    {filterStatus && filterStatus !== "" && (
+                      <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary-orange text-xs font-bold text-white">
+                        1
+                      </span>
+                    )}
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
+                      {statusFilterOptions.map((option) => (
+                        <Listbox.Option
+                          key={option.value}
+                          value={option.value}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "bg-primary-orange/10 text-primary-orange rounded-md"
+                                : "text-gray-700"
+                            }
+                            cursor-pointer select-none relative py-2 pl-3 pr-9`
+                          }
+                        >
+                          {({ active, selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {option.label}
+                              </span>
+                              {selected && (
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-primary-orange">
+                                  <Check
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
+
+            {/* Filter Type Dropdown */}
+            <div className="relative">
+              <Listbox value={filterType} onChange={handleTypeFilterChange}>
+                <div className="relative">
+                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
+                    <img src={Filter} alt="filter" className="w-5 h-5" />
+                    <span>Type</span>
+                    {/* Only show badge if a type filter is applied (not the default empty string) */}
+                    {filterType && filterType !== "" && (
+                      <span className="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary-orange text-xs font-bold text-white">
+                        1
+                      </span>
+                    )}
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
+                      {getAssessmentTypes().map((option) => (
+                        <Listbox.Option
+                          key={option.value}
+                          value={option.value}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "bg-primary-orange/10 text-primary-orange rounded-md"
+                                : "text-gray-700"
+                            }
+                            cursor-pointer select-none relative py-2 pl-3 pr-9`
+                          }
+                        >
+                          {({ active, selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {option.label}
+                              </span>
+                              {selected && (
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-primary-orange">
+                                  <Check
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {/* <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90">
@@ -654,12 +971,20 @@ const AssessmentsTab = () => {
                               <div className="mb-2">
                                 <span
                                   className={`inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-md border ${getStatusColor(
-                                    assessment.invoice_bookings[0].invoices.status
+                                    assessment.invoice_bookings[0].invoices
+                                      .status
                                   )}`}
                                 >
-                                  {getInvoiceStatusIcon(assessment.invoice_bookings[0].invoices.status)}
-                                  {assessment.invoice_bookings[0].invoices.status.charAt(0).toUpperCase() +
-                                    assessment.invoice_bookings[0].invoices.status.slice(1)}
+                                  {getInvoiceStatusIcon(
+                                    assessment.invoice_bookings[0].invoices
+                                      .status
+                                  )}
+                                  {assessment.invoice_bookings[0].invoices.status
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                    assessment.invoice_bookings[0].invoices.status.slice(
+                                      1
+                                    )}
                                 </span>
                               </div>
                               <p className="text-sm text-gray-500">

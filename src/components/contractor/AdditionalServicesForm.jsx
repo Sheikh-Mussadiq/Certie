@@ -1,31 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check as CheckIcon } from "lucide-react";
+import { Listbox, Transition } from "@headlessui/react";
 import { getAllServices } from "../../services/serviceServices";
 import { updatePropertyBuildingType } from "../../services/propertiesServices";
 import { toast } from "react-hot-toast";
 import fraPricingData from "../../assets/FRA_Pricing.json";
 
-const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildingTypeUpdate }) => {
+const AdditionalServicesForm = ({
+  onSubmit,
+  buildingCategory,
+  property,
+  onBuildingTypeUpdate,
+}) => {
   // Allowed building types
   const allowedBuildingTypes = [
-    'Residential Block',
-    'Single Residential Dwelling', 
-    'Commercial Office',
-    'Mixed-Use Building',
-    'School / Education',
-    'Retail Unit',
-    'Warehouse / Industrial',
-    'HMO (House in Multiple Occupation)',
-    'Care Facility',
-    'Hotel'
+    "Residential Block",
+    "Single Residential Dwelling",
+    "Commercial Office",
+    "Mixed-Use Building",
+    "School / Education",
+    "Retail Unit",
+    "Warehouse / Industrial",
+    "HMO (House in Multiple Occupation)",
+    "Care Facility",
+    "Hotel",
   ];
-  
+
   const [selectedServices, setSelectedServices] = useState([]);
   const [otherService, setOtherService] = useState("");
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentBuildingType, setCurrentBuildingType] = useState(buildingCategory || "");
+  const [currentBuildingType, setCurrentBuildingType] = useState(
+    buildingCategory || ""
+  );
   const [isUpdatingBuildingType, setIsUpdatingBuildingType] = useState(false);
   const [quantities, setQuantities] = useState({
     devices: 100, // Default value for PAT Testing
@@ -51,21 +59,23 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
 
   // Fire Risk Assessment helper functions
   const getFraBuildingType = () => {
-    return fraPricingData.buildingTypes.find(type => type.id === currentBuildingType);
+    return fraPricingData.buildingTypes.find(
+      (type) => type.id === currentBuildingType
+    );
   };
 
   const getFraOptionById = (optionId) => {
     const buildingType = getFraBuildingType();
     if (!buildingType) return null;
-    return buildingType.options.find(option => option.id === optionId);
+    return buildingType.options.find((option) => option.id === optionId);
   };
 
   const findFraOptionByNumericValue = (value) => {
     const buildingType = getFraBuildingType();
     if (!buildingType || !value) return null;
-    
+
     const numValue = parseInt(value);
-    return buildingType.options.find(option => {
+    return buildingType.options.find((option) => {
       if (option.min !== undefined && option.max !== undefined) {
         return numValue >= option.min && numValue <= option.max;
       } else if (option.min !== undefined && option.max === null) {
@@ -84,21 +94,21 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
   // Handle building type update
   const handleBuildingTypeChange = async (newBuildingType) => {
     if (!property?.id || newBuildingType === currentBuildingType) return;
-    
+
     setIsUpdatingBuildingType(true);
     try {
       await updatePropertyBuildingType(property.id, newBuildingType);
       setCurrentBuildingType(newBuildingType);
-      
+
       // Clear FRA selection when building type changes as options may be different
       setFraOption("");
       setFraNumericValue("");
-      
+
       // Notify parent component about the building type change
       if (onBuildingTypeUpdate) {
         onBuildingTypeUpdate(newBuildingType);
       }
-      
+
       toast.success("Building type updated successfully");
     } catch (error) {
       console.error("Error updating building type:", error);
@@ -195,7 +205,9 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
       } else {
         const buildingTypeData = getFraBuildingType();
         if (!buildingTypeData) {
-          console.warn(`No FRA pricing data found for building type: ${currentBuildingType}`);
+          console.warn(
+            `No FRA pricing data found for building type: ${currentBuildingType}`
+          );
           meta.fraError = `No pricing available for building type: ${currentBuildingType}`;
         } else {
           const selectedOption = getFraOptionById(fraOption);
@@ -203,7 +215,7 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
             fraOption,
             currentBuildingType,
             selectedOption,
-            buildingTypeFound: buildingTypeData
+            buildingTypeFound: buildingTypeData,
           });
           if (selectedOption) {
             meta.option = selectedOption;
@@ -220,7 +232,14 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
       buildingCategory: currentBuildingType,
       meta: meta,
     });
-  }, [selectedServices, otherService, quantities, fraOption, onSubmit, currentBuildingType]);
+  }, [
+    selectedServices,
+    otherService,
+    quantities,
+    fraOption,
+    onSubmit,
+    currentBuildingType,
+  ]);
 
   if (loading) {
     return (
@@ -294,39 +313,96 @@ const AdditionalServicesForm = ({ onSubmit, buildingCategory, property, onBuildi
 
         {/* Building Type Selector - Show only if property exists */}
         {property?.id && (
-          <div className="mt-6 p-4 border border-grey-outline rounded-lg bg-blue-50">
+          <div className="mt-6 p-4 border border-grey-outline rounded-lg bg-primary-orange/20">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="font-semibold text-lg text-primary-black">
                   Update Building Type
                 </h4>
                 <p className="text-sm text-primary-grey mt-1">
-                  You can update your property's building type if it was selected incorrectly.
+                  You can update your property's building type if it was
+                  selected incorrectly.
                 </p>
               </div>
             </div>
             <div className="relative">
-              <select
+              <Listbox
                 value={currentBuildingType}
-                onChange={(e) => handleBuildingTypeChange(e.target.value)}
+                onChange={handleBuildingTypeChange}
                 disabled={isUpdatingBuildingType}
-                className="w-full appearance-none bg-white border border-grey-outline rounded-lg py-3 px-4 pr-10 text-gray-700 cursor-pointer focus:outline-none focus:border-primary-orange disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <option value="">Select building type</option>
-                {allowedBuildingTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <ChevronDown className="h-5 w-5 text-gray-400" />
-              </div>
-              {isUpdatingBuildingType && (
-                <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-orange"></div>
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full cursor-pointer bg-white py-3 pl-4 pr-10 text-left border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+                    <span
+                      className={`block truncate ${
+                        !currentBuildingType && "text-gray-500"
+                      }`}
+                    >
+                      {currentBuildingType || "Select a building type"}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                      {isUpdatingBuildingType ? (
+                        <div className="animate-spin h-4 w-4 border-b-2 border-primary-orange mr-1"></div>
+                      ) : (
+                        <ChevronDown
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
+                      {currentBuildingType === "" && (
+                        <div className="text-gray-500 py-2 pl-4 pr-4 select-none">
+                          <span className="block truncate">
+                            No building type selected
+                          </span>
+                        </div>
+                      )}
+                      {allowedBuildingTypes.map((type) => (
+                        <Listbox.Option
+                          key={type}
+                          value={type}
+                          className={({ active }) =>
+                            `${
+                              active
+                                ? "bg-primary-orange/10 text-primary-orange rounded-md"
+                                : "text-gray-700"
+                            }
+                            cursor-pointer select-none relative py-2 pl-4 pr-4`
+                          }
+                        >
+                          {({ active, selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {type}
+                              </span>
+                              {selected && (
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-primary-orange">
+                                  <CheckIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
                 </div>
-              )}
+              </Listbox>
             </div>
           </div>
         )}

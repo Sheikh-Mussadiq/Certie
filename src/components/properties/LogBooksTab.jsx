@@ -11,6 +11,9 @@ import {
 import LogbookEntriesView from "./LogbookEntriesView";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import LogBookModal from "./LogBookModal";
+import DeleteLogBookModal from "./DeleteLogBookModal";
+import { toast } from "react-hot-toast";
 
 const LogBooksTab = () => {
   const { currentUser } = useAuth();
@@ -87,21 +90,20 @@ const LogBooksTab = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleCreateLogbook = async (e) => {
-    e.preventDefault();
+  const handleCreateLogbook = async (formData) => {
     setModalLoading(true);
     setModalError(null);
     try {
       const newLogbook = await createLogbook({
-        ...form,
+        ...formData,
         property_id: property.id,
       });
       setShowModal(false);
-      setForm({ logbook_type: "", description: "", frequency: "Monthly" });
       // Add new logbook to local state instead of refetching
       if (newLogbook) {
         setLogbooks((prevLogbooks) => [...prevLogbooks, newLogbook]);
       }
+      toast.success("Logbook created successfully");
     } catch (err) {
       setModalError("Failed to create logbook");
     } finally {
@@ -137,13 +139,16 @@ const LogBooksTab = () => {
   // Function to extract initials from logbook name
   const getLogbookInitials = (name) => {
     if (!name) return "LB";
-    
+
     // Clean the name by removing any brackets and their contents
-    const cleanName = name.replace(/\s*\([^)]*\)\s*$/, '').replace(/\s*\)\s*$/, '').trim();
-    
+    const cleanName = name
+      .replace(/\s*\([^)]*\)\s*$/, "")
+      .replace(/\s*\)\s*$/, "")
+      .trim();
+
     // Split by spaces to get words
     const words = cleanName.split(/\s+/);
-    
+
     if (words.length === 1) {
       // For single word, take first and last letter if possible
       const word = words[0];
@@ -153,14 +158,16 @@ const LogBooksTab = () => {
       return word.charAt(0).toUpperCase() + word.charAt(0).toUpperCase();
     } else {
       // For multiple words, take first letter of first and last word
-      return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+      return (
+        words[0].charAt(0) + words[words.length - 1].charAt(0)
+      ).toUpperCase();
     }
   };
-  
+
   // Function to generate a color based on the logbook name
   const getLogbookColor = (name) => {
     if (!name) return "#4F46E5"; // Default color
-    
+
     // List of colors to choose from
     const colors = [
       "#4F46E5", // Indigo
@@ -174,14 +181,16 @@ const LogBooksTab = () => {
       "#84CC16", // Lime
       "#14B8A6", // Teal
     ];
-    
+
     // Use the sum of character codes as a consistent hash
-    const hash = name.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-    
+    const hash = name
+      .split("")
+      .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+
     // Use the hash to pick a color
     return colors[hash % colors.length];
   };
-  
+
   // Map Supabase data to UI shape (add icon, regulation, isActive, etc. as needed)
   const mappedLogbooks = logbooks.map((logbook) => {
     const name = logbook.logbook_type;
@@ -278,11 +287,11 @@ const LogBooksTab = () => {
             >
               <div className="flex flex-col items-start justify-between p-4">
                 <div className="flex items-center gap-3">
-                  <div 
-                    className="w-12 h-12 rounded-lg flex items-center justify-center" 
-                    style={{ backgroundColor: logbook.color + '20' }} // Add 20 for 12.5% opacity
+                  <div
+                    className="w-12 h-12 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: logbook.color + "20" }} // Add 20 for 12.5% opacity
                   >
-                    <div 
+                    <div
                       className="flex items-center justify-center w-8 h-8 rounded-md text-white font-medium"
                       style={{ backgroundColor: logbook.color }}
                     >
@@ -363,127 +372,26 @@ const LogBooksTab = () => {
         </div>
       )}
 
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
-            <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-              onClick={() => setShowModal(false)}
-            >
-              &times;
-            </button>
-            <h2 className="text-lg font-semibold mb-4">
-              Create Custom LogBook
-            </h2>
-            <form onSubmit={handleCreateLogbook} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  type="text"
-                  name="logbook_type"
-                  value={form.logbook_type}
-                  onChange={handleModalChange}
-                  className="w-full px-3 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  value={form.description}
-                  onChange={handleModalChange}
-                  className="w-full px-3 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Frequency
-                </label>
-                <select
-                  name="frequency"
-                  value={form.frequency}
-                  onChange={handleModalChange}
-                  className="w-full px-3 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                  required
-                >
-                  {frequencyOptions.map((freq) => (
-                    <option key={freq} value={freq}>
-                      {freq}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {modalError && (
-                <div className="text-red-500 text-sm">{modalError}</div>
-              )}
-              <button
-                type="submit"
-                className="w-full bg-primary-black text-white py-2 rounded-lg hover:bg-primary-black/90 transition-colors"
-                disabled={modalLoading}
-              >
-                {modalLoading ? "Creating..." : "Create LogBook"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <LogBookModal
+        isOpen={showModal}
+        closeModal={() => setShowModal(false)}
+        onSubmit={handleCreateLogbook}
+        loading={modalLoading}
+        error={modalError}
+        frequencyOptions={frequencyOptions}
+      />
 
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
-            <button
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-              onClick={() => {
-                setShowDeleteModal(false);
-                setLogbookToDelete(null);
-              }}
-            >
-              &times;
-            </button>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                <Trash2 className="w-6 h-6 text-red-500" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-primary-black">
-                  Delete LogBook
-                </h2>
-                <p className="text-sm text-primary-grey">
-                  This action cannot be undone
-                </p>
-              </div>
-            </div>
-            <p className="text-sm text-primary-grey mb-6">
-              Are you sure you want to delete "
-              <strong>{logbookToDelete?.name}</strong>"? This will permanently
-              remove the logbook and all its entries.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setLogbookToDelete(null);
-                }}
-                className="flex-1 px-4 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors"
-                disabled={deleteLoading}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteLogbook}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                disabled={deleteLoading}
-              >
-                {deleteLoading ? "Deleting..." : "Delete"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Delete LogBook Modal */}
+      <DeleteLogBookModal
+        isOpen={showDeleteModal}
+        closeModal={() => {
+          setShowDeleteModal(false);
+          setLogbookToDelete(null);
+        }}
+        logbookToDelete={logbookToDelete}
+        onConfirm={handleDeleteLogbook}
+        loading={deleteLoading}
+      />
     </div>
   );
 };
