@@ -304,8 +304,9 @@ const DocumentsTab = () => {
             className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-secondary-black"
           />
         </div>
-        {currentUser.id === property.owner_id ||
-          (currentUser.role === "super_admin" && (
+        {(currentUser.id === property.owner_id ||
+          currentUser.role === "super_admin" || 
+          property.managers?.some(manager => manager.user_id === currentUser.id)) && (
             <div className="flex gap-3">
               <button
                 onClick={() => setIsCreateFolderModalOpen(true)}
@@ -322,7 +323,7 @@ const DocumentsTab = () => {
                 Upload Document
               </button>
             </div>
-          ))}
+          )}
       </div>
 
       {/* Search Results */}

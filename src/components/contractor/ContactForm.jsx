@@ -124,7 +124,7 @@ const ContactForm = ({ onSubmit, property }) => {
               />
             </div>
           </div>
-          {property && (
+          {/* {property && (
           <div>
             <label className="block text-sm font-medium mb-2">
               Attachments
@@ -175,7 +175,7 @@ const ContactForm = ({ onSubmit, property }) => {
               </div>
             </div>
           </div>
-          )}
+          )} */}
         </form>
       </div>
     </motion.div>

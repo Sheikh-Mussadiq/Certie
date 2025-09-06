@@ -515,8 +515,14 @@ const BookingDetailsModal = ({ isOpen, onClose, booking, onUpdate }) => {
                           <input
                             type="text"
                             name="assigneeContact"
+                            pattern="[+0-9]+"
                             value={formData.assigneeContact}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || /^[+0-9]+$/.test(value)) {
+                                handleChange(e);
+                              }
+                            }}
                             className="block w-full pl-10 pr-3 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                             placeholder="Enter contact number"
                             required

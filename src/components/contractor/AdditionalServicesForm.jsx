@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, Check as CheckIcon } from "lucide-react";
-import { Listbox, Transition } from "@headlessui/react";
+import { ChevronDown, Check as CheckIcon, Phone } from "lucide-react";
+import { Listbox, Transition, Dialog } from "@headlessui/react";
 import { getAllServices } from "../../services/serviceServices";
 import { updatePropertyBuildingType } from "../../services/propertiesServices";
 import { toast } from "react-hot-toast";
@@ -41,6 +41,56 @@ const AdditionalServicesForm = ({
   });
   const [fraOption, setFraOption] = useState(""); // Fire Risk Assessment option
   const [fraNumericValue, setFraNumericValue] = useState(""); // For numeric inputs
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [selectedPoaOption, setSelectedPoaOption] = useState(null);
+
+  // Contact Modal Component
+  const ContactModal = () => {
+    return (
+      <Dialog
+        open={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        className="relative z-50"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="mx-auto max-w-md rounded-xl bg-white p-6 shadow-lg">
+            <Dialog.Title className="text-lg font-medium leading-6 text-gray-900 flex items-center gap-2">
+              <Phone className="w-5 h-5 text-primary-orange" />
+              Contact Us for Pricing
+            </Dialog.Title>
+            <Dialog.Description className="mt-2 text-sm text-gray-500">
+              {selectedPoaOption?.label && (
+                <p>
+                  You've selected: <span className="font-medium">{selectedPoaOption.label}</span>
+                </p>
+              )}
+              <p className="mt-2">
+                Due to the size and complexity of this option, we'd like to provide you with a customized quote. 
+                Please contact our sales team for detailed pricing information.
+              </p>
+            </Dialog.Description>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-lg"
+                onClick={() => setIsContactModalOpen(false)}
+              >
+                Close
+              </button>
+              <a
+                href="mailto:sales@example.com"
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-orange hover:bg-primary-orange/90 rounded-lg"
+              >
+                Contact Sales
+              </a>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+    );
+  };
 
   // Price calculation functions
   const calculatePatTestingPrice = (devices) => {
@@ -256,6 +306,7 @@ const AdditionalServicesForm = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
+      <ContactModal />
       <div className="mb-8 border border-grey-outline rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-2">
           Choose which services you need
@@ -590,42 +641,65 @@ const AdditionalServicesForm = ({
 
                   {/* Show ranges as radio buttons for all input types */}
                   <div className="space-y-3">
-                    {buildingType.options.map((option) => (
-                      <label
-                        key={option.id}
-                        className={`relative flex items-center justify-between border rounded-lg p-3 cursor-pointer transition-all ${
-                          fraOption === option.id
-                            ? "border-primary-orange bg-primary-orange/10"
-                            : "border-grey-outline"
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            name="fraOption"
-                            value={option.id}
-                            checked={fraOption === option.id}
-                            onChange={() => handleFraOptionChange(option.id)}
-                            className="sr-only"
-                          />
-                          <span
-                            className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${
-                              fraOption === option.id
-                                ? "border-primary-orange"
+                    {buildingType.options.map((option) => {
+                      const isPoa = option.poa;
+                      
+                      return (
+                        <div
+                          key={option.id}
+                          className={`relative flex items-center justify-between border rounded-lg p-3 cursor-pointer transition-all ${
+                            fraOption === option.id
+                              ? "border-primary-orange bg-primary-orange/10"
+                              : isPoa 
+                                ? "border-primary-orange/50 bg-primary-orange/5"
                                 : "border-grey-outline"
-                            }`}
-                          >
-                            {fraOption === option.id && (
-                              <span className="w-3 h-3 rounded-full bg-primary-orange"></span>
+                          }`}
+                          onClick={() => {
+                            if (isPoa) {
+                              setSelectedPoaOption(option);
+                              setIsContactModalOpen(true);
+                            } else {
+                              handleFraOptionChange(option.id);
+                            }
+                          }}
+                        >
+                          <div className="flex items-center">
+                            {!isPoa && (
+                              <input
+                                type="radio"
+                                name="fraOption"
+                                value={option.id}
+                                checked={fraOption === option.id}
+                                onChange={() => handleFraOptionChange(option.id)}
+                                className="sr-only"
+                              />
                             )}
+                            <span
+                              className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${
+                                fraOption === option.id
+                                  ? "border-primary-orange"
+                                  : isPoa
+                                    ? "border-primary-orange/50"
+                                    : "border-grey-outline"
+                              }`}
+                            >
+                              {fraOption === option.id && !isPoa && (
+                                <span className="w-3 h-3 rounded-full bg-primary-orange"></span>
+                              )}
+                              {isPoa && (
+                                <Phone className="w-3 h-3 text-primary-orange/70" />
+                              )}
+                            </span>
+                            <span className={`font-medium ${isPoa ? "text-primary-orange/90" : ""}`}>
+                              {option.label}
+                            </span>
+                          </div>
+                          <span className={`font-semibold ${isPoa ? "text-primary-orange/90" : "text-primary-orange"}`}>
+                            {getFraPrice(option)}
                           </span>
-                          <span className="font-medium">{option.label}</span>
                         </div>
-                        <span className="font-semibold text-primary-orange">
-                          {getFraPrice(option)}
-                        </span>
-                      </label>
-                    ))}
+                      );
+                    })}
                   </div>
                   {/* )} */}
                 </>

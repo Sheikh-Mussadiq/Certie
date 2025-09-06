@@ -92,6 +92,10 @@ const Bookings = () => {
           return new Date(b.booked_time) - new Date(a.booked_time);
         case "booked_time_asc":
           return new Date(a.booked_time) - new Date(b.booked_time);
+        case "created_at_desc":
+          return new Date(b.created_at) - new Date(a.created_at);
+        case "created_at_asc":
+          return new Date(a.created_at) - new Date(b.created_at);
         case "property_name_asc":
           return a.property_name.localeCompare(b.property_name);
         case "property_name_desc":

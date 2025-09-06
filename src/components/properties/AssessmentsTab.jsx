@@ -217,14 +217,18 @@ const AssessmentsTab = () => {
     let nextDueCount = 0;
 
     assessmentData.forEach((assessment) => {
+      // Get the status using the same function used in the table
+      const status = getAssessmentStatus(assessment);
+      
+      // Count overdue items using the same logic as the table
+      if (status === "overdue") {
+        overdue++;
+      }
+
       if (assessment.completed_at) {
         const completedDate = new Date(assessment.completed_at);
         const nextDueDate = new Date(completedDate);
         nextDueDate.setFullYear(nextDueDate.getFullYear() + 1);
-
-        if (nextDueDate < now && assessment.status !== "completed") {
-          overdue++;
-        }
 
         // Find the next upcoming due date
         if (nextDueDate > now && (!nextDue || nextDueDate < nextDue)) {
@@ -239,14 +243,12 @@ const AssessmentsTab = () => {
       thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
       assessmentData.forEach((assessment) => {
-        if (assessment.completed_at) {
-          const completedDate = new Date(assessment.completed_at);
-          const nextDueDate = new Date(completedDate);
-          nextDueDate.setFullYear(nextDueDate.getFullYear() + 1);
-
-          if (nextDueDate >= now && nextDueDate <= thirtyDaysFromNow) {
-            nextDueCount++;
-          }
+        // Get the status using the same function used in the table
+        const status = getAssessmentStatus(assessment);
+        
+        // Count items that are "due soon"
+        if (status === "due soon") {
+          nextDueCount++;
         }
       });
     }
@@ -445,20 +447,20 @@ const AssessmentsTab = () => {
     {
       label: "Total Assessments",
       value: stats.total.toString().padStart(2, "0"),
-      change: "10.2%",
-      isPositive: true,
+      // change: "10.2%",
+      // isPositive: true,
     },
     {
       label: "Over Due",
       value: stats.overdue.toString().padStart(2, "0"),
-      change: "5.75%",
-      isPositive: false,
+      // change: "5.75%",
+      // isPositive: false,
     },
     {
       label: "Next Due",
       value: stats.nextDue ? stats.nextDue.toString().padStart(2, "0") : "N/A",
-      change: "5.75%",
-      isPositive: false,
+      // change: "5.75%",
+      // isPositive: false,
     },
   ];
 
@@ -611,7 +613,7 @@ const AssessmentsTab = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-end">
+            {/* <div className="flex items-end">
               <span
                 className={`text-xs flex items-center gap-1 ${
                   stat.isPositive ? "text-green-600" : "text-primary-orange"
@@ -626,7 +628,7 @@ const AssessmentsTab = () => {
                 {stat.change}
                 <span className="text-xs text-primary-grey">vs last month</span>
               </span>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

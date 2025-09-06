@@ -297,6 +297,10 @@ const PropertyOverview = () => {
       {/* Property Team Section */}
       <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4 mt-4">
         <h3 className="text-lg font-semibold mb-4">Property Team</h3>
+        <p className="text-sm text-primary-grey">
+          Property Managers are responsible for the overall management of the property. Site Users are responsible for the day to day operations of the property.
+        </p>
+          <p className="text-sm text-primary-grey mb-4"><strong>Manage your team in the edit property button above.</strong></p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           {/* Property Managers */}
           <div className="border border-grey-outline rounded-2xl md:rounded-r-none">

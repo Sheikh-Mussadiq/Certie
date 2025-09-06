@@ -56,12 +56,12 @@ const BookingCompleted = ({ propertyId, onBookAnother }) => {
         >
           See Bookings
         </button>
-        <button
+        {/* <button
           onClick={onBookAnother}
           className="px-6 py-3 border border-grey-outline rounded-md font-medium hover:bg-gray-50 transition-colors"
         >
           Book Another Service
-        </button>
+        </button> */}
       </motion.div>
     </div>
   );

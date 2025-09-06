@@ -23,8 +23,6 @@ const AddProperty = () => {
     image: null,
     owner_id: currentUser.id,
     compliance_score: 0,
-    manager: "",
-    assistant_manager: "",
     square_ft: 0,
     construction_year: 1900,
     tenure: "Leasehold",
@@ -389,14 +387,18 @@ const AddProperty = () => {
                   Contact Phone
                 </label>
                 <input
-                  type="tel"
+                  type="text"
+                  pattern="[+0-9]+"
                   value={formData.contact_phone}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      contact_phone: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^[+0-9]+$/.test(value)) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        contact_phone: value,
+                      }));
+                    }
+                  }}
                   placeholder="Enter contact phone"
                   className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                 />

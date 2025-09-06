@@ -23,6 +23,8 @@ const BookingFilters = ({
   const sortOptions = {
     booked_time_desc: "Booking Date (Newest)",
     booked_time_asc: "Booking Date (Oldest)",
+    created_at_desc: "Creation Date (Newest)",
+    created_at_asc: "Creation Date (Oldest)",
     property_name_asc: "Property Name (A-Z)",
     property_name_desc: "Property Name (Z-A)",
     status: "Status",
@@ -75,7 +77,7 @@ const BookingFilters = ({
   return (
     <div className="flex flex-wrap justify-end items-center mb-6 gap-4">
       <div className="flex space-x-4">
-        {/* <div className="relative inline-block" ref={sortRef}>
+        <div className="relative inline-block" ref={sortRef}>
           <button
             onClick={handleSortClick}
             className="inline-flex text-sm items-center px-4 py-2 border border-grey-outline rounded-lg bg-white text-gray-700 hover:bg-gray-50"
@@ -104,7 +106,7 @@ const BookingFilters = ({
               </div>
             </div>
           )}
-        </div> */}
+        </div>
 
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

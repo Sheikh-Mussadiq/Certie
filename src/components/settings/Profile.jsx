@@ -189,9 +189,8 @@ const Profile = () => {
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              disabled={!isEditing}
-              className="w-full px-3 py-2 border border-grey-outline rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-orange disabled:bg-grey-fill"
+              disabled
+              className="w-full px-3 py-2 border border-grey-outline rounded-lg bg-grey-fill text-primary-grey cursor-not-allowed"
             />
           </div>
         </div>

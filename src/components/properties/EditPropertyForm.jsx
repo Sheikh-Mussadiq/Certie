@@ -515,9 +515,12 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
               </div>
 
               <div className="space-y-6">
+                <div className="space-y-1">
                 <h3 className="text-lg font-medium text-primary-black">
                   Management & Contact Information
                 </h3>
+                <p className="text-sm text-primary-grey"> Users must have signed up to the platform to be added to the property team. </p>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <h3 className="text-lg font-medium mb-4">Managers</h3>

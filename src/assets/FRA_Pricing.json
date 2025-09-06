@@ -47,13 +47,17 @@
       "inputType": "rooms",
       "promptLabel": "Please select number of rooms / beds",
       "options": [
-        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 475 },
-        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 600 },
-        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 800 },
-        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 1050 },
-        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 1350 },
-        { "id": "40+", "label": "40+ rooms", "min": 41, "max": null, "price": 1700 },
-        { "id": "40+_poa", "label": "Large / specialist (POA)", "min": 200, "max": null, "poa": true, "note": "Use POA for very large or specialist facilities" }
+        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 350 },
+        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 400 },
+        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 425 },
+        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 450 },
+        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 500 },
+        { "id": "40-60", "label": "40–60 rooms", "min": 41, "max": 60, "price": 550 },
+        { "id": "61-80", "label": "61–80 rooms", "min": 61, "max": 80, "price": 600 },
+        { "id": "81-120", "label": "81–120 rooms", "min": 81, "max": 120, "price": 650 },
+        { "id": "121-200", "label": "121–200 rooms", "min": 121, "max": 200, "price": 700 },
+        { "id": "200-350", "label": "200–350 rooms", "min": 200, "max": 350, "price": 950 },
+        { "id": "350+_poa", "label": "Very large / complex (POA)", "min": 351, "max": null, "poa": true, "note": "Use POA for very large or specialist facilities" }
       ]
     },
 
@@ -63,13 +67,17 @@
       "inputType": "rooms",
       "promptLabel": "Please select number of rooms",
       "options": [
-        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 500 },
-        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 650 },
-        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 875 },
-        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 1150 },
-        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 1450 },
-        { "id": "40+", "label": "40+ rooms", "min": 41, "max": null, "price": 1850 },
-        { "id": "40+_poa", "label": "Very large / complex (POA)", "min": 200, "max": null, "poa": true, "note": "Verify top-tier POA entries from source if needed" }
+        { "id": "3-6", "label": "3–6 rooms", "min": 3, "max": 6, "price": 350 },
+        { "id": "7-10", "label": "7–10 rooms", "min": 7, "max": 10, "price": 400 },
+        { "id": "11-19", "label": "11–19 rooms", "min": 11, "max": 19, "price": 425 },
+        { "id": "20-30", "label": "20–30 rooms", "min": 20, "max": 30, "price": 450 },
+        { "id": "31-40", "label": "31–40 rooms", "min": 31, "max": 40, "price": 500 },
+        { "id": "40-60", "label": "40–60 rooms", "min": 41, "max": 60, "price": 550 },
+        { "id": "61-80", "label": "61–80 rooms", "min": 61, "max": 80, "price": 600 },
+        { "id": "81-120", "label": "81–120 rooms", "min": 81, "max": 120, "price": 650 },
+        { "id": "121-200", "label": "121–200 rooms", "min": 121, "max": 200, "price": 700 },
+        { "id": "200-350", "label": "200–350 rooms", "min": 200, "max": 350, "price": 950 },
+        { "id": "350+_poa", "label": "Very large / complex (POA)", "min": 351, "max": null, "poa": true, "note": "Verify top-tier POA entries from source if needed" }
       ],
       "note": "Top-tier / POA rows were partially ambiguous in the image; confirm with authoritative pricing table if needed."
     },

@@ -57,7 +57,7 @@ const TimeAndDateForm = ({ onDataChange }) => {
     // Create date at noon to avoid time-of-day issues
     const date = new Date(year, month, day, 12, 0, 0, 0);
     const todayNoon = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0, 0);
-    return date < todayNoon;
+    return date <= todayNoon; // Changed from < to <= to include current date
   };
 
   const handleDateSelect = (day) => {
