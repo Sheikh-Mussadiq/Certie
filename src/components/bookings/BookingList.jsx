@@ -5,6 +5,7 @@ import {
   Clock,
   FileText,
   AlertCircle,
+  SquarePen,
 } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -279,7 +280,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                     className="text-primary-grey hover:text-primary-black"
                     onClick={() => handleOpenModal(booking)}
                   >
-                    <MoreHorizontal className="h-5 w-5" />
+                    <SquarePen className="h-5 w-5" />
                   </button>
                 </td>
               )}
