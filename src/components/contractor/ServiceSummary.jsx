@@ -25,7 +25,7 @@ const ServiceSummary = ({
     const additionalCost = additionalDevices * 0.89; // 89p per additional device
     return basePrice + additionalCost;
   };
-  
+
   const calculateFireDoorPrice = (doors) => {
     const basePrice = 180; // £180 for 10 doors
     const additionalDoors = Math.max(0, doors - 10);
@@ -35,7 +35,7 @@ const ServiceSummary = ({
 
   return (
     <motion.div
-      className="bg-white rounded-xl p-6 border border-grey-outline sticky top-4"
+      className="bg-white rounded-xl p-6 border border-grey-outline"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
@@ -65,9 +65,9 @@ const ServiceSummary = ({
         {/* Display quantities and prices for specific services */}
         {selectedServices.includes("PAT Testing") && meta.devices && (
           <div className="flex items-start gap-3">
-            <HiWrenchScrewdriver 
-              size={16} 
-              className="text-primary-orange flex-shrink-0 mt-1" 
+            <HiWrenchScrewdriver
+              size={16}
+              className="text-primary-orange flex-shrink-0 mt-1"
             />
             <div className="flex flex-col w-full">
               <div className="flex justify-between items-center">
@@ -87,12 +87,12 @@ const ServiceSummary = ({
             </div>
           </div>
         )}
-        
+
         {selectedServices.includes("Fire Door Inspection") && meta.doors && (
           <div className="flex items-start gap-3">
-            <HiWrenchScrewdriver 
-              size={16} 
-              className="text-primary-orange flex-shrink-0 mt-1" 
+            <HiWrenchScrewdriver
+              size={16}
+              className="text-primary-orange flex-shrink-0 mt-1"
             />
             <div className="flex flex-col w-full">
               <div className="flex justify-between items-center">
@@ -102,12 +102,30 @@ const ServiceSummary = ({
                 </p>
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-xs text-primary-grey">
-                  {meta.doors} doors
-                </p>
+                <p className="text-xs text-primary-grey">{meta.doors} doors</p>
                 <p className="text-xs text-primary-grey">
                   (£180 base + £15 per additional)
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {selectedServices.includes("Fire Risk Assessment") && meta.option && (
+          <div className="flex items-start gap-3">
+            <HiWrenchScrewdriver
+              size={16}
+              className="text-primary-orange flex-shrink-0 mt-1"
+            />
+            <div className="flex flex-col w-full">
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">Fire Risk Assessment: </p>
+                <p className="text-sm font-semibold text-primary-orange">
+                  £{meta.option?.price?.toFixed(2) || "POA"}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-primary-grey">{meta.option.label}</p>
               </div>
             </div>
           </div>
@@ -143,7 +161,11 @@ const ServiceSummary = ({
           <div className="flex w-full">
             <p className="text-sm font-medium">Property Type:</p>
             <p className="text-sm ml-1 text-primary-grey">
-            {buildingType ? buildingType : property?.type ? property.type : "Not specified"}
+              {buildingType
+                ? buildingType
+                : property?.type
+                ? property.type
+                : "Not specified"}
             </p>
           </div>
         </div>
@@ -151,7 +173,7 @@ const ServiceSummary = ({
         <div className="flex items-center gap-3">
           <Clock size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
-            <p className="text-sm font-medium">Date:</p>
+            <p className="text-sm font-medium">Assessment Date:</p>
             <p className="text-sm ml-1 text-primary-grey">
               {dateTime
                 ? `${dateTime.date?.toLocaleDateString("en-GB", {
@@ -163,7 +185,7 @@ const ServiceSummary = ({
             </p>
           </div>
         </div>
-{/* 
+        {/* 
         <div className="flex items-center gap-3">
           <MapPin size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
@@ -174,15 +196,19 @@ const ServiceSummary = ({
           </div>
         </div> */}
 
-         {!property?.address && <div className="flex items-center gap-3">
-          <Building size={16} className="text-primary-orange flex-shrink-0" />
-          <div className="flex w-full">
-            <p className="text-sm font-medium">Address:</p>
-            <p className="text-sm ml-1 text-primary-grey">
-              {address || `${property?.address.street}, ${property?.address.city}` || "Not specified yet"}
-            </p>
+        {!property?.address && (
+          <div className="flex items-center gap-3">
+            <Building size={16} className="text-primary-orange flex-shrink-0" />
+            <div className="flex w-full">
+              <p className="text-sm font-medium">Address:</p>
+              <p className="text-sm ml-1 text-primary-grey">
+                {address ||
+                  `${property?.address.street}, ${property?.address.city}` ||
+                  "Not specified yet"}
+              </p>
+            </div>
           </div>
-        </div>}
+        )}
 
         {/* <div className="flex items-center gap-3">
           <Building size={16} className="text-primary-orange flex-shrink-0" />
@@ -194,7 +220,7 @@ const ServiceSummary = ({
           </div>
         </div> */}
 
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <Users size={16} className="text-primary-orange flex-shrink-0" />
           <div className="flex w-full">
             <p className="text-sm font-medium">No. of Occupants:</p>
@@ -202,7 +228,7 @@ const ServiceSummary = ({
               {tenants || "Not specified"}
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </motion.div>
   );

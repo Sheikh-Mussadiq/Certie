@@ -82,13 +82,16 @@ const BookingDetails = ({
     setSelectedAdditionalServices(data);
   }, []);
 
-  const handleBuildingTypeUpdate = useCallback((newBuildingType) => {
-    setSelectedBuildingType(newBuildingType);
-    // Call parent callback if provided
-    if (onBuildingTypeUpdate) {
-      onBuildingTypeUpdate(newBuildingType);
-    }
-  }, [onBuildingTypeUpdate]);
+  const handleBuildingTypeUpdate = useCallback(
+    (newBuildingType) => {
+      setSelectedBuildingType(newBuildingType);
+      // Call parent callback if provided
+      if (onBuildingTypeUpdate) {
+        onBuildingTypeUpdate(newBuildingType);
+      }
+    },
+    [onBuildingTypeUpdate]
+  );
 
   const handleTimeAndDateSubmit = (data) => {
     onTimeAndDateSubmit(data);
@@ -108,8 +111,8 @@ const BookingDetails = ({
       data.name &&
       data.email &&
       data.phone
-        // data.address &&
-        // data.postcode
+      // data.address &&
+      // data.postcode
     ) {
       setContactFormData(data);
     }
@@ -150,7 +153,16 @@ const BookingDetails = ({
                       currentStep === "property-details" &&
                       selectedBuildingType
                     ) {
-                      onBuildingTypeSubmit(selectedBuildingType, propertyName, street, city, postcodeValue, floors, size, tenants);
+                      onBuildingTypeSubmit(
+                        selectedBuildingType,
+                        propertyName,
+                        street,
+                        city,
+                        postcodeValue,
+                        floors,
+                        size,
+                        tenants
+                      );
                     } else if (
                       currentStep === "service-details" &&
                       selectedAdditionalServices
@@ -167,7 +179,8 @@ const BookingDetails = ({
                     (currentStep === "property-details" &&
                       !selectedBuildingType) ||
                     (currentStep === "service-details" &&
-                      !selectedAdditionalServices) ||
+                      (!selectedAdditionalServices ||
+                        selectedAdditionalServices.services.length === 0)) ||
                     (currentStep === "time-date" && !dateTime) ||
                     (currentStep === "contact" && !contactFormData)
                   }
@@ -175,7 +188,8 @@ const BookingDetails = ({
                     (currentStep === "property-details" &&
                       selectedBuildingType) ||
                     (currentStep === "service-details" &&
-                      selectedAdditionalServices) ||
+                      selectedAdditionalServices &&
+                      selectedAdditionalServices.services.length > 0) ||
                     (currentStep === "time-date" && dateTime) ||
                     (currentStep === "contact" && contactFormData)
                       ? "bg-primary-black hover:bg-primary-black/80"
@@ -229,24 +243,29 @@ const BookingDetails = ({
                 <TimeAndDateForm onDataChange={handleTimeAndDateChange} />
               )}
               {currentStep === "contact" && (
-                <ContactForm onSubmit={handleContactFormSubmit} property={property} />
+                <ContactForm
+                  onSubmit={handleContactFormSubmit}
+                  property={property}
+                />
               )}
             </div>
 
             <div className="md:col-span-1 space-y-8">
-              <ServiceSummary
-                postcode={postcode}
-                floors={floors}
-                size={size}
-                tenants={tenants}
-                address={`${street}, ${city}`}
-                property={property}
-                buildingType={selectedBuildingType}
-                additionalServices={selectedAdditionalServices}
-                dateTime={dateTime}
-                contactDetails={contactFormData}
-              />
-              {currentStep !== "complete" && <FAQAccordion />}
+              <div className="sticky top-20 space-y-8">
+                <ServiceSummary
+                  postcode={postcode}
+                  floors={floors}
+                  size={size}
+                  tenants={tenants}
+                  address={`${street}, ${city}`}
+                  property={property}
+                  buildingType={selectedBuildingType}
+                  additionalServices={selectedAdditionalServices}
+                  dateTime={dateTime}
+                  contactDetails={contactFormData}
+                />
+                {currentStep !== "complete" && <FAQAccordion />}
+              </div>
             </div>
           </div>
         </>

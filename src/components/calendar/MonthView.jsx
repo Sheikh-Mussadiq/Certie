@@ -1,4 +1,11 @@
-const MonthView = ({ currentDate, getEventsForDay, loading }) => {
+import Tooltip from "../ui/Tooltip";
+
+const MonthView = ({
+  currentDate,
+  getEventsForDay,
+  loading,
+  onAssessmentClick,
+}) => {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -116,14 +123,22 @@ const MonthView = ({ currentDate, getEventsForDay, loading }) => {
             <div className="mt-1 space-y-1 overflow-hidden flex-1 relative z-10">
               {day.events && day.events.length > 0
                 ? day.events.slice(0, 3).map((event, eventIndex) => (
-                    <div
+                    <Tooltip
                       key={eventIndex}
-                      className={`text-xs p-1 rounded ${
-                        event.color || "bg-blue-100 text-blue-800"
-                      } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
+                      content={`Click to view details for ${event.title}`}
+                      position="top"
                     >
-                      {event.title}
-                    </div>
+                      <div
+                        className={`text-xs p-1 rounded ${
+                          event.color || "bg-blue-100 text-blue-800"
+                        } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
+                        onClick={() =>
+                          onAssessmentClick && onAssessmentClick(event)
+                        }
+                      >
+                        {event.title}
+                      </div>
+                    </Tooltip>
                   ))
                 : null}
               {day.events && day.events.length > 3 && (

@@ -33,7 +33,7 @@ const FAQItem = ({ question, answer, isOpen, toggleOpen }) => {
 };
 
 const FAQAccordion = () => {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
 
   const faqs = [
     {

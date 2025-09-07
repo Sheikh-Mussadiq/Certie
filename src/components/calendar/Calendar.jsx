@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import CalendarHeader from "./CalendarHeader";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
@@ -8,6 +9,7 @@ import YearView from "./YearView";
 import { useCalendarBookings } from "../../hooks/useCalendarBookings";
 
 const Calendar = () => {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("month"); // 'month', 'week', 'day', 'year'
   const {
@@ -55,6 +57,44 @@ const Calendar = () => {
     setCurrentDate(new Date());
   };
 
+  const handleAssessmentClick = (assessment) => {
+    console.log("Assessment clicked - full object:", assessment);
+
+    if (assessment) {
+      // The booking object is stored within the assessment object
+      // Check if we have booking.property_id, booking.properties.id, or properties.property_id
+      let propertyId = null;
+
+      if (assessment.booking) {
+        console.log("Found booking object:", assessment.booking);
+        // First try property_id directly on booking
+        propertyId = assessment.booking.property_id;
+
+        // Then try properties.id or properties.property_id
+        if (!propertyId && assessment.booking.properties) {
+          propertyId =
+            assessment.booking.properties.id ||
+            assessment.booking.properties.property_id;
+        }
+      }
+
+      // Fallback to the raw properties on assessment
+      if (!propertyId && assessment.properties) {
+        propertyId =
+          assessment.properties.id || assessment.properties.property_id;
+      }
+
+      if (propertyId) {
+        console.log("Redirecting to property:", propertyId);
+        navigate(`/properties/${propertyId}/assessments`);
+      } else {
+        console.log(
+          "No property ID found in the assessment object - check console for full object structure"
+        );
+      }
+    }
+  };
+
   // Show error state if there's an error
   if (error) {
     return (
@@ -96,6 +136,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDay={getEventsForDay}
             loading={loading}
+            onAssessmentClick={handleAssessmentClick}
           />
         )}
         {view === "week" && (
@@ -103,6 +144,7 @@ const Calendar = () => {
             currentDate={currentDate}
             formatBookingsForCalendar={formatBookingsForCalendar}
             loading={loading}
+            onAssessmentClick={handleAssessmentClick}
           />
         )}
         {view === "day" && (
@@ -110,6 +152,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDate={getEventsForDate}
             loading={loading}
+            onAssessmentClick={handleAssessmentClick}
           />
         )}
         {view === "year" && (
@@ -117,6 +160,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDay={getEventsForDay}
             loading={loading}
+            onAssessmentClick={handleAssessmentClick}
           />
         )}
       </div>

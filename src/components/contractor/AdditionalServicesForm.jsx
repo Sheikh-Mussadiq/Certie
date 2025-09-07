@@ -38,6 +38,7 @@ const AdditionalServicesForm = ({
   const [quantities, setQuantities] = useState({
     devices: 100, // Default value for PAT Testing
     doors: 10, // Default value for Fire Door Inspection
+    units: "", // Default value for Fire Risk Assessment
   });
   const [fraOption, setFraOption] = useState(""); // Fire Risk Assessment option
   const [fraNumericValue, setFraNumericValue] = useState(""); // For numeric inputs
@@ -62,12 +63,14 @@ const AdditionalServicesForm = ({
             <Dialog.Description className="mt-2 text-sm text-gray-500">
               {selectedPoaOption?.label && (
                 <p>
-                  You've selected: <span className="font-medium">{selectedPoaOption.label}</span>
+                  You've selected:{" "}
+                  <span className="font-medium">{selectedPoaOption.label}</span>
                 </p>
               )}
               <p className="mt-2">
-                Due to the size and complexity of this option, we'd like to provide you with a customized quote. 
-                Please contact our sales team for detailed pricing information.
+                Due to the size and complexity of this option, we'd like to
+                provide you with a customized quote. Please contact our sales
+                team for detailed pricing information.
               </p>
             </Dialog.Description>
 
@@ -201,6 +204,16 @@ const AdditionalServicesForm = ({
       }
     } else {
       newServices = [...selectedServices, serviceName];
+      // If Fire Risk Assessment is selected, set the default option
+      if (serviceName === "Fire Risk Assessment") {
+        const buildingType = getFraBuildingType();
+        if (buildingType && buildingType.options) {
+          const firstOption = buildingType.options.find((option) => !option.poa);
+          if (firstOption) {
+            setFraOption(firstOption.id);
+          }
+        }
+      }
     }
     setSelectedServices(newServices);
   };
@@ -227,6 +240,7 @@ const AdditionalServicesForm = ({
 
   const handleFraNumericChange = (value) => {
     setFraNumericValue(value);
+    setQuantities((prev) => ({ ...prev, units: value }));
     // Find matching option based on numeric value
     const matchingOption = findFraOptionByNumericValue(value);
     if (matchingOption) {
@@ -250,6 +264,9 @@ const AdditionalServicesForm = ({
       meta.doors = quantities.doors;
     }
     if (selectedServices.includes("Fire Risk Assessment")) {
+      if (fraNumericValue) {
+        meta.units = fraNumericValue;
+      }
       if (!fraOption) {
         console.warn("Fire Risk Assessment selected but no option chosen");
       } else {
@@ -364,7 +381,7 @@ const AdditionalServicesForm = ({
 
         {/* Building Type Selector - Show only if property exists */}
         {property?.id && (
-          <div className="mt-6 p-4 border border-grey-outline rounded-lg bg-primary-orange/20">
+          <div className="mt-6 p-4 border border-grey-outline rounded-lg bg-grey-fill">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="font-semibold text-lg text-primary-black">
@@ -643,16 +660,16 @@ const AdditionalServicesForm = ({
                   <div className="space-y-3">
                     {buildingType.options.map((option) => {
                       const isPoa = option.poa;
-                      
+
                       return (
                         <div
                           key={option.id}
                           className={`relative flex items-center justify-between border rounded-lg p-3 cursor-pointer transition-all ${
                             fraOption === option.id
                               ? "border-primary-orange bg-primary-orange/10"
-                              : isPoa 
-                                ? "border-primary-orange/50 bg-primary-orange/5"
-                                : "border-grey-outline"
+                              : isPoa
+                              ? "border-primary-orange/50 bg-primary-orange/5"
+                              : "border-grey-outline"
                           }`}
                           onClick={() => {
                             if (isPoa) {
@@ -670,7 +687,9 @@ const AdditionalServicesForm = ({
                                 name="fraOption"
                                 value={option.id}
                                 checked={fraOption === option.id}
-                                onChange={() => handleFraOptionChange(option.id)}
+                                onChange={() =>
+                                  handleFraOptionChange(option.id)
+                                }
                                 className="sr-only"
                               />
                             )}
@@ -679,8 +698,8 @@ const AdditionalServicesForm = ({
                                 fraOption === option.id
                                   ? "border-primary-orange"
                                   : isPoa
-                                    ? "border-primary-orange/50"
-                                    : "border-grey-outline"
+                                  ? "border-primary-orange/50"
+                                  : "border-grey-outline"
                               }`}
                             >
                               {fraOption === option.id && !isPoa && (
@@ -690,11 +709,21 @@ const AdditionalServicesForm = ({
                                 <Phone className="w-3 h-3 text-primary-orange/70" />
                               )}
                             </span>
-                            <span className={`font-medium ${isPoa ? "text-primary-orange/90" : ""}`}>
+                            <span
+                              className={`font-medium ${
+                                isPoa ? "text-primary-orange/90" : ""
+                              }`}
+                            >
                               {option.label}
                             </span>
                           </div>
-                          <span className={`font-semibold ${isPoa ? "text-primary-orange/90" : "text-primary-orange"}`}>
+                          <span
+                            className={`font-semibold ${
+                              isPoa
+                                ? "text-primary-orange/90"
+                                : "text-primary-orange"
+                            }`}
+                          >
                             {getFraPrice(option)}
                           </span>
                         </div>

@@ -1,4 +1,6 @@
-const DayView = ({ currentDate, getEventsForDate, loading }) => {
+import Tooltip from "../ui/Tooltip";
+
+const DayView = ({ currentDate, getEventsForDate, loading, onAssessmentClick }) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   // Get real events for the current date
@@ -95,19 +97,25 @@ const DayView = ({ currentDate, getEventsForDate, loading }) => {
             {events.map((event, index) => {
               const style = getEventStyle(event);
               return (
-                <div
+                <Tooltip
                   key={index}
-                  className={`absolute left-0 right-0 mx-1 p-2 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
-                  style={style}
+                  content={`Click to view details for ${event.title}`}
+                  position="top"
                 >
-                  <div className="font-medium">{event.title}</div>
-                  <div className="text-[10px]">
-                    {event.start.getHours().toString().padStart(2, "0")}:
-                    {event.start.getMinutes().toString().padStart(2, "0")} -
-                    {event.end.getHours().toString().padStart(2, "0")}:
-                    {event.end.getMinutes().toString().padStart(2, "0")}
+                  <div
+                    className={`absolute left-0 right-0 mx-1 p-2 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
+                    style={style}
+                    onClick={() => onAssessmentClick && onAssessmentClick(event)}
+                  >
+                    <div className="font-medium">{event.title}</div>
+                    <div className="text-[10px]">
+                      {event.start.getHours().toString().padStart(2, "0")}:
+                      {event.start.getMinutes().toString().padStart(2, "0")} -
+                      {event.end.getHours().toString().padStart(2, "0")}:
+                      {event.end.getMinutes().toString().padStart(2, "0")}
+                    </div>
                   </div>
-                </div>
+                </Tooltip>
               );
             })}
           </div>
