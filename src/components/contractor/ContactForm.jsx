@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 
-const ContactForm = ({ onSubmit, property }) => {
+const ContactForm = ({ onSubmit, property, onDataChange }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,12 +20,8 @@ const ContactForm = ({ onSubmit, property }) => {
     setFormData(newFormData);
 
     // Check if all required fields are filled
-    if (
-      newFormData.name &&
-      newFormData.email &&
-      newFormData.phone
-    ) {
-      onSubmit(newFormData);
+    if (onDataChange) {
+      onDataChange(newFormData);
     }
   };
 
@@ -51,6 +47,12 @@ const ContactForm = ({ onSubmit, property }) => {
     onSubmit(formData);
     return false;
   };
+
+  useEffect(() => {
+    if (onDataChange) {
+      onDataChange(formData);
+    }
+  }, [formData, onDataChange]);
 
   return (
     <motion.div
@@ -107,8 +109,6 @@ const ContactForm = ({ onSubmit, property }) => {
                 required
               />
             </div>
-
-
 
             <div>
               <label className="block text-sm font-medium mb-2">

@@ -40,6 +40,7 @@ const BookingDetails = ({
     useState(null);
 
   const [contactFormData, setContactFormData] = useState(null);
+  const [isContactFormValid, setIsContactFormValid] = useState(false);
 
   useEffect(() => {
     if (property?.property_type) {
@@ -106,17 +107,14 @@ const BookingDetails = ({
     [onTimeAndDateSubmit]
   );
 
-  const handleContactFormSubmit = (data) => {
-    if (
-      data.name &&
-      data.email &&
-      data.phone
-      // data.address &&
-      // data.postcode
-    ) {
-      setContactFormData(data);
+  const handleContactDataChange = useCallback((data) => {
+    setContactFormData(data);
+    if (data.name && data.email && data.phone) {
+      setIsContactFormValid(true);
+    } else {
+      setIsContactFormValid(false);
     }
-  };
+  }, []);
 
   // const handlePaymentFormSubmit = (data) => {
   //   onPaymentSubmit(data);
@@ -182,7 +180,7 @@ const BookingDetails = ({
                       (!selectedAdditionalServices ||
                         selectedAdditionalServices.services.length === 0)) ||
                     (currentStep === "time-date" && !dateTime) ||
-                    (currentStep === "contact" && !contactFormData)
+                    (currentStep === "contact" && !isContactFormValid)
                   }
                   className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
                     (currentStep === "property-details" &&
@@ -191,7 +189,7 @@ const BookingDetails = ({
                       selectedAdditionalServices &&
                       selectedAdditionalServices.services.length > 0) ||
                     (currentStep === "time-date" && dateTime) ||
-                    (currentStep === "contact" && contactFormData)
+                    (currentStep === "contact" && isContactFormValid)
                       ? "bg-primary-black hover:bg-primary-black/80"
                       : "bg-primary-grey cursor-not-allowed"
                   }`}
@@ -244,7 +242,7 @@ const BookingDetails = ({
               )}
               {currentStep === "contact" && (
                 <ContactForm
-                  onSubmit={handleContactFormSubmit}
+                  onDataChange={handleContactDataChange}
                   property={property}
                 />
               )}

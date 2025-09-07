@@ -196,7 +196,8 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                       <div>Email: {booking.contact_details.email || "-"}</div>
                       <div>Phone: {booking.contact_details.phone || "-"}</div>
                       <div className="truncate max-w-xs">
-                        Address: {booking.contact_details.address || "-"}
+                        Additional Info:{" "}
+                        {booking.contact_details.additionalInfo || "-"}
                       </div>
                     </div>
                   </div>
