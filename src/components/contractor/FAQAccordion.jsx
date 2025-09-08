@@ -37,24 +37,29 @@ const FAQAccordion = () => {
 
   const faqs = [
     {
-      question: "What is Modoin?",
+      question: "When do I need to make payment for an assessment?",
       answer:
-        "Modoin refers to a specialized methodology for commercial & residential property fire risk assessments where fire hazards are identified and mitigated. Potenti tellus hendrerit facilisis praesent nunc habitasse convallis semper bibendum vitae molestie phasellus iaculis diam elit.",
+        "Payment is required after the assessment has been carried out, but before the final report or certificate is released in the Certie system.",
     },
     {
-      question: "Do you have a monthly plan?",
+      question: "Can I book an assessment without paying upfront?",
       answer:
-        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
+        "Yes. You can book your assessment without advance payment. Payment is only due once the assessment is completed, prior to the results being uploaded.",
     },
     {
-      question: "Do you have a monthly plan?",
+      question: "How are payments made?",
       answer:
-        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
+        "Payments can be made securely online through Certie. We accept major debit and credit cards, as well as approved corporate payment methods for larger clients.",
     },
     {
-      question: "Do you have a monthly plan?",
+      question: "Do you offer flexible payment terms for larger clients?",
       answer:
-        "Yes, we offer flexible monthly subscription plans for regular compliance assessments. This includes scheduled visits, ongoing support, and access to our compliance dashboard.",
+        "Yes. For larger or regular clients, tailored payment terms can be created, including monthly invoicing or extended credit arrangements. Please speak to our team to set this up.",
+    },
+    {
+      question: "What happens if payment isn’t made promptly?",
+      answer:
+        "Your completed assessment will remain on hold within the system until payment is received. Once cleared, the assessment will be released immediately for your records and compliance needs.",
     },
   ];
 
