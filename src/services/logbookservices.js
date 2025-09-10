@@ -21,6 +21,10 @@ export const getLogbooksWithEntries = async (propertyId = null) => {
   try {
     let query = supabase.from("property_logbooks").select(`
         *,
+        property:properties (
+          id,
+          name
+        ),
         logbook_entries (
           id,
           completion_status,
