@@ -170,6 +170,7 @@ const AuthenticatedRoutes = () => {
             <Route index element={<PropertyOverview />} />
             <Route path="assessments" element={<AssessmentsTab />} />
             <Route path="logbooks" element={<LogBooksTab />} />
+            <Route path="logbooks/:logbookId" element={<LogBooksTab />} />
             <Route path="documents" element={<DocumentsTab />} />
           </Route>
           <Route

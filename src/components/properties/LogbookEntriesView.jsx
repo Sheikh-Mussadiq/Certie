@@ -177,6 +177,7 @@ const LogbookEntriesView = ({ logbook, onBack }) => {
           <ClipboardList className="w-6 h-6 text-primary-orange" />
           {logbook.name || logbook.logbook_type}
         </h2>
+        <p className="mt-1 text-primary-grey">{logbook.description}</p>
         <div className="flex items-center gap-2 mt-2 text-primary-grey">
           <Clock className="w-4 h-4" />
           <span className="text-sm">{logbook.frequency}</span>

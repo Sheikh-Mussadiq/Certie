@@ -10,6 +10,7 @@ const OutstandingIssues = ({ logbooks }) => {
           ...entry,
           logbookName: logbook.logbook_type,
           logbookDescription: logbook.description,
+          propertyName: logbook.property?.name || "Unknown Property",
         }))
     )
     .sort((a, b) => new Date(b.performed_at) - new Date(a.performed_at))
@@ -36,7 +37,9 @@ const OutstandingIssues = ({ logbooks }) => {
               className="flex justify-between items-center p-2 rounded-lg bg-grey-fill/50"
             >
               <div className="flex flex-col justify-between items-start space-y-1">
+
                 <p className="font-semibold text-sm">{item.logbookName}</p>
+                <p className="text-xs font-semibold"> Property: {item.propertyName}</p>
 
                 <p className="text-sm text-gray-500 truncate w-72">
                   {item.issue_comment || item.logbookDescription}

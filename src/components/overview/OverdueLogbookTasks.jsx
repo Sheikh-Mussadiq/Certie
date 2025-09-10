@@ -20,22 +20,40 @@ const OverdueLogbookTasks = ({ logbooks }) => {
 
   const overdueTasks = logbooks
     .filter((logbook) => {
-      if (!logbook.entries || logbook.entries.length === 0) return true; // Overdue if no entries
+      const entries = logbook.logbook_entries || logbook.entries || [];
+      if (entries.length === 0) return false; // Don't show as overdue if no entries
 
-      const lastEntry = logbook.entries[0];
-      if (lastEntry.completion_status !== "Completed") return true;
+      // Sort entries by performed_at date (most recent first)
+      const sortedEntries = entries.sort((a, b) => new Date(b.performed_at) - new Date(a.performed_at));
+      const lastEntry = sortedEntries[0];
+      
+      // Check if last entry is completed (Working Correctly or Completed)
+      if (lastEntry.completion_status !== "Working Correctly" && lastEntry.completion_status !== "Completed") {
+        return true;
+      }
 
-      const nextDueDate = addDays(
-        parseISO(lastEntry.performed_at),
-        logbook.frequency
-      );
+      // Convert frequency string to days
+      const frequencyToDays = {
+        "Daily": 1,
+        "Weekly": 7,
+        "Monthly": 30,
+        "Quarterly": 90,
+        "Annually": 365,
+        "Every 6 months": 180,
+        "Every 2 years": 730,
+        "Every 3 years": 1095,
+        "Every 5 years": 1825,
+      };
+
+      const frequencyDays = frequencyToDays[logbook.frequency] || 30; // Default to 30 days if unknown
+      const nextDueDate = addDays(parseISO(lastEntry.performed_at), frequencyDays);
       return isPast(nextDueDate);
     })
     .slice(0, 3);
 
   const handleTaskClick = (logbook) => {
-    if (logbook.property_id) {
-      navigate(`/properties/${logbook.property_id}/logbooks`);
+    if (logbook.property_id && logbook.id) {
+      navigate(`/properties/${logbook.property_id}/logbooks/${logbook.id}`);
     }
   };
 
@@ -76,7 +94,8 @@ const OverdueLogbookTasks = ({ logbooks }) => {
             >
               <div>
                 <p className="font-semibold text-sm">{task.logbook_type}</p>
-                <p className="text-sm text-gray-500">{task.description}</p>
+                <p className="text-sm text-gray-500">{task.property?.name || "Unknown Property"}</p>
+                {/* <p className="text-sm text-gray-500">{task.description}</p> */}
               </div>
               <StatusBadge status="Critical" />
             </div>

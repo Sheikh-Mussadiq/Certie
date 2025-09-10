@@ -169,3 +169,20 @@ export const createLogbookEntry = async ({
     throw error;
   }
 };
+
+// Update an existing logbook
+export const updateLogbook = async (logbookId, { logbook_type, description, frequency }) => {
+  try {
+    const { data, error } = await supabase
+      .from("property_logbooks")
+      .update({ logbook_type, description, frequency })
+      .eq("id", logbookId)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error updating logbook:", error);
+    throw error;
+  }
+};

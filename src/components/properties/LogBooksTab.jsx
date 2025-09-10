@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   getLogbooks,
@@ -7,9 +7,10 @@ import {
   deactivateLogbook,
   createLogbook,
   deleteLogbook,
+  updateLogbook,
 } from "../../services/logbookservices";
 import LogbookEntriesView from "./LogbookEntriesView";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import LogBookModal from "./LogBookModal";
 import DeleteLogBookModal from "./DeleteLogBookModal";
@@ -18,6 +19,7 @@ import { toast } from "react-hot-toast";
 const LogBooksTab = () => {
   const { currentUser } = useAuth();
   const { property } = useOutletContext();
+  const { logbookId } = useParams();
   const [activeTab, setActiveTab] = useState("Active");
   const [searchTerm, setSearchTerm] = useState("");
   const [logbooks, setLogbooks] = useState([]);
@@ -32,7 +34,8 @@ const LogBooksTab = () => {
     description: "",
     frequency: "Monthly",
   });
-  const [selectedLogbook, setSelectedLogbook] = useState(null);
+  const [selectedLogbook, setSelectedLogbook] = useState(null); // For viewing entries
+  const [editingLogbook, setEditingLogbook] = useState(null); // For editing metadata
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [logbookToDelete, setLogbookToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -106,6 +109,27 @@ const LogBooksTab = () => {
       toast.success("Logbook created successfully");
     } catch (err) {
       setModalError("Failed to create logbook");
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  const handleEditLogbook = async (formData) => {
+    if (!editingLogbook) return;
+    setModalLoading(true);
+    setModalError(null);
+    try {
+      const updated = await updateLogbook(editingLogbook.id, formData);
+      if (updated) {
+        setLogbooks((prev) =>
+          prev.map((lb) => (lb.id === updated.id ? updated : lb))
+        );
+      }
+      toast.success("Logbook updated");
+      setShowModal(false);
+      setEditingLogbook(null);
+    } catch (err) {
+      setModalError("Failed to update logbook");
     } finally {
       setModalLoading(false);
     }
@@ -191,6 +215,27 @@ const LogBooksTab = () => {
     return colors[hash % colors.length];
   };
 
+  // Auto-select logbook if logbookId is provided in URL
+  useEffect(() => {
+    if (logbookId && logbooks.length > 0) {
+      const logbook = logbooks.find(lb => lb.id === logbookId);
+      if (logbook) {
+        // Map the logbook data to the expected format
+        const mappedLogbook = {
+          id: logbook.id,
+          name: logbook.logbook_type,
+          initials: getLogbookInitials(logbook.logbook_type),
+          color: getLogbookColor(logbook.logbook_type),
+          frequency: logbook.frequency,
+          regulation: logbook.regulation || "",
+          description: logbook.description,
+          isActive: logbook.active,
+        };
+        setSelectedLogbook(mappedLogbook);
+      }
+    }
+  }, [logbookId, logbooks]);
+
   // Map Supabase data to UI shape (add icon, regulation, isActive, etc. as needed)
   const mappedLogbooks = logbooks.map((logbook) => {
     const name = logbook.logbook_type;
@@ -232,7 +277,7 @@ const LogBooksTab = () => {
             place.
           </p>
         </div>
-        {currentUser.id === property.owner_id && (
+  {currentUser.id === property.owner_id && (
           <button
             className="flex items-center gap-2 px-4 py-2 bg-secondary-black text-white rounded-xl hover:bg-secondary-black/90 transition-colors"
             onClick={() => setShowModal(true)}
@@ -334,7 +379,21 @@ const LogBooksTab = () => {
                       <Trash2 className="w-4 h-4" />
                     </button>
                   )}
+                  {currentUser.id === property.owner_id && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingLogbook(logbook);
+                        setShowModal(true);
+                      }}
+                      className="p-2 text-primary-black hover:bg-gray-100 rounded-lg transition-colors"
+                      title="Edit logbook"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
+                  {currentUser.id === property.owner_id && (
                 <label
                   className="relative inline-flex items-center cursor-pointer"
                   onClick={(e) => e.stopPropagation()}
@@ -352,12 +411,16 @@ const LogBooksTab = () => {
                     }`}
                   ></div>
                 </label>
+                  )}
               </div>
             </div>
           ))}
 
-          {activeTab === "Active" && (
-            <div className="border-2 border-dashed border-grey-outline rounded-lg p-6 flex flex-col items-center justify-center text-center">
+          {activeTab === "Active" && currentUser.id === property.owner_id && (
+            <div 
+              className="border-2 border-dashed border-grey-outline rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-primary-black hover:bg-grey-fill/30 transition-all duration-200"
+              onClick={() => setShowModal(true)}
+            >
               <div className="w-12 h-12 rounded-lg bg-grey-fill flex items-center justify-center mb-4">
                 <Plus className="w-6 h-6 text-primary-grey" />
               </div>
@@ -365,7 +428,7 @@ const LogBooksTab = () => {
                 Create Custom LogBook
               </h3>
               <p className="text-sm text-primary-grey mb-4">
-                Add a New logbook tailored to your specific
+                Add a New logbook tailored to your specific needs
               </p>
             </div>
           )}
@@ -374,11 +437,16 @@ const LogBooksTab = () => {
 
       <LogBookModal
         isOpen={showModal}
-        closeModal={() => setShowModal(false)}
-        onSubmit={handleCreateLogbook}
+        closeModal={() => {
+          setShowModal(false);
+          setEditingLogbook(null);
+        }}
+        onSubmit={editingLogbook ? handleEditLogbook : handleCreateLogbook}
         loading={modalLoading}
         error={modalError}
         frequencyOptions={frequencyOptions}
+        initialData={editingLogbook}
+        mode={editingLogbook ? "edit" : "create"}
       />
 
       {/* Delete LogBook Modal */}

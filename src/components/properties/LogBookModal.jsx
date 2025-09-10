@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "lucide-react";
 
@@ -9,12 +9,35 @@ const LogBookModal = ({
   loading,
   error,
   frequencyOptions,
+  initialData = null,
+  mode = "create", // 'create' | 'edit'
 }) => {
   const [form, setForm] = useState({
-    logbook_type: "",
-    description: "",
-    frequency: frequencyOptions[0] || "Monthly",
+    logbook_type: initialData?.logbook_type || initialData?.name || "",
+    description: initialData?.description || "",
+    frequency: initialData?.frequency || frequencyOptions[0] || "Monthly",
   });
+
+  // Reset form when modal opens/closes or initialData changes
+  // (avoid stale state when switching between create/edit)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (isOpen) {
+      setForm({
+        logbook_type: initialData?.logbook_type || initialData?.name || "",
+        description: initialData?.description || "",
+        frequency: initialData?.frequency || frequencyOptions[0] || "Monthly",
+      });
+    } else {
+      if (mode === "create") {
+        setForm({
+          logbook_type: "",
+          description: "",
+          frequency: frequencyOptions[0] || "Monthly",
+        });
+      }
+    }
+  }, [isOpen, initialData, mode, frequencyOptions]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +84,7 @@ const LogBookModal = ({
                     as="h3"
                     className="text-lg font-semibold text-gray-900"
                   >
-                    Create Custom LogBook
+                    {mode === "edit" ? "Edit LogBook" : "Create Custom LogBook"}
                   </Dialog.Title>
                   <button
                     type="button"
@@ -127,7 +150,13 @@ const LogBookModal = ({
                       className="w-full bg-primary-black text-white py-2 rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={loading}
                     >
-                      {loading ? "Creating..." : "Create LogBook"}
+                      {loading
+                        ? mode === "edit"
+                          ? "Saving..."
+                          : "Creating..."
+                        : mode === "edit"
+                        ? "Save Changes"
+                        : "Create LogBook"}
                     </button>
                   </div>
                 </form>

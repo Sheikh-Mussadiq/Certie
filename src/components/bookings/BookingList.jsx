@@ -101,7 +101,8 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
 
   return (
     <div className="bg-white rounded-lg border border-grey-outline overflow-hidden">
-      <table className="min-w-full divide-y divide-grey-outline">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-grey-outline">
         <thead className="bg-grey-fill">
           <tr>
             {/* <th
@@ -288,6 +289,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
           ))}
         </tbody>
       </table>
+      </div>
 
       {/* Booking Details Modal */}
       <BookingDetailsModal

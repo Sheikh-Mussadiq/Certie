@@ -15,6 +15,7 @@ const RecentActivity = ({ logbooks, bookings }) => {
       logbookName: logbook.logbook_type,
       date: entry.performed_at,
       property_id: logbook.property_id,
+      propertyName: logbook.property?.name || "Unknown Property",
     }))
   );
 
@@ -95,13 +96,20 @@ const RecentActivity = ({ logbooks, bookings }) => {
                         : activity.title}
                     </p>
                     <div>
-                      <p className="text-sm text-gray-500 truncate">
-                        {activity.type === "logbook"
-                          ? activity.issue_comment || "Task completed"
-                          : `${activity.property} • ${
-                              activity.assignee || "Unassigned"
-                            }`}
-                      </p>
+                      {activity.type === "logbook" ? (
+                        <>
+                          <p className="text-sm text-gray-500 truncate w-72 overflow-hidden">
+                            {activity.issue_comment || "Task completed"}
+                          </p>
+                          <p className="text-xs text-gray-400 truncate w-72 overflow-hidden">
+                            {activity.propertyName}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-sm text-gray-500 truncate w-72 overflow-hidden">
+                          {`${activity.property} • ${activity.assignee || "Unassigned"}`}
+                        </p>
+                      )}
                       <p className="text-xs text-gray-400">
                         {format(new Date(activity.date), "MMM dd, yyyy")}
                       </p>
