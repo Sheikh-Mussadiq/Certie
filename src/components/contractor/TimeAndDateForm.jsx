@@ -57,7 +57,12 @@ const TimeAndDateForm = ({ onDataChange }) => {
     // Create date at noon to avoid time-of-day issues
     const date = new Date(year, month, day, 12, 0, 0, 0);
     const todayNoon = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0, 0);
-    return date <= todayNoon; // Changed from < to <= to include current date
+    
+    // Add 3 days to today's date (minimum booking lead time)
+    const minimumBookingDate = new Date(todayNoon);
+    minimumBookingDate.setDate(minimumBookingDate.getDate() + 4);
+    
+    return date < minimumBookingDate; // Require 3 days minimum lead time
   };
 
   const handleDateSelect = (day) => {
@@ -68,7 +73,7 @@ const TimeAndDateForm = ({ onDataChange }) => {
       day
     );
     
-    // Only allow selection if date is today or in the future
+    // Only allow selection if date is at least 3 days from today
     if (!isDateInPast(currentMonth.getFullYear(), currentMonth.getMonth(), day)) {
       setSelectedDate(selected);
 
