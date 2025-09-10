@@ -1,4 +1,11 @@
-const YearView = ({ currentDate, getEventsForDay, loading }) => {
+import Tooltip from "../ui/Tooltip";
+
+const YearView = ({
+  currentDate,
+  getEventsForDay,
+  loading,
+  onAssessmentClick,
+}) => {
   const months = [
     "January",
     "February",
@@ -53,6 +60,25 @@ const YearView = ({ currentDate, getEventsForDay, loading }) => {
     return events && events.length > 0;
   };
 
+  // Get events for a day
+  const getEvents = (day, month) => {
+    if (!getEventsForDay || !day) return [];
+    return (
+      getEventsForDay(day, new Date(currentDate.getFullYear(), month, 1)) || []
+    );
+  };
+
+  // Handle clicking on a day with events
+  const handleDayClick = (day, month) => {
+    if (day && hasEvents(day, month) && onAssessmentClick) {
+      const events = getEvents(day, month);
+      // If there are multiple events, pass the first one
+      if (events.length > 0) {
+        onAssessmentClick(events[0]);
+      }
+    }
+  };
+
   const year = currentDate.getFullYear();
 
   if (loading) {
@@ -88,25 +114,48 @@ const YearView = ({ currentDate, getEventsForDay, loading }) => {
               ))}
 
               {/* Calendar Days */}
-              {getMonthDays(year, monthIndex).map((day, dayIndex) => (
-                <div
-                  key={dayIndex}
-                  className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
-                    day === null
-                      ? ""
-                      : isToday(day, monthIndex)
-                      ? "bg-primary-black text-white font-bold rounded-md"
-                      : hasEvents(day, monthIndex)
-                      ? "bg-blue-100 text-blue-800 font-medium rounded-md"
-                      : "text-primary-black"
-                  }`}
-                >
-                  {day}
-                  {day && hasEvents(day, monthIndex) && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
-                  )}
-                </div>
-              ))}
+              {getMonthDays(year, monthIndex).map((day, dayIndex) => {
+                return hasEvents(day, monthIndex) ? (
+                  <Tooltip
+                    key={dayIndex}
+                    content="Click to view assessment details"
+                    position="top"
+                    theme="primary"
+                  >
+                    <div
+                      className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
+                        day === null
+                          ? ""
+                          : isToday(day, monthIndex)
+                          ? "bg-primary-black text-white font-bold rounded-md"
+                          : "bg-blue-100 text-blue-800 font-medium rounded-md cursor-pointer"
+                      }`}
+                      onClick={() => handleDayClick(day, monthIndex)}
+                    >
+                      {day}
+                      {day && hasEvents(day, monthIndex) && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                      )}
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <div
+                    key={dayIndex}
+                    className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
+                      day === null
+                        ? ""
+                        : isToday(day, monthIndex)
+                        ? "bg-primary-black text-white font-bold rounded-md"
+                        : "text-primary-black"
+                    }`}
+                  >
+                    {day}
+                    {day && hasEvents(day, monthIndex) && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

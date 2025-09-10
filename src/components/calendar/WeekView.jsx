@@ -1,4 +1,11 @@
-const WeekView = ({ currentDate, formatBookingsForCalendar, loading }) => {
+import Tooltip from "../ui/Tooltip";
+
+const WeekView = ({
+  currentDate,
+  formatBookingsForCalendar,
+  loading,
+  onAssessmentClick,
+}) => {
   const getWeekDays = (date) => {
     const days = [];
     const startOfWeek = new Date(date);
@@ -139,19 +146,27 @@ const WeekView = ({ currentDate, formatBookingsForCalendar, loading }) => {
                 {dayEvents.map((event, index) => {
                   const style = getEventStyle(event);
                   return (
-                    <div
+                    <Tooltip
                       key={index}
-                      className={`absolute left-0 right-0 mx-1 p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
-                      style={style}
+                      content={`Click to view details for ${event.title}`}
+                      position="top"
                     >
-                      <div className="font-medium truncate">{event.title}</div>
-                      <div className="text-[10px] truncate">
-                        {event.start.getHours().toString().padStart(2, "0")}:
-                        {event.start.getMinutes().toString().padStart(2, "0")} -
-                        {event.end.getHours().toString().padStart(2, "0")}:
-                        {event.end.getMinutes().toString().padStart(2, "0")}
+                      <div
+                        className={`absolute left-0 right-0 mx-1 p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
+                        style={style}
+                        onClick={() =>
+                          onAssessmentClick && onAssessmentClick(event)
+                        }
+                      >
+                        <div className="font-medium truncate">{event.title}</div>
+                        <div className="text-[10px] truncate">
+                          {event.start.getHours().toString().padStart(2, "0")}:
+                          {event.start.getMinutes().toString().padStart(2, "0")} -
+                          {event.end.getHours().toString().padStart(2, "0")}:
+                          {event.end.getMinutes().toString().padStart(2, "0")}
+                        </div>
                       </div>
-                    </div>
+                    </Tooltip>
                   );
                 })}
               </div>

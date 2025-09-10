@@ -1,5 +1,12 @@
 import StatusBadge from "./StatusBadge";
-import { MoreHorizontal, CheckCircle, Clock, FileText, AlertCircle } from "lucide-react";
+import {
+  MoreHorizontal,
+  CheckCircle,
+  Clock,
+  FileText,
+  AlertCircle,
+  SquarePen,
+} from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -7,11 +14,45 @@ import BookingDetailsModal from "./BookingDetailsModal";
 import { useAuth } from "../../context/AuthContext";
 
 const BookingList = ({ bookings, onBookingUpdate }) => {
+  const renderServiceDetails = (booking) => {
+    const serviceName =
+      booking.type ||
+      (booking.service_name
+        ? Array.isArray(booking.service_name)
+          ? booking.service_name.join(", ")
+          : booking.service_name
+        : "N/A");
+    const meta = booking.meta;
+    let metaDetails = [];
+
+    if (meta) {
+      if (meta.devices) {
+        metaDetails.push(`${meta.devices} devices`);
+      }
+      if (meta.doors) {
+        metaDetails.push(`${meta.doors} doors`);
+      }
+      if (meta.fraMeta && meta.fraMeta.label) {
+        metaDetails.push(meta.fraMeta.label);
+      }
+    }
+
+    return (
+      <div>
+        <div>{serviceName}</div>
+        {metaDetails.length > 0 && (
+          <div className="text-xs text-primary-grey">
+            {metaDetails.join(", ")}
+          </div>
+        )}
+      </div>
+    );
+  };
   const navigate = useNavigate();
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { currentUser } = useAuth();
-  
+
   // Status styling function similar to Invoices.jsx
   const getStatusColor = (status) => {
     switch (status) {
@@ -136,8 +177,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                 />
               </td> */}
               <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline">
-                {booking.type ||
-                  (booking.service_name ? booking.service_name : "N/A")}
+                {renderServiceDetails(booking)}
               </td>
               <td
                 className="px-6 py-4 whitespace-nowrap text-sm text-primary-black border-r border-grey-outline hover:cursor-pointer hover:text-primary-orange hover:underline"
@@ -157,7 +197,8 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                       <div>Email: {booking.contact_details.email || "-"}</div>
                       <div>Phone: {booking.contact_details.phone || "-"}</div>
                       <div className="truncate max-w-xs">
-                        Address: {booking.contact_details.address || "-"}
+                        Additional Info:{" "}
+                        {booking.contact_details.additionalInfo || "-"}
                       </div>
                     </div>
                   </div>
@@ -186,8 +227,12 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                           booking.invoice_bookings[0].invoices.status
                         )}`}
                       >
-                        {getStatusIcon(booking.invoice_bookings[0].invoices.status)}
-                        {booking.invoice_bookings[0].invoices.status.charAt(0).toUpperCase() +
+                        {getStatusIcon(
+                          booking.invoice_bookings[0].invoices.status
+                        )}
+                        {booking.invoice_bookings[0].invoices.status
+                          .charAt(0)
+                          .toUpperCase() +
                           booking.invoice_bookings[0].invoices.status.slice(1)}
                       </span>
                     </div>
@@ -235,7 +280,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                     className="text-primary-grey hover:text-primary-black"
                     onClick={() => handleOpenModal(booking)}
                   >
-                    <MoreHorizontal className="h-5 w-5" />
+                    <SquarePen className="h-5 w-5" />
                   </button>
                 </td>
               )}

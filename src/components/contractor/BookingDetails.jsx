@@ -40,6 +40,7 @@ const BookingDetails = ({
     useState(null);
 
   const [contactFormData, setContactFormData] = useState(null);
+  const [isContactFormValid, setIsContactFormValid] = useState(false);
 
   useEffect(() => {
     if (property?.property_type) {
@@ -82,13 +83,16 @@ const BookingDetails = ({
     setSelectedAdditionalServices(data);
   }, []);
 
-  const handleBuildingTypeUpdate = useCallback((newBuildingType) => {
-    setSelectedBuildingType(newBuildingType);
-    // Call parent callback if provided
-    if (onBuildingTypeUpdate) {
-      onBuildingTypeUpdate(newBuildingType);
-    }
-  }, [onBuildingTypeUpdate]);
+  const handleBuildingTypeUpdate = useCallback(
+    (newBuildingType) => {
+      setSelectedBuildingType(newBuildingType);
+      // Call parent callback if provided
+      if (onBuildingTypeUpdate) {
+        onBuildingTypeUpdate(newBuildingType);
+      }
+    },
+    [onBuildingTypeUpdate]
+  );
 
   const handleTimeAndDateSubmit = (data) => {
     onTimeAndDateSubmit(data);
@@ -103,17 +107,14 @@ const BookingDetails = ({
     [onTimeAndDateSubmit]
   );
 
-  const handleContactFormSubmit = (data) => {
-    if (
-      data.name &&
-      data.email &&
-      data.phone
-        // data.address &&
-        // data.postcode
-    ) {
-      setContactFormData(data);
+  const handleContactDataChange = useCallback((data) => {
+    setContactFormData(data);
+    if (data.name && data.email && data.phone) {
+      setIsContactFormValid(true);
+    } else {
+      setIsContactFormValid(false);
     }
-  };
+  }, []);
 
   // const handlePaymentFormSubmit = (data) => {
   //   onPaymentSubmit(data);
@@ -150,7 +151,16 @@ const BookingDetails = ({
                       currentStep === "property-details" &&
                       selectedBuildingType
                     ) {
-                      onBuildingTypeSubmit(selectedBuildingType, propertyName, street, city, postcodeValue, floors, size, tenants);
+                      onBuildingTypeSubmit(
+                        selectedBuildingType,
+                        propertyName,
+                        street,
+                        city,
+                        postcodeValue,
+                        floors,
+                        size,
+                        tenants
+                      );
                     } else if (
                       currentStep === "service-details" &&
                       selectedAdditionalServices
@@ -167,17 +177,19 @@ const BookingDetails = ({
                     (currentStep === "property-details" &&
                       !selectedBuildingType) ||
                     (currentStep === "service-details" &&
-                      !selectedAdditionalServices) ||
+                      (!selectedAdditionalServices ||
+                        selectedAdditionalServices.services.length === 0)) ||
                     (currentStep === "time-date" && !dateTime) ||
-                    (currentStep === "contact" && !contactFormData)
+                    (currentStep === "contact" && !isContactFormValid)
                   }
                   className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
                     (currentStep === "property-details" &&
                       selectedBuildingType) ||
                     (currentStep === "service-details" &&
-                      selectedAdditionalServices) ||
+                      selectedAdditionalServices &&
+                      selectedAdditionalServices.services.length > 0) ||
                     (currentStep === "time-date" && dateTime) ||
-                    (currentStep === "contact" && contactFormData)
+                    (currentStep === "contact" && isContactFormValid)
                       ? "bg-primary-black hover:bg-primary-black/80"
                       : "bg-primary-grey cursor-not-allowed"
                   }`}
@@ -229,24 +241,29 @@ const BookingDetails = ({
                 <TimeAndDateForm onDataChange={handleTimeAndDateChange} />
               )}
               {currentStep === "contact" && (
-                <ContactForm onSubmit={handleContactFormSubmit} property={property} />
+                <ContactForm
+                  onDataChange={handleContactDataChange}
+                  property={property}
+                />
               )}
             </div>
 
             <div className="md:col-span-1 space-y-8">
-              <ServiceSummary
-                postcode={postcode}
-                floors={floors}
-                size={size}
-                tenants={tenants}
-                address={`${street}, ${city}`}
-                property={property}
-                buildingType={selectedBuildingType}
-                additionalServices={selectedAdditionalServices}
-                dateTime={dateTime}
-                contactDetails={contactFormData}
-              />
-              {currentStep !== "complete" && <FAQAccordion />}
+              <div className="sticky top-20 space-y-8">
+                <ServiceSummary
+                  postcode={postcode}
+                  floors={floors}
+                  size={size}
+                  tenants={tenants}
+                  address={`${street}, ${city}`}
+                  property={property}
+                  buildingType={selectedBuildingType}
+                  additionalServices={selectedAdditionalServices}
+                  dateTime={dateTime}
+                  contactDetails={contactFormData}
+                />
+                {currentStep !== "complete" && <FAQAccordion />}
+              </div>
             </div>
           </div>
         </>

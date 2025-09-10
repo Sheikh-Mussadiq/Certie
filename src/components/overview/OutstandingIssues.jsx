@@ -31,27 +31,33 @@ const OutstandingIssues = ({ logbooks }) => {
       <div className="space-y-3">
         {recentChanges.length > 0 ? (
           recentChanges.map((item, index) => (
-            <div key={index} className="p-2 rounded-lg bg-grey-fill/50">
-              <div className="flex justify-between items-start">
+            <div
+              key={index}
+              className="flex justify-between items-center p-2 rounded-lg bg-grey-fill/50"
+            >
+              <div className="flex flex-col justify-between items-start space-y-1">
                 <p className="font-semibold text-sm">{item.logbookName}</p>
-                <span
-                  className={`text-xs px-2 py-1 rounded-md border ${
-                    item.completion_status === "Completed"
-                      ? "bg-green-100 text-green-700 border-green-200"
-                      : item.completion_status === "Issue Identified"
-                      ? "bg-red-100 text-red-700 border-red-200"
-                      : "bg-yellow-100 text-yellow-700 border-yellow-200"
-                  }`}
-                >
-                  {item.completion_status}
-                </span>
+
+                <p className="text-sm text-gray-500 truncate w-72">
+                  {item.issue_comment || item.logbookDescription}
+                </p>
+                {item.performed_by && (
+                  <p className="text-xs text-gray-400 truncate w-64">
+                    By: {item.performed_by}
+                  </p>
+                )}
               </div>
-              <p className="text-sm text-gray-500">
-                {item.issue_comment || item.logbookDescription}
-              </p>
-              {item.performed_by && (
-                <p className="text-xs text-gray-400">By: {item.performed_by}</p>
-              )}
+              <span
+                className={`text-xs px-2 py-1 rounded-md border ${
+                  item.completion_status === "Completed"
+                    ? "bg-green-100 text-green-700 border-green-200"
+                    : item.completion_status === "Issue Identified"
+                    ? "bg-red-100 text-red-700 border-red-200"
+                    : "bg-yellow-100 text-yellow-700 border-yellow-200"
+                }`}
+              >
+                {item.completion_status}
+              </span>
             </div>
           ))
         ) : (
