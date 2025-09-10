@@ -1,6 +1,6 @@
 import { Plus, ChevronDown } from "lucide-react";
 
-const OverviewHeader = () => {
+const OverviewHeader = ({ children }) => {
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
@@ -12,6 +12,7 @@ const OverviewHeader = () => {
         </p>
       </div>
       <div className="flex items-center gap-4">
+        {children}
         {/* <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50">
           <span>Switch Property</span>
           <ChevronDown size={16} />

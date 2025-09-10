@@ -100,10 +100,39 @@ export const getProperties = async () => {
 // Fetch properties without related managers and site users
 export const getPropertiesBasic = async () => {
   try {
-    const { data, error } = await supabase.from("properties").select("*");
+    // Fetch all properties
+    const { data: properties, error } = await supabase.from("properties").select("*");
 
     if (error) throw error;
-    return data;
+    
+    // Get all unique owner_ids
+    const ownerIds = properties
+      .map(property => property.owner_id)
+      .filter(id => id); // Filter out null or undefined
+    
+    // Fetch all owners in one query
+    const { data: owners, error: ownersError } = await supabase
+      .from("user_public_view")
+      .select("*")
+      .in("id", ownerIds);
+      
+    if (ownersError) throw ownersError;
+    
+    // Create a map of owner data for quick lookup
+    const ownersMap = owners.reduce((map, owner) => {
+      map[owner.id] = owner;
+      return map;
+    }, {});
+    
+    // Add owner_data to each property
+    const propertiesWithOwners = properties.map(property => {
+      return {
+        ...property,
+        owner_data: property.owner_id ? ownersMap[property.owner_id] : null
+      };
+    });
+    
+    return propertiesWithOwners;
   } catch (error) {
     console.error("Error fetching properties (basic):", error);
     throw error;
