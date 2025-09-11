@@ -57,6 +57,19 @@ const Calendar = () => {
     setCurrentDate(new Date());
   };
 
+  const handleEventClick = (event) => {
+    console.log("Calendar event clicked - full object:", event);
+
+    if (!event) return;
+
+    // Determine the type of event (assessment or logbook)
+    if (event.type === "assessment") {
+      handleAssessmentClick(event);
+    } else if (event.type === "logbook") {
+      handleLogbookClick(event);
+    }
+  };
+
   const handleAssessmentClick = (assessment) => {
     console.log("Assessment clicked - full object:", assessment);
 
@@ -92,6 +105,18 @@ const Calendar = () => {
           "No property ID found in the assessment object - check console for full object structure"
         );
       }
+    }
+  };
+
+  const handleLogbookClick = (logbookEvent) => {
+    console.log("Logbook clicked - full object:", logbookEvent);
+
+    if (logbookEvent && logbookEvent.property_id) {
+      // Navigate to the property's logbook page
+      console.log("Redirecting to property logbook:", logbookEvent.property_id);
+      navigate(`/properties/${logbookEvent.property_id}/logbooks`);
+    } else {
+      console.log("No property ID found in the logbook event");
     }
   };
 
@@ -136,7 +161,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDay={getEventsForDay}
             loading={loading}
-            onAssessmentClick={handleAssessmentClick}
+            onEventClick={handleEventClick}
           />
         )}
         {view === "week" && (
@@ -144,7 +169,7 @@ const Calendar = () => {
             currentDate={currentDate}
             formatBookingsForCalendar={formatBookingsForCalendar}
             loading={loading}
-            onAssessmentClick={handleAssessmentClick}
+            onEventClick={handleEventClick}
           />
         )}
         {view === "day" && (
@@ -152,7 +177,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDate={getEventsForDate}
             loading={loading}
-            onAssessmentClick={handleAssessmentClick}
+            onEventClick={handleEventClick}
           />
         )}
         {view === "year" && (
@@ -160,7 +185,7 @@ const Calendar = () => {
             currentDate={currentDate}
             getEventsForDay={getEventsForDay}
             loading={loading}
-            onAssessmentClick={handleAssessmentClick}
+            onEventClick={handleEventClick}
           />
         )}
       </div>

@@ -1,29 +1,46 @@
 import Tooltip from "../ui/Tooltip";
 
-const DayView = ({ currentDate, getEventsForDate, loading, onAssessmentClick }) => {
+const DayView = ({ currentDate, getEventsForDate, loading, onEventClick }) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
   // Get real events for the current date
   const events = getEventsForDate ? getEventsForDate(currentDate) : [];
+
+  // Debug logging
+  console.log("DayView - currentDate:", currentDate.toISOString());
+  console.log("DayView - events count:", events.length);
 
   // console.log("DayView - currentDate:", currentDate);
   // console.log("DayView - events:", events);
 
   // Function to position events in the grid
   const getEventStyle = (event) => {
-    const startHour = event.start.getHours();
-    const startMinutes = event.start.getMinutes();
-    const endHour = event.end.getHours();
-    const endMinutes = event.end.getMinutes();
+    try {
+      // Ensure we're working with proper date objects
+      const startTime = new Date(event.start);
+      const endTime = new Date(event.end);
 
-    const top = (startHour + startMinutes / 60) * 48; // 48px per hour (4px per 5 minutes)
-    const height =
-      (endHour + endMinutes / 60 - startHour - startMinutes / 60) * 48;
+      const startHour = startTime.getHours();
+      const startMinutes = startTime.getMinutes();
+      const endHour = endTime.getHours();
+      const endMinutes = endTime.getMinutes();
 
-    return {
-      top: `${top}px`,
-      height: `${height}px`,
-    };
+      const top = (startHour + startMinutes / 60) * 48; // 48px per hour
+      const height = Math.max(
+        (endHour + endMinutes / 60 - startHour - startMinutes / 60) * 48,
+        24 // Minimum height to ensure visibility
+      );
+
+      return {
+        top: `${top}px`,
+        height: `${height}px`,
+        left: '4px', // Margin from the left
+        width: 'calc(100% - 8px)', // Full width minus left/right margins
+      };
+    } catch (err) {
+      console.error("Error calculating event style:", err, event);
+      return { top: "0px", height: "48px" }; // Default positioning
+    }
   };
 
   // Check if this day is today
@@ -68,7 +85,7 @@ const DayView = ({ currentDate, getEventsForDate, loading, onAssessmentClick }) 
       </div>
 
       {/* Scrollable Time Grid */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         <div className="relative grid grid-cols-2 min-h-[1152px]">
           {" "}
           {/* 24 hours * 48px = 1152px */}
@@ -88,36 +105,39 @@ const DayView = ({ currentDate, getEventsForDate, loading, onAssessmentClick }) 
               </div>
             ))}
           </div>
-          <div className="border-l border-grey-outline relative bg-white">
+          <div className="border-l border-grey-outline relative bg-white overflow-hidden">
+            {/* Time grid cells */}
             {hours.map((hour) => (
-              <div key={hour} className="h-12 border-b border-grey-outline" />
+              <div key={hour} className="h-12 border-b border-grey-outline relative" />
             ))}
 
-            {/* Events */}
-            {events.map((event, index) => {
-              const style = getEventStyle(event);
-              return (
-                <Tooltip
-                  key={index}
-                  content={`Click to view details for ${event.title}`}
-                  position="top"
-                >
-                  <div
-                    className={`absolute left-0 right-0 mx-1 p-2 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
-                    style={style}
-                    onClick={() => onAssessmentClick && onAssessmentClick(event)}
+            {/* Events container positioned absolutely over the grid */}
+            <div className="absolute inset-0 pointer-events-none">
+              {events.map((event, index) => {
+                const style = getEventStyle(event);
+                return (
+                  <Tooltip
+                    key={index}
+                    content={`Click to view details for ${event.title}`}
+                    position="top"
                   >
-                    <div className="font-medium">{event.title}</div>
-                    <div className="text-[10px]">
-                      {event.start.getHours().toString().padStart(2, "0")}:
-                      {event.start.getMinutes().toString().padStart(2, "0")} -
-                      {event.end.getHours().toString().padStart(2, "0")}:
-                      {event.end.getMinutes().toString().padStart(2, "0")}
+                    <div
+                      className={`absolute p-2 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10 pointer-events-auto`}
+                      style={style}
+                      onClick={() => onEventClick && onEventClick(event)}
+                    >
+                      <div className="font-medium">{event.title}</div>
+                      <div className="text-[10px]">
+                        {event.start.getHours().toString().padStart(2, "0")}:
+                        {event.start.getMinutes().toString().padStart(2, "0")} -
+                        {event.end.getHours().toString().padStart(2, "0")}:
+                        {event.end.getMinutes().toString().padStart(2, "0")}
+                      </div>
                     </div>
-                  </div>
-                </Tooltip>
-              );
-            })}
+                  </Tooltip>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

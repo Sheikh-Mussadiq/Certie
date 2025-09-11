@@ -4,7 +4,7 @@ const YearView = ({
   currentDate,
   getEventsForDay,
   loading,
-  onAssessmentClick,
+  onEventClick,
 }) => {
   const months = [
     "January",
@@ -70,11 +70,11 @@ const YearView = ({
 
   // Handle clicking on a day with events
   const handleDayClick = (day, month) => {
-    if (day && hasEvents(day, month) && onAssessmentClick) {
+    if (day && hasEvents(day, month) && onEventClick) {
       const events = getEvents(day, month);
       // If there are multiple events, pass the first one
       if (events.length > 0) {
-        onAssessmentClick(events[0]);
+        onEventClick(events[0]);
       }
     }
   };
@@ -118,7 +118,7 @@ const YearView = ({
                 return hasEvents(day, monthIndex) ? (
                   <Tooltip
                     key={dayIndex}
-                    content="Click to view assessment details"
+                    content="Click to view event details"
                     position="top"
                     theme="primary"
                   >

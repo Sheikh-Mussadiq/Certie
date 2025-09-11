@@ -4,7 +4,7 @@ const WeekView = ({
   currentDate,
   formatBookingsForCalendar,
   loading,
-  onAssessmentClick,
+  onEventClick,
 }) => {
   const getWeekDays = (date) => {
     const days = [];
@@ -46,28 +46,41 @@ const WeekView = ({
     const endHour = event.end.getHours();
     const endMinutes = event.end.getMinutes();
 
-    const top = (startHour + startMinutes / 60) * 48; // 48px per hour (4px per 5 minutes)
-    const height =
-      (endHour + endMinutes / 60 - startHour - startMinutes / 60) * 48;
+    const top = (startHour + startMinutes / 60) * 48; // 48px per hour
+    const height = Math.max(
+      (endHour + endMinutes / 60 - startHour - startMinutes / 60) * 48,
+      24 // Minimum height for visibility
+    );
 
     return {
       top: `${top}px`,
       height: `${height}px`,
+      left: '4px', // Margin from the left
+      width: 'calc(100% - 8px)', // Full width minus left/right margins
     };
   };
 
   // Function to check if event belongs to a day
   const eventBelongsToDay = (event, day) => {
-    const belongs =
-      event.start.getDate() === day.getDate() &&
-      event.start.getMonth() === day.getMonth() &&
-      event.start.getFullYear() === day.getFullYear();
-    // console.log(
-    //   `Checking if event ${
-    //     event.title
-    //   } belongs to ${day.toDateString()}: ${belongs}`
-    // );
-    return belongs;
+    try {
+      // Ensure we're working with proper date objects
+      const eventStart = new Date(event.start);
+
+      const belongs =
+        eventStart.getDate() === day.getDate() &&
+        eventStart.getMonth() === day.getMonth() &&
+        eventStart.getFullYear() === day.getFullYear();
+
+      // Debug logging
+      console.log(
+        `Checking event: ${event.title} on ${day.toDateString()}: ${belongs}`
+      );
+
+      return belongs;
+    } catch (err) {
+      console.error("Error in eventBelongsToDay:", err);
+      return false;
+    }
   };
 
   if (loading) {
@@ -104,7 +117,7 @@ const WeekView = ({
       </div>
 
       {/* Scrollable Time Grid */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         <div className="relative grid grid-cols-8 min-h-[1152px]">
           {" "}
           {/* 24 hours * 48px = 1152px */}
@@ -133,42 +146,49 @@ const WeekView = ({
             return (
               <div
                 key={day.toISOString()}
-                className="border-l border-grey-outline relative bg-white"
+                className="border-l border-grey-outline relative bg-white overflow-hidden"
               >
+                {/* Time grid cells */}
                 {hours.map((hour) => (
                   <div
                     key={hour}
-                    className="h-12 border-b border-grey-outline"
+                    className="h-12 border-b border-grey-outline relative"
                   />
                 ))}
 
-                {/* Events for this day */}
-                {dayEvents.map((event, index) => {
-                  const style = getEventStyle(event);
-                  return (
-                    <Tooltip
-                      key={index}
-                      content={`Click to view details for ${event.title}`}
-                      position="top"
-                    >
-                      <div
-                        className={`absolute left-0 right-0 mx-1 p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10`}
-                        style={style}
-                        onClick={() =>
-                          onAssessmentClick && onAssessmentClick(event)
-                        }
+                {/* Events container positioned absolutely over the grid */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {dayEvents.map((event, index) => {
+                    const style = getEventStyle(event);
+                    return (
+                      <Tooltip
+                        key={index}
+                        content={`Click to view details for ${event.title}`}
+                        position="top"
                       >
-                        <div className="font-medium truncate">{event.title}</div>
-                        <div className="text-[10px] truncate">
-                          {event.start.getHours().toString().padStart(2, "0")}:
-                          {event.start.getMinutes().toString().padStart(2, "0")} -
-                          {event.end.getHours().toString().padStart(2, "0")}:
-                          {event.end.getMinutes().toString().padStart(2, "0")}
+                        <div
+                          className={`absolute p-1 rounded border ${event.color} text-xs overflow-hidden cursor-pointer transition-opacity hover:opacity-90 z-10 pointer-events-auto`}
+                          style={style}
+                          onClick={() => onEventClick && onEventClick(event)}
+                        >
+                          <div className="font-medium truncate">
+                            {event.title}
+                          </div>
+                          <div className="text-[10px] truncate">
+                            {event.start.getHours().toString().padStart(2, "0")}
+                            :
+                            {event.start
+                              .getMinutes()
+                              .toString()
+                              .padStart(2, "0")}{" "}
+                            -{event.end.getHours().toString().padStart(2, "0")}:
+                            {event.end.getMinutes().toString().padStart(2, "0")}
+                          </div>
                         </div>
-                      </div>
-                    </Tooltip>
-                  );
-                })}
+                      </Tooltip>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}

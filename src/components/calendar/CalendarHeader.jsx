@@ -20,7 +20,11 @@ const CalendarHeader = ({
     <div className="flex items-center justify-between p-4 ">
       <div className="flex items-center gap-4">
         <div className="flex bg-grey-fill rounded-lg">
-          {["Day", "Week", "Month", "Year"].map((viewOption) => (
+          {[
+            // "Day", "Week",
+            "Month",
+            "Year",
+          ].map((viewOption) => (
             <button
               key={viewOption}
               onClick={() => onViewChange(viewOption.toLowerCase())}

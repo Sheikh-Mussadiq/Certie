@@ -4,7 +4,7 @@ const MonthView = ({
   currentDate,
   getEventsForDay,
   loading,
-  onAssessmentClick,
+  onEventClick,
 }) => {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -133,7 +133,7 @@ const MonthView = ({
                           event.color || "bg-blue-100 text-blue-800"
                         } truncate hover:bg-opacity-90 cursor-pointer transition-colors`}
                         onClick={() =>
-                          onAssessmentClick && onAssessmentClick(event)
+                          onEventClick && onEventClick(event)
                         }
                       >
                         {event.title}
