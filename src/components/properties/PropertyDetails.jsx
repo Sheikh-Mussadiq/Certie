@@ -23,6 +23,7 @@ import {
 import AssessmentsTab from "./AssessmentsTab";
 import LogBooksTab from "./LogBooksTab";
 import DocumentsTab from "./DocumentsTab";
+import OutstandingIssuesTab from "./OutstandingIssuesTab";
 import EditPropertyForm from "./EditPropertyForm";
 import { useAuth } from "../../context/AuthContext";
 
@@ -48,6 +49,11 @@ const PropertyDetails = ({ property, setProperty }) => {
       id: "documents",
       label: "Documents",
       path: `/properties/${id}/documents`,
+    },
+    {
+      id: "outstandingIssues",
+      label: "Outstanding Issues",
+      path: `/properties/${id}/outstanding-issues`,
     },
   ];
 

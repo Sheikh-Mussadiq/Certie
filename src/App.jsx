@@ -28,6 +28,7 @@ import AssessmentsTab from "./components/properties/AssessmentsTab";
 import LogBooksTab from "./components/properties/LogBooksTab";
 import DocumentsTab from "./components/properties/DocumentsTab";
 import PropertyOverview from "./components/properties/PropertyOverview";
+import OutstandingIssuesTab from "./components/properties/OutstandingIssuesTab";
 import Overview from "./pages/Overview";
 import Settings from "./pages/Settings";
 
@@ -172,6 +173,7 @@ const AuthenticatedRoutes = () => {
             <Route path="logbooks" element={<LogBooksTab />} />
             <Route path="logbooks/:logbookId" element={<LogBooksTab />} />
             <Route path="documents" element={<DocumentsTab />} />
+            <Route path="outstanding-issues" element={<OutstandingIssuesTab />} />
           </Route>
           <Route
             path="/bookings"
