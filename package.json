@@ -16,8 +16,10 @@
     "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@supabase/supabase-js": "^2.39.7",
     "@tailwindcss/typography": "^0.5.16",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
@@ -33,6 +35,7 @@
     "react-router-dom": "^7.4.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
+    "sonner": "^2.0.7",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

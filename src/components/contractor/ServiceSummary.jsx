@@ -20,17 +20,23 @@ const ServiceSummary = ({
 
   // Price calculation functions (duplicate from AdditionalServicesForm)
   const calculatePatTestingPrice = (devices) => {
-    const basePrice = 99; // £99 for 100 devices
-    const additionalDevices = Math.max(0, devices - 100);
-    const additionalCost = additionalDevices * 0.89; // 89p per additional device
-    return basePrice + additionalCost;
+    // £0.99 per device, with a minimum of £99
+    if (devices <= 100) {
+      return Math.max(devices * 0.99, 99);
+    } else {
+      // Original pricing: £99 for 100 devices + £0.89 per additional device
+      return 99 + (devices - 100) * 0.89;
+    }
   };
 
   const calculateFireDoorPrice = (doors) => {
-    const basePrice = 180; // £180 for 10 doors
-    const additionalDoors = Math.max(0, doors - 10);
-    const additionalCost = additionalDoors * 15; // £15 per additional door
-    return basePrice + additionalCost;
+    // £18 per door, with a minimum of £180
+    if (doors <= 10) {
+      return Math.max(doors * 18, 180);
+    } else {
+      // Original pricing: £180 for 10 doors + £15 per additional door
+      return 180 + (doors - 10) * 15;
+    }
   };
 
   return (
@@ -81,7 +87,7 @@ const ServiceSummary = ({
                   {meta.devices} devices
                 </p>
                 <p className="text-xs text-primary-grey">
-                  (£99 base + 89p per additional)
+                  (£0.99 per device, min £99)
                 </p>
               </div>
             </div>
@@ -104,7 +110,7 @@ const ServiceSummary = ({
               <div className="flex justify-between items-center">
                 <p className="text-xs text-primary-grey">{meta.doors} doors</p>
                 <p className="text-xs text-primary-grey">
-                  (£180 base + £15 per additional)
+                  (£18 per door, min £180)
                 </p>
               </div>
             </div>

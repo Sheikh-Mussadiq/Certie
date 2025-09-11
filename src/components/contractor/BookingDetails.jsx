@@ -41,6 +41,12 @@ const BookingDetails = ({
 
   const [contactFormData, setContactFormData] = useState(null);
   const [isContactFormValid, setIsContactFormValid] = useState(false);
+  const [hasInteractedOnCurrentStep, setHasInteractedOnCurrentStep] =
+    useState(false);
+
+  useEffect(() => {
+    setHasInteractedOnCurrentStep(false);
+  }, [currentStep]);
 
   useEffect(() => {
     if (property?.property_type) {
@@ -55,6 +61,7 @@ const BookingDetails = ({
   }, [property]);
 
   const handleBuildingDataChange = useCallback((data) => {
+    setHasInteractedOnCurrentStep(true);
     setSelectedBuildingType(data.buildingType);
     if (data.propertyName) {
       setPropertyName(data.propertyName);
@@ -80,6 +87,7 @@ const BookingDetails = ({
   }, []);
 
   const handleAdditionalServicesSubmit = useCallback((data) => {
+    setHasInteractedOnCurrentStep(true);
     setSelectedAdditionalServices(data);
   }, []);
 
@@ -101,6 +109,7 @@ const BookingDetails = ({
   // New function to handle time and date changes without navigation
   const handleTimeAndDateChange = useCallback(
     (data) => {
+      setHasInteractedOnCurrentStep(true);
       // Just pass the data to the parent component without triggering navigation
       onTimeAndDateSubmit(data);
     },
@@ -108,6 +117,7 @@ const BookingDetails = ({
   );
 
   const handleContactDataChange = useCallback((data) => {
+    setHasInteractedOnCurrentStep(true);
     setContactFormData(data);
     if (data.name && data.email && data.phone) {
       setIsContactFormValid(true);
@@ -119,6 +129,7 @@ const BookingDetails = ({
   // const handlePaymentFormSubmit = (data) => {
   //   onPaymentSubmit(data);
   // };
+
 
   return (
     <div className="max-w-7xl mx-auto relative">
@@ -245,6 +256,74 @@ const BookingDetails = ({
                   onDataChange={handleContactDataChange}
                   property={property}
                 />
+              )}
+              {hasInteractedOnCurrentStep && (
+                <div className="pt-2 flex justify-end items-center">
+                  <div className="flex space-x-3">
+                    <motion.button
+                      onClick={onGoBack}
+                      className="px-5 py-2 border border-grey-outline rounded-lg font-medium text-sm text-primary-black"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Go back
+                    </motion.button>
+
+                    <motion.button
+                      onClick={() => {
+                        if (
+                          currentStep === "property-details" &&
+                          selectedBuildingType
+                        ) {
+                          onBuildingTypeSubmit(
+                            selectedBuildingType,
+                            propertyName,
+                            street,
+                            city,
+                            postcodeValue,
+                            floors,
+                            size,
+                            tenants
+                          );
+                        } else if (
+                          currentStep === "service-details" &&
+                          selectedAdditionalServices
+                        ) {
+                          onAdditionalServicesSubmit(selectedAdditionalServices);
+                        } else if (currentStep === "time-date" && dateTime) {
+                          onTimeAndDateContinue();
+                        } else if (currentStep === "contact" && contactFormData) {
+                          onContactSubmit(contactFormData);
+                          onFinalizeBooking(contactFormData);
+                        }
+                      }}
+                      disabled={
+                        (currentStep === "property-details" &&
+                          !selectedBuildingType) ||
+                        (currentStep === "service-details" &&
+                          (!selectedAdditionalServices ||
+                            selectedAdditionalServices.services.length === 0)) ||
+                        (currentStep === "time-date" && !dateTime) ||
+                        (currentStep === "contact" && !isContactFormValid)
+                      }
+                      className={`px-5 py-2 text-white rounded-lg font-medium text-sm ${
+                        (currentStep === "property-details" &&
+                          selectedBuildingType) ||
+                        (currentStep === "service-details" &&
+                          selectedAdditionalServices &&
+                          selectedAdditionalServices.services.length > 0) ||
+                        (currentStep === "time-date" && dateTime) ||
+                        (currentStep === "contact" && isContactFormValid)
+                          ? "bg-primary-black hover:bg-primary-black/80"
+                          : "bg-primary-grey cursor-not-allowed"
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Continue
+                    </motion.button>
+                  </div>
+                </div>
               )}
             </div>
 

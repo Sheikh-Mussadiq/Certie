@@ -12,8 +12,8 @@ import {
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginSignUpPage from "./pages/LoginSignUpPage";
-import LandingPage from "./pages/LandingPage";
 import MainLayout from "./layouts/MainLayout";
+import CustomToast from "./components/ui/toast";
 import Properties from "./pages/Properties";
 import AddProperty from "./pages/AddProperty";
 import PropertyDetails from "./pages/PropertyDetails";
@@ -173,7 +173,10 @@ const AuthenticatedRoutes = () => {
             <Route path="logbooks" element={<LogBooksTab />} />
             <Route path="logbooks/:logbookId" element={<LogBooksTab />} />
             <Route path="documents" element={<DocumentsTab />} />
-            <Route path="outstanding-issues" element={<OutstandingIssuesTab />} />
+            <Route
+              path="outstanding-issues"
+              element={<OutstandingIssuesTab />}
+            />
           </Route>
           <Route
             path="/bookings"
@@ -256,7 +259,16 @@ export default function App() {
           <Route path="/contractor-workflow" element={<ContractorWorkflow />} />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>
-        <Toaster position="top-right" />
+        <Toaster position="top-right">
+          {(t) => (
+            <CustomToast
+              t={t}
+              title={t.title}
+              message={t.message}
+              actions={t.actions}
+            />
+          )}
+        </Toaster>
       </BrowserRouter>
     </AuthProvider>
   );

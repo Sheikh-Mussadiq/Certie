@@ -38,11 +38,16 @@ const TimeAndDateForm = ({ onDataChange }) => {
   const { days, firstDay } = getDaysInMonth(currentMonth);
 
   const handlePrevMonth = () => {
-    const newMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
-    
+    const newMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() - 1
+    );
+
     // Don't allow navigating to months before the current month
-    if (newMonth.getMonth() >= today.getMonth() || 
-        newMonth.getFullYear() > today.getFullYear()) {
+    if (
+      newMonth.getMonth() >= today.getMonth() ||
+      newMonth.getFullYear() > today.getFullYear()
+    ) {
       setCurrentMonth(newMonth);
     }
   };
@@ -56,12 +61,20 @@ const TimeAndDateForm = ({ onDataChange }) => {
   const isDateInPast = (year, month, day) => {
     // Create date at noon to avoid time-of-day issues
     const date = new Date(year, month, day, 12, 0, 0, 0);
-    const todayNoon = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0, 0);
-    
+    const todayNoon = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      12,
+      0,
+      0,
+      0
+    );
+
     // Add 3 days to today's date (minimum booking lead time)
     const minimumBookingDate = new Date(todayNoon);
     minimumBookingDate.setDate(minimumBookingDate.getDate() + 4);
-    
+
     return date < minimumBookingDate; // Require 3 days minimum lead time
   };
 
@@ -72,9 +85,11 @@ const TimeAndDateForm = ({ onDataChange }) => {
       currentMonth.getMonth(),
       day
     );
-    
+
     // Only allow selection if date is at least 3 days from today
-    if (!isDateInPast(currentMonth.getFullYear(), currentMonth.getMonth(), day)) {
+    if (
+      !isDateInPast(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+    ) {
       setSelectedDate(selected);
 
       // Convert to timestampz format (ISO string) and pass to parent
@@ -116,18 +131,28 @@ const TimeAndDateForm = ({ onDataChange }) => {
           <h3 className="font-semibold text-lg mb-4">Select a Date</h3>
           <div className="bg-white rounded-lg border border-grey-outline p-4">
             <div className="flex items-center justify-between mb-4">
-              <button onClick={handlePrevMonth}>
+              <motion.button
+                onClick={handlePrevMonth}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="bg-grey-fill rounded-lg p-2"
+              >
                 <ChevronLeft className="w-5 h-5 text-gray-600" />
-              </button>
+              </motion.button>
               <span className="font-medium">
                 {currentMonth.toLocaleString("default", {
                   month: "long",
                   year: "numeric",
                 })}
               </span>
-              <button onClick={handleNextMonth}>
+              <motion.button
+                onClick={handleNextMonth}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="bg-grey-fill rounded-lg p-2"
+              >
                 <ChevronRight className="w-5 h-5 text-gray-600" />
-              </button>
+              </motion.button>
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2">
@@ -150,13 +175,13 @@ const TimeAndDateForm = ({ onDataChange }) => {
                 const isSelected =
                   selectedDate?.getDate() === day &&
                   selectedDate?.getMonth() === currentMonth.getMonth();
-                
+
                 const isPastDate = isDateInPast(
-                  currentMonth.getFullYear(), 
-                  currentMonth.getMonth(), 
+                  currentMonth.getFullYear(),
+                  currentMonth.getMonth(),
                   day
                 );
-                
+
                 return (
                   <button
                     key={day}
@@ -164,9 +189,11 @@ const TimeAndDateForm = ({ onDataChange }) => {
                     disabled={isPastDate}
                     className={`p-2 text-center rounded-full
                       ${isSelected ? "bg-primary-orange text-white" : ""}
-                      ${isPastDate 
-                        ? "text-gray-300 cursor-not-allowed" 
-                        : "hover:bg-red-50"}
+                      ${
+                        isPastDate
+                          ? "text-gray-300 cursor-not-allowed"
+                          : "hover:bg-red-50"
+                      }
                     `}
                   >
                     {day}

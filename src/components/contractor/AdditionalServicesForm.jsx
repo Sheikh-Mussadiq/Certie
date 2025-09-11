@@ -36,8 +36,8 @@ const AdditionalServicesForm = ({
   );
   const [isUpdatingBuildingType, setIsUpdatingBuildingType] = useState(false);
   const [quantities, setQuantities] = useState({
-    devices: 100, // Default value for PAT Testing
-    doors: 10, // Default value for Fire Door Inspection
+    devices: 1, // Default value for PAT Testing
+    doors: 1, // Default value for Fire Door Inspection
     units: "", // Default value for Fire Risk Assessment
   });
   const [fraOption, setFraOption] = useState(""); // Fire Risk Assessment option
@@ -97,17 +97,23 @@ const AdditionalServicesForm = ({
 
   // Price calculation functions
   const calculatePatTestingPrice = (devices) => {
-    const basePrice = 99; // £99 for 100 devices
-    const additionalDevices = Math.max(0, devices - 100);
-    const additionalCost = additionalDevices * 0.89; // 89p per additional device
-    return basePrice + additionalCost;
+    // £0.99 per device, with a minimum of £99
+    if (devices <= 100) {
+      return Math.max(devices * 0.99, 99);
+    } else {
+      // Original pricing: £99 for 100 devices + £0.89 per additional device
+      return 99 + (devices - 100) * 0.89;
+    }
   };
 
   const calculateFireDoorPrice = (doors) => {
-    const basePrice = 180; // £180 for 10 doors
-    const additionalDoors = Math.max(0, doors - 10);
-    const additionalCost = additionalDoors * 15; // £15 per additional door
-    return basePrice + additionalCost;
+    // £18 per door, with a minimum of £180
+    if (doors <= 10) {
+      return Math.max(doors * 18, 180);
+    } else {
+      // Original pricing: £180 for 10 doors + £15 per additional door
+      return 180 + (doors - 10) * 15;
+    }
   };
 
   // Fire Risk Assessment helper functions
@@ -208,7 +214,9 @@ const AdditionalServicesForm = ({
       if (serviceName === "Fire Risk Assessment") {
         const buildingType = getFraBuildingType();
         if (buildingType && buildingType.options) {
-          const firstOption = buildingType.options.find((option) => !option.poa);
+          const firstOption = buildingType.options.find(
+            (option) => !option.poa
+          );
           if (firstOption) {
             setFraOption(firstOption.id);
           }
@@ -224,8 +232,8 @@ const AdditionalServicesForm = ({
 
   const handleQuantityChange = (type, value) => {
     // Validate minimum values
-    if (type === "devices" && value < 100) return;
-    if (type === "doors" && value < 10) return;
+    if (type === "devices" && value < 1) return;
+    if (type === "doors" && value < 1) return;
 
     setQuantities((prev) => ({
       ...prev,
@@ -324,7 +332,7 @@ const AdditionalServicesForm = ({
       transition={{ duration: 0.4 }}
     >
       <ContactModal />
-      <div className="mb-8 border border-grey-outline rounded-xl p-6">
+      <div className="mb-4 border border-grey-outline rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-2">
           Choose which services you need
         </h3>
@@ -480,14 +488,14 @@ const AdditionalServicesForm = ({
           <div className="mt-4 p-4 border border-grey-outline rounded-lg">
             <div className="flex justify-between items-start mb-3">
               <label className="text-primary-black font-medium">
-                Number of Devices (Minimum 100)
+                Number of Devices (Minimum 1)
               </label>
               <div className="text-right">
                 <div className="font-semibold text-primary-orange">
                   £{calculatePatTestingPrice(quantities.devices).toFixed(2)}
                 </div>
                 <div className="text-xs text-primary-grey">
-                  £99 base + 89p per additional device
+                  £0.99 per device (minimum £99), £0.89 per device after 100
                 </div>
               </div>
             </div>
@@ -498,7 +506,7 @@ const AdditionalServicesForm = ({
                 onClick={() =>
                   handleQuantityChange(
                     "devices",
-                    Math.max(100, quantities.devices - 1)
+                    Math.max(1, quantities.devices - 1)
                   )
                 }
               >
@@ -508,13 +516,10 @@ const AdditionalServicesForm = ({
                 type="number"
                 value={quantities.devices}
                 onChange={(e) =>
-                  handleQuantityChange(
-                    "devices",
-                    parseInt(e.target.value) || 100
-                  )
+                  handleQuantityChange("devices", parseInt(e.target.value) || 1)
                 }
                 className="w-20 border-t border-b border-grey-outline text-center"
-                min="100"
+                min="1"
               />
               <button
                 type="button"
@@ -533,14 +538,14 @@ const AdditionalServicesForm = ({
           <div className="mt-4 p-4 border border-grey-outline rounded-lg">
             <div className="flex justify-between items-start mb-3">
               <label className="text-primary-black font-medium">
-                Number of Doors (Minimum 10)
+                Number of Doors (Minimum 1)
               </label>
               <div className="text-right">
                 <div className="font-semibold text-primary-orange">
                   £{calculateFireDoorPrice(quantities.doors).toFixed(2)}
                 </div>
                 <div className="text-xs text-primary-grey">
-                  £180 base (includes 10 doors) + £15 per additional door
+                  £18 per door (minimum £180), £15 per door after 10
                 </div>
               </div>
             </div>
@@ -551,7 +556,7 @@ const AdditionalServicesForm = ({
                 onClick={() =>
                   handleQuantityChange(
                     "doors",
-                    Math.max(10, quantities.doors - 1)
+                    Math.max(1, quantities.doors - 1)
                   )
                 }
               >
@@ -561,10 +566,10 @@ const AdditionalServicesForm = ({
                 type="number"
                 value={quantities.doors}
                 onChange={(e) =>
-                  handleQuantityChange("doors", parseInt(e.target.value) || 10)
+                  handleQuantityChange("doors", parseInt(e.target.value) || 1)
                 }
                 className="w-20 border-t border-b border-grey-outline text-center"
-                min="10"
+                min="1"
               />
               <button
                 type="button"
