@@ -73,7 +73,7 @@ const Overview = () => {
 
   return (
     <div className="p-2">
-      <OverviewHeader>
+      <OverviewHeader selectedPropertyId={selectedPropertyId}>
         <PropertyFilter
           properties={properties}
           selectedProperty={selectedPropertyId}

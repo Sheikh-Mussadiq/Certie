@@ -1,6 +1,8 @@
 import { Plus, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const OverviewHeader = ({ children }) => {
+const OverviewHeader = ({ children, selectedPropertyId }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-6">
       <div>
@@ -13,14 +15,33 @@ const OverviewHeader = ({ children }) => {
       </div>
       <div className="flex items-center gap-4">
         {children}
-        {/* <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50">
-          <span>Switch Property</span>
-          <ChevronDown size={16} />
-        </button> */}
-        {/* <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-sm hover:bg-gray-900">
-          <Plus size={16} />
-          <span>Add New Task</span>
-        </button> */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              if (selectedPropertyId) {
+                navigate(`/properties/${selectedPropertyId}/assessments`);
+              } else {
+                navigate("/bookings");
+              }
+            }}
+           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg shadow-sm hover:bg-primary-black/90"
+          >
+            {selectedPropertyId ? "Book Assessment" : "Bookings"}
+          </button>
+          <button
+            onClick={() => {
+              if (selectedPropertyId) {
+                navigate(`/properties/${selectedPropertyId}/logbooks`);
+              } else {
+                navigate("/logbooks");
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg shadow-sm hover:bg-primary-black/90"
+          >
+            {/* <Plus size={16} /> */}
+            {selectedPropertyId ? "Add LogBook" : "LogBooks"}
+          </button>
+        </div>
       </div>
     </div>
   );

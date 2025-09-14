@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AuthForm from "../components/auth/AuthForm";
 import { useAuth } from "../context/AuthContext";
 import { Leaf } from "lucide-react";
-import LandingPage from "./LandingPage";
+import Overview from "./Overview";
 import { TbLeaf2 } from "react-icons/tb";
 import { LiaCanadianMapleLeaf } from "react-icons/lia";
 import { GiOakLeaf } from "react-icons/gi";
@@ -24,7 +24,7 @@ const LoginSignUpPage = () => {
   }, []);
 
   if (isAuthenticated) {
-    return <LandingPage />;
+    return <Overview />;
   }
 
   // Animated background elements (leaves)

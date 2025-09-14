@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-// import CustomSelect from "../components/ui/CustomSelect";
+import PropertyGridShimmer from "../components/logbooks/shimmers/PropertyGridShimmer";
 import {
   getLogbooks,
   activateLogbook,
@@ -14,6 +14,7 @@ import LogbookGrid from "../components/logbooks/LogbookGrid";
 import LogbookPageHeader from "../components/logbooks/LogbookPageHeader";
 import PropertyGrid from "../components/logbooks/PropertyGrid";
 import { useNavigate, useParams } from "react-router-dom";
+import LogbookGridShimmer from "../components/logbooks/shimmers/LogbookGridShimmer";
 
 const Logbooks = () => {
   const { currentUser } = useAuth();
@@ -41,12 +42,18 @@ const Logbooks = () => {
 
   useEffect(() => {
     let isMounted = true;
+    setLoading(true);
     getPropertiesBasic()
       .then((data) => {
         if (!isMounted) return;
         setProperties(data || []);
       })
-      .catch(() => setProperties([]));
+      .catch(() => setProperties([]))
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
     return () => {
       isMounted = false;
     };
@@ -258,20 +265,13 @@ const Logbooks = () => {
       )}
 
       {!selectedPropertyId ? (
-        loading ? (
-          <div className="text-center py-12 text-primary-grey">
-            Loading properties...
-          </div>
-        ) : (
           <PropertyGrid
             properties={properties}
             onSelect={(p) => setSelectedPropertyId(String(p.id))}
+            loading={loading}
           />
-        )
       ) : loading ? (
-        <div className="text-center py-12 text-primary-grey">
-          Loading logbooks...
-        </div>
+        <LogbookGridShimmer />
       ) : error ? (
         <div className="text-center py-12 text-red-500">{error}</div>
       ) : filteredLogbooks.length === 0 ? (

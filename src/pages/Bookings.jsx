@@ -7,6 +7,7 @@ import BookingPagination from "../components/bookings/BookingPagination";
 import { getAllBookings } from "../services/bookingServices";
 import BookingListShimmer from "../components/bookings/shimmers/BookingListShimmer";
 import { useAuth } from "../context/AuthContext";
+import PropertySelectionModal from "../components/bookings/PropertySelectionModal";
 
 const Bookings = () => {
   const { currentUser } = useAuth();
@@ -18,6 +19,7 @@ const Bookings = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [showPropertyModal, setShowPropertyModal] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -133,11 +135,20 @@ const Bookings = () => {
             Check all the bookings of properties here.
           </p>
         )}
-        {/* <button className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors">
+        <button 
+          onClick={() => setShowPropertyModal(true)}
+          className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors"
+        >
           <Plus className="h-5 w-5 mr-1" />
-          <span>New Booking</span>
-        </button> */}
+          <span>Book Assessment</span>
+        </button>
       </div>
+
+      {/* Property Selection Modal */}
+      <PropertySelectionModal 
+        isOpen={showPropertyModal}
+        onClose={() => setShowPropertyModal(false)}
+      />
 
       <div className="bg-white rounded-xl border border-grey-outline shadow-sm p-4">
         <BookingFilters

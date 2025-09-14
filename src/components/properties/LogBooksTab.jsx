@@ -15,6 +15,7 @@ import { useAuth } from "../../context/AuthContext";
 import LogBookModal from "./LogBookModal";
 import DeleteLogBookModal from "./DeleteLogBookModal";
 import { toast } from "react-hot-toast";
+import LogbookGridShimmer from "../logbooks/shimmers/LogbookGridShimmer";
 
 const LogBooksTab = () => {
   const { currentUser } = useAuth();
@@ -316,7 +317,7 @@ const LogBooksTab = () => {
         />
       </div>
       {loading ? (
-        <div className="text-center py-8">Loading logbooks...</div>
+        <LogbookGridShimmer />
       ) : error ? (
         <div className="text-center text-red-500 py-8">{error}</div>
       ) : (
