@@ -275,6 +275,11 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                         {booking.assignee.email}
                       </div>
                     )}
+                    {booking?.assessment_time && (
+                      <div className="text-xs font-bold text-primary-black">
+                        Assessment Date: {booking.assessment_time ? format(new Date(booking.assessment_time), "dd MMM - yyyy") : "-"}
+                      </div>
+                    )}
                   </div>
                 </div>
               </td>

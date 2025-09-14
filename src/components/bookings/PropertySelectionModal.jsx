@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
+import { X, Building2 } from "lucide-react";
 import { getPropertiesBasic } from "../../services/propertiesServices";
+import { useAuth } from "../../context/AuthContext";
 import Shimmer from "../ui/Shimmer";
 
 const PropertySelectionModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,13 +33,15 @@ const PropertySelectionModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const filteredProperties = properties.filter(property => 
-    property.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (property.address && typeof property.address === 'object' &&
-      (property.address.street?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       property.address.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       property.address.postcode?.toLowerCase().includes(searchQuery.toLowerCase())))
-  );
+  const filteredProperties = properties
+    .filter(property => property.owner_id === currentUser?.id) // Filter by ownership
+    .filter(property => 
+      property.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (property.address && typeof property.address === 'object' &&
+        (property.address.street?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+         property.address.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+         property.address.postcode?.toLowerCase().includes(searchQuery.toLowerCase())))
+    );
 
   const handlePropertySelect = (propertyId) => {
     navigate("/contractor-workflow", {
@@ -85,8 +89,12 @@ const PropertySelectionModal = ({ isOpen, onClose }) => {
           ) : error ? (
             <div className="text-center text-red-500 py-4">{error}</div>
           ) : filteredProperties.length === 0 ? (
-            <div className="text-center text-gray-500 py-4">
-              No properties found
+            <div className="flex flex-col items-center justify-center py-12 text-primary-grey">
+              <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mb-4">
+                <Building2 className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No properties found</h3>
+              <p className="text-sm text-gray-500">You don't have any properties available at the moment.</p>
             </div>
           ) : (
             <div className="space-y-4 max-h-[50vh] overflow-y-auto">
