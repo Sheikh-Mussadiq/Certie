@@ -130,7 +130,7 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
               scope="col"
               className="px-6 py-4 text-left text-sm font-semibold text-primary-grey uppercase tracking-wider border-r border-grey-outline"
             >
-              Contact Details
+              Details
             </th>
             {/* <th
               scope="col"
@@ -200,6 +200,9 @@ const BookingList = ({ bookings, onBookingUpdate }) => {
                       <div className="truncate max-w-xs">
                         Additional Info:{" "}
                         {booking.contact_details.additionalInfo || "-"}
+                      </div>
+                      <div className="truncate max-w-xs font-bold text-primary-black">
+                      Booking Date: {booking.booked_time ? format(new Date(booking.booked_time), "dd MMM - yyyy") : "-"}
                       </div>
                     </div>
                   </div>
