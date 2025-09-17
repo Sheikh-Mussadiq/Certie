@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import {
   MapPin,
@@ -13,13 +13,12 @@ import "../../carousel.css";
 
 const InfoLine = ({ icon: Icon, text }) => {
   // Split the text at the colon to separate label and value
-  const parts = text.split(': ');
-  
+  const parts = text.split(": ");
+
   // If there's a colon in the text, use the parts, otherwise use the whole text as value
-  const [label, value] = parts.length > 1 
-    ? [parts[0] + ':', parts.slice(1).join(': ')] 
-    : ['', text];
-    
+  const [label, value] =
+    parts.length > 1 ? [parts[0] + ":", parts.slice(1).join(": ")] : ["", text];
+
   return (
     <div className="flex items-start text-sm">
       <Icon className="w-4 h-4 text-gray-500 mr-3 mt-0.5 flex-shrink-0" />
@@ -33,6 +32,7 @@ const InfoLine = ({ icon: Icon, text }) => {
 
 const PropertySummary = ({ properties }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -41,6 +41,49 @@ const PropertySummary = ({ properties }) => {
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
+
+  // Update current index when slide changes
+  const updateCurrentIndex = useCallback(() => {
+    if (emblaApi) {
+      setCurrentIndex(emblaApi.selectedScrollSnap());
+    }
+  }, [emblaApi]);
+
+  // Set up event listeners
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    emblaApi.on("select", updateCurrentIndex);
+    emblaApi.on("init", updateCurrentIndex);
+
+    return () => {
+      emblaApi.off("select", updateCurrentIndex);
+      emblaApi.off("init", updateCurrentIndex);
+    };
+  }, [emblaApi, updateCurrentIndex]);
+
+  // Function to get limited pills to show
+  const getLimitedPills = useCallback(() => {
+    const maxPills = 7; // Maximum number of pills to show
+    const totalProperties = properties.length;
+
+    if (totalProperties <= maxPills) {
+      // Show all pills if within limit
+      return Array.from({ length: totalProperties }, (_, i) => i);
+    }
+
+    // Calculate start and end indices to center around current index
+    const half = Math.floor(maxPills / 2);
+    let start = Math.max(0, currentIndex - half);
+    let end = Math.min(totalProperties - 1, start + maxPills - 1);
+
+    // Adjust start if we're near the end
+    if (end - start + 1 < maxPills) {
+      start = Math.max(0, end - maxPills + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }, [properties.length, currentIndex]);
 
   if (!properties || properties.length === 0) {
     return (
@@ -82,15 +125,21 @@ const PropertySummary = ({ properties }) => {
                 <div className="md:w-1/2 space-y-3 flex flex-col justify-center">
                   <InfoLine
                     icon={MapPin}
-                    text={`Property Name: ${property?.name || 'N/A'}`}
+                    text={`Property Name: ${property?.name || "N/A"}`}
                   />
                   <InfoLine
                     icon={MapPin}
-                    text={`Address: ${property?.address ? `${property?.address?.street || ''}, ${property?.address?.city || ''}, ${property?.address?.postcode || ''}` : 'N/A'}`}
+                    text={`Address: ${
+                      property?.address
+                        ? `${property?.address?.street || ""}, ${
+                            property?.address?.city || ""
+                          }, ${property?.address?.postcode || ""}`
+                        : "N/A"
+                    }`}
                   />
                   <InfoLine
                     icon={Building}
-                    text={`Property Type: ${property?.property_type || 'N/A'}`}
+                    text={`Property Type: ${property?.property_type || "N/A"}`}
                   />
                   <InfoLine
                     icon={MapPin}
@@ -145,6 +194,34 @@ const PropertySummary = ({ properties }) => {
         >
           <ChevronRight size={16} />
         </motion.button>
+      </div>
+
+      {/* Interactive pills with simple limiting */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {getLimitedPills().map((index) => (
+          <motion.button
+            key={index}
+            className={`w-2 h-2 rounded-full cursor-pointer ${
+              index === currentIndex ? "bg-primary-orange" : "bg-gray-300"
+            }`}
+            onClick={() => emblaApi?.scrollTo(index)}
+            animate={{
+              width: index === currentIndex ? 24 : 8,
+              backgroundColor: index === currentIndex ? "#ff5436" : "#D1D5DB",
+            }}
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut",
+            }}
+            whileHover={{
+              scale: 1.2,
+              backgroundColor: index === currentIndex ? "#ff5436" : "#9CA3AF",
+            }}
+            whileTap={{
+              scale: 0.9,
+            }}
+          />
+        ))}
       </div>
     </div>
   );
