@@ -33,6 +33,9 @@ const InfoLine = ({ icon: Icon, text }) => {
 const PropertySummary = ({ properties }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Check if navigation should be shown (only when there are multiple properties)
+  const showNavigation = properties && properties.length > 1;
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -152,7 +155,7 @@ const PropertySummary = ({ properties }) => {
 
                   {/* Show owner information if available */}
                   {property?.owner_data && (
-                    <div className="flex items-center pt-3">
+                    <div className="flex items-center pt-3 bg-grey-fill/50 p-3 rounded-lg">
                       <img
                         src={
                           property.owner_data?.avatar_url ||
@@ -177,52 +180,56 @@ const PropertySummary = ({ properties }) => {
           })}
         </div>
       </div>
-      <div className="embla__buttons">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="embla__button"
-          onClick={scrollPrev}
-        >
-          <ChevronLeft size={16} />
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="embla__button"
-          onClick={scrollNext}
-        >
-          <ChevronRight size={16} />
-        </motion.button>
-      </div>
+      {showNavigation && (
+        <div className="embla__buttons">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="embla__button"
+            onClick={scrollPrev}
+          >
+            <ChevronLeft size={16} />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="embla__button"
+            onClick={scrollNext}
+          >
+            <ChevronRight size={16} />
+          </motion.button>
+        </div>
+      )}
 
       {/* Interactive pills with simple limiting */}
-      <div className="flex justify-center mt-4 space-x-2">
-        {getLimitedPills().map((index) => (
-          <motion.button
-            key={index}
-            className={`w-2 h-2 rounded-full cursor-pointer ${
-              index === currentIndex ? "bg-primary-orange" : "bg-gray-300"
-            }`}
-            onClick={() => emblaApi?.scrollTo(index)}
-            animate={{
-              width: index === currentIndex ? 24 : 8,
-              backgroundColor: index === currentIndex ? "#ff5436" : "#D1D5DB",
-            }}
-            transition={{
-              duration: 0.3,
-              ease: "easeInOut",
-            }}
-            whileHover={{
-              scale: 1.2,
-              backgroundColor: index === currentIndex ? "#ff5436" : "#9CA3AF",
-            }}
-            whileTap={{
-              scale: 0.9,
-            }}
-          />
-        ))}
-      </div>
+      {showNavigation && (
+        <div className="flex justify-center mt-4 space-x-2">
+          {getLimitedPills().map((index) => (
+            <motion.button
+              key={index}
+              className={`w-2 h-2 rounded-full cursor-pointer ${
+                index === currentIndex ? "bg-primary-orange" : "bg-gray-300"
+              }`}
+              onClick={() => emblaApi?.scrollTo(index)}
+              animate={{
+                width: index === currentIndex ? 24 : 8,
+                backgroundColor: index === currentIndex ? "#ff5436" : "#D1D5DB",
+              }}
+              transition={{
+                duration: 0.3,
+                ease: "easeInOut",
+              }}
+              whileHover={{
+                scale: 1.2,
+                backgroundColor: index === currentIndex ? "#ff5436" : "#9CA3AF",
+              }}
+              whileTap={{
+                scale: 0.9,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
