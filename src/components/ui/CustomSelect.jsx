@@ -23,7 +23,7 @@ const CustomSelect = ({
   }, [value, options]);
 
   const handleChange = (optionValue) => {
-    const selectedOpt = options.find(opt => opt.value === optionValue);
+    const selectedOpt = options.find((opt) => opt.value === optionValue);
     if (selectedOpt) {
       onChange(selectedOpt.value);
     }
@@ -43,16 +43,20 @@ const CustomSelect = ({
       )}
 
       <div className="relative">
-        <Listbox
-          value={value}
-          onChange={handleChange}
-          disabled={disabled}
-        >
+        <Listbox value={value} onChange={handleChange} disabled={disabled}>
           <div className="relative">
-            <Listbox.Button 
-              className={`relative w-full cursor-pointer bg-white py-3 pl-4 pr-10 text-left border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange focus:ring-2 focus:ring-primary-orange/20 ${disabled ? 'disabled:opacity-50 disabled:cursor-not-allowed bg-grey-fill text-primary-grey' : ''} shadow-sm`}
+            <Listbox.Button
+              className={`relative w-full cursor-pointer bg-white h-11 pl-4 pr-10 text-left text-sm font-medium border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange focus:ring-2 focus:ring-primary-orange/20 ${
+                disabled
+                  ? "disabled:opacity-50 disabled:cursor-not-allowed bg-grey-fill text-primary-grey"
+                  : ""
+              } shadow-sm flex items-center`}
             >
-              <span className={`block truncate ${!selectedOption && 'text-primary-grey'}`}>
+              <span
+                className={`block truncate max-w-full ${
+                  !selectedOption && "text-primary-grey"
+                }`}
+              >
                 {selectedOption ? selectedOption.label : placeholder}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -72,12 +76,10 @@ const CustomSelect = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 min-w-[200px] w-auto overflow-auto rounded-lg bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm dropdown-scroll">
                 {options.length === 0 ? (
                   <div className="text-gray-500 py-2 pl-4 pr-4 select-none">
-                    <span className="block truncate">
-                      No options available
-                    </span>
+                    <span className="block truncate">No options available</span>
                   </div>
                 ) : (
                   options.map((option) => (
@@ -90,7 +92,7 @@ const CustomSelect = ({
                             ? "bg-primary-orange/10 text-primary-orange rounded-md"
                             : "text-gray-700"
                         }
-                        cursor-pointer select-none relative py-2 pl-4 pr-4`
+                        cursor-pointer select-none relative py-2 pl-4 pr-10`
                       }
                     >
                       {({ active, selected }) => (
@@ -103,11 +105,8 @@ const CustomSelect = ({
                             {option.label}
                           </span>
                           {selected && (
-                            <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-primary-orange">
-                              <Check
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-primary-orange">
+                              <Check className="h-5 w-5" aria-hidden="true" />
                             </span>
                           )}
                         </>

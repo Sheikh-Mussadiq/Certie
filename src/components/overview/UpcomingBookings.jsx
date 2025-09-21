@@ -16,7 +16,9 @@ const UpcomingBookings = ({ bookings }) => {
       // );
 
       return (
-        b.status === "assigned"
+        b.status !== "completed" &&
+        b.status !== "cancelled" &&
+        b.status !== "rejected"
         // assessmentDate > now &&
         // assessmentDate <= sevenDaysFromNow
       );
@@ -42,9 +44,14 @@ const UpcomingBookings = ({ bookings }) => {
   return (
     <div className="bg-white p-4 rounded-xl">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-secondary-black text-lg">
-          Upcoming Bookings
-        </h3>
+        <div className="flex items-center">
+          <h3 className="font-semibold text-secondary-black text-lg">
+            Upcoming Bookings
+          </h3>
+          <span className="ml-2 bg-grey-fill/50 text-secondary-black text-xs font-semibold px-2 py-1 rounded-full border border-grey-outline">
+            {upcoming.length}
+          </span>
+        </div>
         <button
           onClick={handleViewAllClick}
           className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-grey-outline text-secondary-black hover:bg-grey-fill transition-colors text-sm"
@@ -53,40 +60,48 @@ const UpcomingBookings = ({ bookings }) => {
           <ArrowRight size={16} />
         </button>
       </div>
-      <div className="space-y-4">
-        {upcoming.length > 0 ? (
-          upcoming.map((booking, index) => (
-            <div
-              key={booking.id || index}
-              onClick={handleBookingClick}
-              className="flex items-center p-3 rounded-lg bg-grey-fill/50 hover:bg-grey-fill cursor-pointer transition-all duration-200 hover:shadow-md"
-            >
-              <div className="bg-gray-100 p-2 rounded-lg mr-4">
-                <ListAltIcon size={20} className="text-primary-grey" />
+      <div className="max-h-40 overflow-y-auto">
+        <div className="space-y-4 pr-2 pb-2">
+          {upcoming.length > 0 ? (
+            upcoming.map((booking, index) => (
+              <div
+                key={booking.id || index}
+                onClick={handleBookingClick}
+                className="flex items-center p-3 rounded-lg bg-grey-fill/50 hover:bg-grey-fill cursor-pointer transition-all duration-200 hover:shadow-md"
+              >
+                <div className="bg-gray-100 p-2 rounded-lg mr-4">
+                  <ListAltIcon size={20} className="text-primary-grey" />
+                </div>
+                <div className="flex-grow">
+                  <p className="font-semibold">{booking.type}</p>
+                  <p className="text-sm text-gray-500">
+                    {booking.properties?.name}
+                  </p>
+                </div>
+                {booking.assessment_time ? (
+                  <span className="text-sm bg-grey-fill border border-grey-outline px-2 py-1 rounded-lg text-secondary-black">
+                    {format(new Date(booking.assessment_time), "dd MMM - yyyy")}
+                  </span>
+                ) : (
+                  <span className="text-sm bg-grey-fill border border-grey-outline px-2 py-1 rounded-lg text-secondary-black">
+                    {booking.status}
+                  </span>
+                )}
               </div>
-              <div className="flex-grow">
-                <p className="font-semibold">{booking.type}</p>
-                <p className="text-sm text-gray-500">
-                  {booking.properties?.name}
-                </p>
-              </div>
-              <span className="text-sm bg-grey-fill border border-grey-outline px-2 py-1 rounded-lg text-secondary-black">
-                {format(new Date(booking.assessment_time), "dd MMM - yyyy")}
-              </span>
+            ))
+          ) : (
+            <div className="text-center py-6">
+              <Calendar className="mx-auto text-gray-400 mb-2" size={24} />
+              <p className="text-sm text-gray-500">No upcoming bookings.</p>
+              <button
+                onClick={handleViewAllClick}
+                className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
+              >
+                View all bookings
+              </button>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-6">
-            <Calendar className="mx-auto text-gray-400 mb-2" size={24} />
-            <p className="text-sm text-gray-500">No upcoming bookings.</p>
-            <button
-              onClick={handleViewAllClick}
-              className="mt-2 text-sm text-blue-600 hover:text-blue-800 underline"
-            >
-              View all bookings
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

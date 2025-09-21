@@ -20,7 +20,7 @@ const PropertyFilter = ({ properties, selectedProperty, onSelectProperty }) => {
       onChange={handleSelect}
       options={options}
       placeholder="All Properties"
-      className="w-60"
+      className="w-full sm:w-48 h-11 max-w-[200px] sm:max-w-none"
     />
   );
 };

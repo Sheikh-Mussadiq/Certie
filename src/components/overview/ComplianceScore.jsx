@@ -10,7 +10,7 @@ const ComplianceScore = ({ properties }) => {
       : 0;
 
   return (
-    <div className="bg-white p-4 rounded-xl">
+    <div className="bg-white p-4 rounded-xl flex flex-col justify-between">
       <div className="flex justify-between items-center mb-12">
         <h3 className="font-semibold text-secondary-black text-lg">
           Compliance Score
