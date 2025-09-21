@@ -1,7 +1,7 @@
 import React from 'react';
 import Shimmer from '../../ui/Shimmer';
 
-const OverdueLogbookTasksShimmer = () => {
+const LogbookTasksShimmer = () => {
   return (
     <div className="bg-white p-4 rounded-xl">
       <div className="flex items-center justify-between mb-4">
@@ -26,4 +26,4 @@ const OverdueLogbookTasksShimmer = () => {
   );
 };
 
-export default OverdueLogbookTasksShimmer;
+export default LogbookTasksShimmer;

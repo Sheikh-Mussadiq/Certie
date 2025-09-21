@@ -5,7 +5,7 @@ import ComplianceScoreShimmer from "../components/overview/shimmers/ComplianceSc
 import UpcomingBookingsShimmer from "../components/overview/shimmers/UpcomingBookingsShimmer";
 import OutstandingIssuesShimmer from "../components/overview/shimmers/OutstandingIssuesShimmer";
 import ImportantInformationShimmer from "../components/overview/shimmers/ImportantInformationShimmer";
-import OverdueLogbookTasksShimmer from "../components/overview/shimmers/OverdueLogbookTasksShimmer";
+import LogbookTasksShimmer from "../components/overview/shimmers/LogbookTasksShimmer";
 import RecentActivityShimmer from "../components/overview/shimmers/RecentActivityShimmer";
 import PropertySummaryShimmer from "../components/overview/shimmers/PropertySummaryShimmer";
 import ComplianceScore from "../components/overview/ComplianceScore";
@@ -13,7 +13,7 @@ import UpcomingBookings from "../components/overview/UpcomingBookings";
 import ExpiringCertificates from "../components/overview/ExpiringCertificates";
 import OutstandingIssues from "../components/overview/OutstandingIssues";
 import ImportantInformation from "../components/overview/ImportantInformation";
-import OverdueLogbookTasks from "../components/overview/OverdueLogbookTasks";
+import LogbookTasks from "../components/overview/LogbookTasks";
 import RecentActivity from "../components/overview/RecentActivity";
 import PropertySummary from "../components/overview/PropertySummary";
 import OverviewHeader from "../components/overview/OverviewHeader";
@@ -59,7 +59,7 @@ const Overview = () => {
             </div>
           </div>
           <div className="space-y-4">
-            <OverdueLogbookTasksShimmer />
+            <LogbookTasksShimmer />
             <RecentActivityShimmer />
           </div>
         </div>
@@ -98,7 +98,7 @@ const Overview = () => {
         </div>
         <div className="space-y-4">
           {/* <ExpiringCertificates documents={documents} /> */}
-          <OverdueLogbookTasks logbooks={filteredLogbooks} />
+          <LogbookTasks logbooks={filteredLogbooks} />
           <RecentActivity
             logbooks={filteredLogbooks}
             bookings={filteredBookings}
