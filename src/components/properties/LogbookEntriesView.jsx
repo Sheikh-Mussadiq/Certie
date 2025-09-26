@@ -18,6 +18,8 @@ import {
   SortAsc,
   Filter,
   MessageSquare,
+  Building,
+  Info,
 } from "lucide-react";
 import Shimmer from "../ui/Shimmer";
 
@@ -59,13 +61,14 @@ function addFrequencyToDate(date, frequency) {
   return d.toLocaleDateString();
 }
 
-const LogbookEntriesView = ({ logbook, onBack }) => {
+const LogbookEntriesView = ({ logbook, property, onBack }) => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [form, setForm] = useState({
     completion_status: "Working Correctly",
     issue_comment: "",
@@ -113,8 +116,10 @@ const LogbookEntriesView = ({ logbook, onBack }) => {
             ? form.issue_comment
             : undefined,
         performed_by: form.performed_by,
+        performed_at: selectedDate.toISOString(),
       });
       setShowModal(false);
+      setSelectedDate(new Date());
       setForm({
         completion_status: "Working Correctly",
         issue_comment: "",
@@ -172,7 +177,8 @@ const LogbookEntriesView = ({ logbook, onBack }) => {
         </motion.button>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex items-center justify-between">
+        <div>
         <h2 className="text-2xl font-semibold text-primary-black flex items-center gap-2">
           <ClipboardList className="w-6 h-6 text-primary-orange" />
           {logbook.name || logbook.logbook_type}
@@ -187,6 +193,15 @@ const LogbookEntriesView = ({ logbook, onBack }) => {
           <div>
             <span className="text-xs text-primary-grey">Next Due</span>
             <p className="font-medium text-primary-black">{nextDue}</p>
+          </div>
+          </div>
+        </div>
+        <div className="flex-1 flex justify-end items-start">
+          <div className="bg-grey-fill p-4 rounded-xl border border-grey-outline/50">
+            <h2 className="text-2xl font-bold text-primary-black flex items-center gap-2">
+              <Building className="w-6 h-6 text-primary-orange" />
+              <span>{property.name}</span>
+            </h2>
           </div>
         </div>
       </div>
@@ -439,6 +454,25 @@ const LogbookEntriesView = ({ logbook, onBack }) => {
               </div>
 
               <form onSubmit={handleAddEntry} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-primary-black">
+                    Date of Check
+                  </label>
+                  <input
+                    type="date"
+                    value={selectedDate.toISOString().split("T")[0]}
+                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                    className="w-full px-4 py-3 border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange"
+                    required
+                  />
+                  <div className="flex items-start gap-2 mt-2 text-xs text-primary-grey">
+                    <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary-orange" />
+                    <span>
+                      Select the date the check was performed. You can backdate
+                      this if you&apos;re catching up on logs.
+                    </span>
+                  </div>
+                </div>
                 <div>
                   <label className="block text-sm font-medium mb-2 text-primary-black">
                     Completion Status

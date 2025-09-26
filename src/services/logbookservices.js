@@ -145,9 +145,10 @@ export const createLogbookEntry = async ({
   completion_status,
   issue_comment,
   performed_by,
+  performed_at,
 }) => {
   try {
-    const performed_at = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const entryDate = performed_at ? new Date(performed_at).toISOString() : new Date().toISOString();
     const { data, error } = await supabase
       .from("logbook_entries")
       .insert([
@@ -157,7 +158,7 @@ export const createLogbookEntry = async ({
           issue_comment:
             completion_status === "Issue Identified" ? issue_comment : null,
           performed_by,
-          performed_at,
+          performed_at: entryDate,
         },
       ])
       .select()

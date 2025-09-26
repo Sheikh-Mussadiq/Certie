@@ -196,6 +196,7 @@ const Logbooks = () => {
     return (
       <LogbookEntriesView
         logbook={selectedLogbook}
+        property={selectedProperty}
         onBack={() => setSelectedLogbook(null)}
       />
     );

@@ -263,6 +263,7 @@ const LogBooksTab = () => {
     return (
       <LogbookEntriesView
         logbook={selectedLogbook}
+        property={property}
         onBack={() => setSelectedLogbook(null)}
       />
     );
