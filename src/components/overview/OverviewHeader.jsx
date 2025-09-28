@@ -40,7 +40,7 @@ const OverviewHeader = ({ children, selectedPropertyId }) => {
             }}
             className="inline-flex items-center justify-center gap-2 h-11 px-4 text-sm font-medium text-white bg-primary-black rounded-lg shadow-sm hover:bg-primary-black/90 transition-colors duration-200 min-w-32 whitespace-nowrap"
           >
-            {selectedPropertyId ? "Add LogBook" : "LogBooks"}
+            {selectedPropertyId ? "Add Logbook" : "Logbooks"}
           </button>
         </div>
       </div>
