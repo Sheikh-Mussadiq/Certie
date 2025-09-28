@@ -17,6 +17,9 @@ import {
   UserCog,
 } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
+import { supabase } from "../../lib/supabase";
+import { toast } from "react-hot-toast";
+import StaticMap from "../ui/StaticMap";
 
 const PropertyOverview = () => {
   const { property } = useOutletContext();
@@ -48,24 +51,88 @@ const PropertyOverview = () => {
       <div className="space-y-8 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
         <div>
           <h2 className="text-lg font-semibold mb-4 flex flex-col gap-2">
-            Property Name: {property?.name}
+            Property Name: {property?.name || "No Property Name"}
             <p className="text-sm text-primary-grey">
               {property?.address?.street}, {property?.address?.city},{" "}
               {property?.address?.postcode}
             </p>
           </h2>
-          <div className="w-full h-[400px] mx-auto rounded-xl overflow-hidden shadow-sm">
-            {property?.image ? (
-              <img
-                src={property.image}
-                alt={property.name}
-                className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-              />
-            ) : (
-              <div className="w-full h-full bg-grey-fill flex items-center justify-center">
-                <span className="text-primary-grey">No image available</span>
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Image Column */}
+            <div className="h-[400px] rounded-xl overflow-hidden shadow-sm">
+              {property?.image ? (
+                <img
+                  src={property.image}
+                  alt={property.name}
+                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                />
+              ) : (
+                <div className="w-full h-full bg-grey-fill flex flex-col items-center justify-center p-6 text-center">
+                  <div className="w-12 h-12 rounded-full bg-grey-200 flex items-center justify-center mb-3">
+                    <svg
+                      className="w-6 h-6 text-grey-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-medium text-grey-600 mb-1">
+                    No Property Image
+                  </h3>
+                  <p className="text-xs text-grey-500 max-w-[200px]">
+                    Upload a property photo to showcase the building exterior
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Map Column */}
+            <div className="h-[400px] rounded-xl overflow-hidden shadow-sm">
+              {property?.latitude && property?.longitude ? (
+                <StaticMap
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  address={`${property?.address?.street}, ${property?.address?.city}, ${property?.address?.postcode}`}
+                />
+              ) : (
+                <div className="w-full h-full bg-grey-fill flex flex-col items-center justify-center p-6 text-center">
+                  <div className="w-12 h-12 rounded-full bg-grey-200 flex items-center justify-center mb-3">
+                    <svg
+                      className="w-6 h-6 text-grey-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-medium text-grey-600 mb-1">
+                    Location Not Set
+                  </h3>
+                  <p className="text-xs text-grey-500 max-w-[200px]">
+                    Add property coordinates to display an interactive map view
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -298,9 +365,13 @@ const PropertyOverview = () => {
       <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4 mt-4">
         <h3 className="text-lg font-semibold mb-4">Property Team</h3>
         <p className="text-sm text-primary-grey">
-          Property Managers are responsible for the overall management of the property. Site Users are responsible for the day to day operations of the property.
+          Property Managers are responsible for the overall management of the
+          property. Site Users are responsible for the day to day operations of
+          the property.
         </p>
-          <p className="text-sm text-primary-grey mb-4"><strong>Manage your team in the edit property button above.</strong></p>
+        <p className="text-sm text-primary-grey mb-4">
+          <strong>Manage your team in the edit property button above.</strong>
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           {/* Property Managers */}
           <div className="border border-grey-outline rounded-2xl md:rounded-r-none">

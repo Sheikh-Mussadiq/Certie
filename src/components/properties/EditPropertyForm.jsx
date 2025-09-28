@@ -129,18 +129,18 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
 
     const response = await addPropertySiteUser(property.id, newSiteUserEmail);
     const updatedSiteUsers = [...formData.site_users, response];
-    
+
     setFormData((prev) => ({
       ...prev,
       site_users: updatedSiteUsers,
     }));
-    
+
     // Update parent component's property state immediately
     setProperty((prev) => ({
       ...prev,
       site_users: updatedSiteUsers,
     }));
-    
+
     setNewSiteUserEmail("");
     toast.success("Site user added successfully");
   };
@@ -157,18 +157,18 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
 
     const response = await addPropertyManager(property.id, newManagerEmail);
     const updatedManagers = [...formData.managers, response];
-    
+
     setFormData((prev) => ({
       ...prev,
       managers: updatedManagers,
     }));
-    
+
     // Update parent component's property state immediately
     setProperty((prev) => ({
       ...prev,
       managers: updatedManagers,
     }));
-    
+
     setNewManagerEmail("");
     toast.success("Manager added successfully");
   };
@@ -179,19 +179,21 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
       toast.error("Failed to remove site user");
       return;
     }
-    const updatedSiteUsers = formData.site_users.filter((user) => user.user_id !== userId);
-    
+    const updatedSiteUsers = formData.site_users.filter(
+      (user) => user.user_id !== userId
+    );
+
     setFormData((prev) => ({
       ...prev,
       site_users: updatedSiteUsers,
     }));
-    
+
     // Update parent component's property state immediately
     setProperty((prev) => ({
       ...prev,
       site_users: updatedSiteUsers,
     }));
-    
+
     setRemovedSiteUsers((prev) => [...prev, userId]);
   };
 
@@ -201,19 +203,21 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
       toast.error("Failed to remove manager");
       return;
     }
-    const updatedManagers = formData.managers.filter((manager) => manager.user_id !== userId);
-    
+    const updatedManagers = formData.managers.filter(
+      (manager) => manager.user_id !== userId
+    );
+
     setFormData((prev) => ({
       ...prev,
       managers: updatedManagers,
     }));
-    
+
     // Update parent component's property state immediately
     setProperty((prev) => ({
       ...prev,
       managers: updatedManagers,
     }));
-    
+
     setRemovedManagers((prev) => [...prev, userId]);
   };
 
@@ -258,20 +262,20 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
         await removePropertyManager(property.id, userId);
       }
 
-          const response = await updateProperty(
-      property.id,
-      formData,
-      currentUser.id
-    );
-    setLoading(false);
-    
-    // Preserve the current managers and site_users since they're updated in real-time
-    setProperty((prev) => ({
-      ...response,
-      managers: prev.managers,
-      site_users: prev.site_users
-    }));
-    onSuccess();
+      const response = await updateProperty(
+        property.id,
+        formData,
+        currentUser.id
+      );
+      setLoading(false);
+
+      // Preserve the current managers and site_users since they're updated in real-time
+      setProperty((prev) => ({
+        ...response,
+        managers: prev.managers,
+        site_users: prev.site_users,
+      }));
+      onSuccess();
     } catch (err) {
       console.error("Error updating property:", err);
       setError("Failed to update property. Please try again.");
@@ -288,7 +292,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
         transition={{ duration: 0.2 }}
         className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 "
       >
-        <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <div className="sticky top-0 z-10 bg-white p-6 border-b border-grey-outline flex justify-between items-center shadow-sm">
             <h2 className="text-xl font-semibold text-primary-black">
               Edit Property
@@ -516,10 +520,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
 
               <div className="space-y-6">
                 <div className="space-y-1">
-                <h3 className="text-lg font-medium text-primary-black">
-                  Management & Contact Information
-                </h3>
-                <p className="text-sm text-primary-grey"> Users must have signed up to the platform to be added to the property team. </p>
+                  <h3 className="text-lg font-medium text-primary-black">
+                    Management & Contact Information
+                  </h3>
+                  <p className="text-sm text-primary-grey">
+                    {" "}
+                    Users must have signed up to the platform to be added to the
+                    property team.{" "}
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">

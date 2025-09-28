@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Building2, Loader2 } from "lucide-react";
+import { Building2, Loader2, MapPin } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { createProperty } from "../services/propertiesServices";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import PropertyMap from "../components/ui/PropertyMap";
 
 const AddProperty = () => {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ const AddProperty = () => {
     evacuation_policy: "",
     emergency_contact: "",
     contactor_hours: "",
+    latitude: 51.5074, // Default to central London
+    longitude: -0.1278,
   });
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -87,6 +90,26 @@ const AddProperty = () => {
       address: {
         ...prev.address,
         [field]: value,
+      },
+    }));
+  };
+
+  // Handle location change from the map
+  const handleLocationChange = (location) => {
+    setFormData((prev) => ({
+      ...prev,
+      latitude: location.lat,
+      longitude: location.lng,
+      address: {
+        ...prev.address,
+        street: location.address.road || location.address.street || "",
+        city:
+          location.address.city ||
+          location.address.town ||
+          location.address.village ||
+          "",
+        state: location.address.state || location.address.county || "",
+        postcode: location.address.postcode || "",
       },
     }));
   };
@@ -143,124 +166,150 @@ const AddProperty = () => {
       </div>
 
       <div className="px-6 py-2">
-        <div className="mb-8 border border-grey-outline rounded-xl p-4">
-          <h3 className="text-sm font-medium mb-2">Upload Property Image</h3>
-          <p className="text-xs text-primary-grey mb-4">
-            formats allowed are *.jpg, *.jpg, up to 10 MB
-            <br />
-            with a minimum size of 400px by 400px
-          </p>
-          <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-              ${
-                isDragActive
-                  ? "border-primary-orange bg-red-50"
-                  : "border-grey-outline hover:border-primary-orange"
-              }`}
-          >
-            <input {...getInputProps()} />
-            {formData.image ? (
-              <div className="flex items-center justify-center">
-                <img
-                  src={URL.createObjectURL(formData.image)}
-                  alt="Property preview"
-                  className="max-h-48 rounded"
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-6">
+            <div className="border border-grey-outline rounded-xl p-4 flex flex-col">
+              <h3 className="text-sm font-medium mb-2">
+                Upload Property Image
+              </h3>
+              <p className="text-xs text-primary-grey mb-4">
+                formats allowed are *.jpg, *.jpg, up to 10 MB
+                <br />
+                with a minimum size of 400px by 400px
+              </p>
+              <div
+                {...getRootProps()}
+                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+                  ${
+                    isDragActive
+                      ? "border-primary-orange bg-red-50"
+                      : "border-grey-outline hover:border-primary-orange"
+                  }`}
+              >
+                <input {...getInputProps()} />
+                {formData.image ? (
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={URL.createObjectURL(formData.image)}
+                      alt="Property preview"
+                      className="max-h-48 rounded"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+                    <p className="mt-2 text-sm text-gray-600">
+                      Drag & drop an image here, or click to select
+                    </p>
+                  </>
+                )}
               </div>
-            ) : (
-              <>
-                <Building2 className="mx-auto h-12 w-12 text-gray-400" />
-                <p className="mt-2 text-sm text-gray-600">
-                  Drag & drop an image here, or click to select
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border border-grey-outline rounded-xl p-4">
-            <label className="block text-sm font-medium mb-2">
-              Property Name
-            </label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, name: e.target.value }))
-              }
-              placeholder="Enter property name"
-              className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-            />
-          </div>
-
-          <div className="space-y-4 md:col-span-2 border border-grey-outline rounded-xl p-4">
-            <h3 className="text-lg font-medium">Address Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Street</label>
-                <input
-                  type="text"
-                  value={formData.address.street}
-                  onChange={(e) =>
-                    handleAddressChange("street", e.target.value)
-                  }
-                  placeholder="Enter street address"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">City</label>
-                <input
-                  type="text"
-                  value={formData.address.city}
-                  onChange={(e) => handleAddressChange("city", e.target.value)}
-                  placeholder="Enter city"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">State</label>
-                <input
-                  type="text"
-                  value={formData.address.state}
-                  onChange={(e) => handleAddressChange("state", e.target.value)}
-                  placeholder="Enter state"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                />
-              </div>
-              <div>
+              <div className="mt-6">
                 <label className="block text-sm font-medium mb-2">
-                  Postcode
+                  Property Name
                 </label>
                 <input
                   type="text"
-                  value={formData.address.postcode}
+                  value={formData.name}
                   onChange={(e) =>
-                    handleAddressChange("postcode", e.target.value)
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  placeholder="Enter postcode"
+                  placeholder="Enter property name"
                   className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                 />
               </div>
-              {/* <div>
-                <label className="block text-sm font-medium mb-2">
-                  Country
-                </label>
-                <input
-                  type="text"
-                  value={formData.address.country}
-                  onChange={(e) =>
-                    handleAddressChange("country", e.target.value)
-                  }
-                  placeholder="Enter country"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-                />
-              </div> */}
+            </div>
+
+            {/* Address Details */}
+            <div className="border border-grey-outline rounded-xl p-4">
+              <h3 className="text-lg font-medium">Address Details</h3>
+              <p className="text-xs text-primary-grey">
+                These fields are automatically updated from the map. You can
+                also edit them manually.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Street
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.address.street}
+                    onChange={(e) =>
+                      handleAddressChange("street", e.target.value)
+                    }
+                    placeholder="Enter street address"
+                    className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">City</label>
+                  <input
+                    type="text"
+                    value={formData.address.city}
+                    onChange={(e) =>
+                      handleAddressChange("city", e.target.value)
+                    }
+                    placeholder="Enter city"
+                    className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.address.state}
+                    onChange={(e) =>
+                      handleAddressChange("state", e.target.value)
+                    }
+                    placeholder="Enter state"
+                    className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Postcode
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.address.postcode}
+                    onChange={(e) =>
+                      handleAddressChange("postcode", e.target.value)
+                    }
+                    placeholder="Enter postcode"
+                    className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Location Map */}
+          <div className="border border-grey-outline rounded-xl p-4 flex flex-col">
+            <h3 className="text-lg font-medium mb-4">Location Map</h3>
+            <p className="text-sm text-primary-grey mb-4">
+              <MapPin className="inline-block mr-1 h-4 w-4" /> Pin the exact
+              location of your property on the map. You can search for an
+              address or drag the marker to adjust the position.
+            </p>
+            <PropertyMap
+              coordinates={[formData.latitude, formData.longitude]}
+              onLocationChange={handleLocationChange}
+              height="510px"
+            />
+            {/* <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <p className="text-sm text-primary-grey">
+                <span className="font-medium">Latitude:</span>{" "}
+                {formData.latitude.toFixed(6)},{" "}
+                <span className="font-medium">Longitude:</span>{" "}
+                {formData.longitude.toFixed(6)}
+              </p>
+            </div> */}
+          </div>
+
+          {/* Property Details */}
           <div className="md:col-span-2 border border-grey-outline rounded-xl p-4">
             <h3 className="text-lg font-medium mb-4">Property Details</h3>
 
@@ -392,7 +441,7 @@ const AddProperty = () => {
                   value={formData.contact_phone}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (value === '' || /^[+0-9]+$/.test(value)) {
+                    if (value === "" || /^[+0-9]+$/.test(value)) {
                       setFormData((prev) => ({
                         ...prev,
                         contact_phone: value,
@@ -452,6 +501,7 @@ const AddProperty = () => {
             </div>
           </div>
 
+          {/* Safety & Emergency Details */}
           <div className="md:col-span-2 border border-grey-outline rounded-xl p-4">
             <h3 className="text-lg font-medium mb-4">
               Safety & Emergency Details
