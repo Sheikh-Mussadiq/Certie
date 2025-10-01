@@ -4,6 +4,7 @@ import {
   ChevronsDown,
   ClipboardList,
   MapPin,
+  ChevronsUp,
 } from "lucide-react";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import { useNavigate } from "react-router-dom";
@@ -145,7 +146,7 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
           clickable={!!lowestComplianceProperty}
         />
         <InfoItem
-          icon={ChevronsDown}
+          icon={ChevronsUp}
           label="Highest Compliance Score"
           value={
             highestComplianceProperty
