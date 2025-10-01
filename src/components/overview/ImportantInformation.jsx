@@ -49,6 +49,14 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
     (p) => p.compliance_score === lowestCompliance
   );
 
+  const highestCompliance =
+    properties.length > 0
+      ? Math.max(...properties.map((p) => p.compliance_score || 0))
+      : 0;
+  const highestComplianceProperty = properties.find(
+    (p) => p.compliance_score === highestCompliance
+  );
+
   // Calculate average compliance score
   const averageCompliance =
     properties.length > 0
@@ -80,6 +88,12 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
   const handleLowestComplianceClick = () => {
     if (lowestComplianceProperty) {
       navigate(`/properties/${lowestComplianceProperty.id}`);
+    }
+  };
+
+  const handleHighestComplianceClick = () => {
+    if (highestComplianceProperty) {
+      navigate(`/properties/${highestComplianceProperty.id}`);
     }
   };
 
@@ -129,6 +143,17 @@ const ImportantInformation = ({ properties, logbooks, bookings }) => {
           }
           onClick={handleLowestComplianceClick}
           clickable={!!lowestComplianceProperty}
+        />
+        <InfoItem
+          icon={ChevronsDown}
+          label="Highest Compliance Score"
+          value={
+            highestComplianceProperty
+              ? `${highestComplianceProperty.name} ${highestCompliance}%`
+              : "N/A"
+          }
+          onClick={handleHighestComplianceClick}
+          clickable={!!highestComplianceProperty}
         />
         <InfoItem
           icon={ClipboardList}

@@ -22,13 +22,13 @@ const ComplianceScore = ({ properties }) => {
       <div className="flex justify-between items-baseline">
         <span className="text-4xl font-bold">{Math.round(averageScore)}%</span>
 
-        <div className="flex items-center text-sm text-secondary-green mt-2">
+        {/* <div className="flex items-center text-sm text-secondary-green mt-2">
           <div className="bg-secondary-green text-white rounded-full p-1">
             <ArrowUp size={16} />
           </div>
           <span className="ml-1">10.2% </span>
           <span className="text-gray-500 ml-1">vs last month</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ const LogbookTasks = ({ logbooks }) => {
           <ArrowRight size={16} />
         </button> */}
       </div>
-      <div className="space-y-3 max-h-56 overflow-y-auto">
+      <div className="space-y-3 max-h-[390px] overflow-y-auto">
         {allTasks.length > 0 ? (
           allTasks.map((task, index) => (
             <div

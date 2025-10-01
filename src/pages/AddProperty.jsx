@@ -118,6 +118,17 @@ const AddProperty = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
+      if (
+        !formData.name ||
+        !formData.address?.city ||
+        !formData.address?.state ||
+        !formData.address?.street ||
+        !formData.property_type
+      ) {
+        toast.error("Please fill in all required fields: Name, Address (City, State, Street), and Property Type.");
+        setIsSubmitting(false);
+        return;
+      }
       const property = await createProperty(formData, currentUser.id);
       toast.success("Property created successfully!");
       navigate(`/properties/${property.id}`);
