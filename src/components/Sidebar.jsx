@@ -38,7 +38,7 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-primary-black h-screen p-4 flex flex-col fixed overflow-y-auto">
-      <Link to="/" className="flex items-center gap-2 px-2 mb-8">
+      <Link to="/overview" className="flex items-center gap-2 px-2 mb-8">
         <img src={Logo} alt="Certie Logo" className="h-8 w-8" />
         <span className="text-2xl font-bold text-white">Certie.co</span>
       </Link>

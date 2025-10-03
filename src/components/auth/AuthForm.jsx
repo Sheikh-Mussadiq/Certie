@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
   Mail,
@@ -19,8 +20,8 @@ import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 
-export default function AuthForm({ onAuthenticated }) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
+  const [isLogin, setIsLogin] = useState(initialMode === "login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setCurrentUser } = useAuth();
@@ -33,6 +34,13 @@ export default function AuthForm({ onAuthenticated }) {
     confirmPassword: "",
     fullName: "",
   });
+
+  // Update isLogin state when initialMode changes
+  useEffect(() => {
+    setIsLogin(initialMode === "login");
+    setError(null);
+    setSuccess(null);
+  }, [initialMode]);
 
   // Password strength checker
   useEffect(() => {
@@ -468,19 +476,12 @@ export default function AuthForm({ onAuthenticated }) {
               {isLogin
                 ? "Don't have an account? "
                 : "Already have an account? "}
-              <motion.button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError(null);
-                  setSuccess(null);
-                }}
+              <Link
+                to={isLogin ? "/signup" : "/login"}
                 className="text-primary-orange hover:text-primary-black font-medium transition-colors duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 {isLogin ? "Create account" : "Login"}
-              </motion.button>
+              </Link>
             </p>
           </div>
         </motion.form>

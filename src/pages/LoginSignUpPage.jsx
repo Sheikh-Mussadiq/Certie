@@ -11,7 +11,7 @@ import { GiOakLeaf } from "react-icons/gi";
 import { IoLeafOutline } from "react-icons/io5";
 import Logo from "../assets/Logo.png";
 import LoginPageBG from "../assets/LoginBG_black.png";
-const LoginSignUpPage = () => {
+const LoginSignUpPage = ({ mode = "login" }) => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -91,7 +91,7 @@ const LoginSignUpPage = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-8"
         >
-          <AuthForm onAuthenticated={() => setIsAuthenticated(true)} />
+          <AuthForm onAuthenticated={() => setIsAuthenticated(true)} initialMode={mode} />
         </motion.div>
 
         {/* Right Section - Background Image */}
