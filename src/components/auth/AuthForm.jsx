@@ -18,12 +18,9 @@ import Logo from "../../assets/Logo.png";
 import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
-import { useLocation } from "react-router-dom";
 
 export default function AuthForm({ onAuthenticated }) {
-  const location = useLocation();
-  // Determine initial state based on URL path
-  const [isLogin, setIsLogin] = useState(location.pathname === "/login");
+  const [isLogin, setIsLogin] = useState(false); // Changed to false to show signup by default
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setCurrentUser } = useAuth();

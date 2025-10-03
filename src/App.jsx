@@ -82,7 +82,7 @@ const AdminProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (currentUser?.role !== "super_admin") {
@@ -118,7 +118,7 @@ const AuthenticatedRoutes = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -255,9 +255,7 @@ export default function App() {
       <BrowserRouter>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<ProtectedLoginRoute />} />
-          <Route path="/signup" element={<ProtectedLoginRoute />} />
+          <Route path="/" element={<ProtectedLoginRoute />} />
           <Route path="/contractor-workflow" element={<ContractorWorkflow />} />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>
