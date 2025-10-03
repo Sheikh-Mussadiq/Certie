@@ -92,7 +92,7 @@ const AdminProtectedRoute = ({ children }) => {
   return children;
 };
 
-const ProtectedLoginRoute = ({ mode = "login" }) => {
+const ProtectedLoginRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -106,7 +106,7 @@ const ProtectedLoginRoute = ({ mode = "login" }) => {
     return <Navigate to="/overview" replace />;
   }
 
-  return <LoginSignUpPage mode={mode} />;
+  return <LoginSignUpPage />;
 };
 
 const AuthenticatedRoutes = () => {
@@ -256,8 +256,8 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<ProtectedLoginRoute mode="login" />} />
-          <Route path="/signup" element={<ProtectedLoginRoute mode="signup" />} />
+          <Route path="/login" element={<ProtectedLoginRoute />} />
+          <Route path="/signup" element={<ProtectedLoginRoute />} />
           <Route path="/contractor-workflow" element={<ContractorWorkflow />} />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>

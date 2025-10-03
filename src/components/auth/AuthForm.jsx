@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import {
   Mail,
@@ -19,9 +18,12 @@ import Logo from "../../assets/Logo.png";
 import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
-export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
-  const [isLogin, setIsLogin] = useState(initialMode === "login");
+export default function AuthForm({ onAuthenticated }) {
+  const location = useLocation();
+  // Determine initial state based on URL path
+  const [isLogin, setIsLogin] = useState(location.pathname === "/login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setCurrentUser } = useAuth();
@@ -34,13 +36,6 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
     confirmPassword: "",
     fullName: "",
   });
-
-  // Update isLogin state when initialMode changes
-  useEffect(() => {
-    setIsLogin(initialMode === "login");
-    setError(null);
-    setSuccess(null);
-  }, [initialMode]);
 
   // Password strength checker
   useEffect(() => {
@@ -476,12 +471,19 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
               {isLogin
                 ? "Don't have an account? "
                 : "Already have an account? "}
-              <Link
-                to={isLogin ? "/signup" : "/login"}
+              <motion.button
+                type="button"
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError(null);
+                  setSuccess(null);
+                }}
                 className="text-primary-orange hover:text-primary-black font-medium transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {isLogin ? "Create account" : "Login"}
-              </Link>
+              </motion.button>
             </p>
           </div>
         </motion.form>
