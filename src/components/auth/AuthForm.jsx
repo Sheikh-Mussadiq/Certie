@@ -19,8 +19,8 @@ import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 
-export default function AuthForm({ onAuthenticated, mode }) {
-  const [isLogin, setIsLogin] = useState(mode === 'login');
+export default function AuthForm({ onAuthenticated }) {
+  const [isLogin, setIsLogin] = useState(false); // Changed to false to show signup by default
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { setCurrentUser } = useAuth();
