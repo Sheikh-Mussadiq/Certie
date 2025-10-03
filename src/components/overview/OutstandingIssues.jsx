@@ -34,24 +34,24 @@ const OutstandingIssues = ({ logbooks }) => {
           recentChanges.map((item, index) => (
             <div
               key={index}
-              className="flex justify-between items-center p-2 rounded-lg bg-grey-fill/50"
+              className="flex justify-between items-center gap-2 p-2 rounded-lg bg-grey-fill/50"
             >
-              <div className="flex flex-col justify-between items-start space-y-1">
+              <div className="flex flex-col justify-between items-start space-y-1 flex-1 min-w-0">
 
                 <p className="font-semibold text-sm">{item.logbookName}</p>
                 <p className="text-xs font-semibold"> Property: {item.propertyName}</p>
 
-                <p className="text-sm text-gray-500 truncate w-72">
+                <p className="text-sm text-gray-500 truncate max-w-full">
                   {item.issue_comment || item.logbookDescription}
                 </p>
                 {item.performed_by && (
-                  <p className="text-xs text-gray-400 truncate w-64">
+                  <p className="text-xs text-gray-400 truncate max-w-full">
                     By: {item.performed_by}
                   </p>
                 )}
               </div>
               <span
-                className={`text-xs px-2 py-1 rounded-md border ${
+                className={`text-xs px-2 py-1 rounded-md border flex-shrink-0 whitespace-nowrap ${
                   item.completion_status === "Completed"
                     ? "bg-green-100 text-green-700 border-green-200"
                     : item.completion_status === "Issue Identified"

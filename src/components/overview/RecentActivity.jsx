@@ -88,8 +88,8 @@ const RecentActivity = ({ logbooks, bookings }) => {
                 )}
               </div> */}
               <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                <div className="flex justify-between items-center gap-2">
+                  <div className="flex flex-col flex-1 min-w-0">
                     <p className="font-semibold text-sm truncate">
                       {activity.type === "logbook"
                         ? activity.logbookName
@@ -98,15 +98,15 @@ const RecentActivity = ({ logbooks, bookings }) => {
                     <div>
                       {activity.type === "logbook" ? (
                         <>
-                          <p className="text-sm text-gray-500 truncate w-72 overflow-hidden">
+                          <p className="text-sm text-gray-500 truncate max-w-full overflow-hidden">
                             {activity.issue_comment || "Task completed"}
                           </p>
-                          <p className="text-xs text-gray-400 truncate w-72 overflow-hidden">
+                          <p className="text-xs text-gray-400 truncate max-w-full overflow-hidden">
                             {activity.propertyName}
                           </p>
                         </>
                       ) : (
-                        <p className="text-sm text-gray-500 truncate w-72 overflow-hidden">
+                        <p className="text-sm text-gray-500 truncate max-w-full overflow-hidden">
                           {`${activity.property} • ${activity.assignee || "Unassigned"}`}
                         </p>
                       )}
@@ -115,9 +115,9 @@ const RecentActivity = ({ logbooks, bookings }) => {
                       </p>
                     </div>
                   </div>
-                  <div className="">
+                  <div className="flex-shrink-0">
                     <span
-                      className={`text-xs px-2 py-1 rounded-md border ml-2 ${
+                      className={`text-xs px-2 py-1 rounded-md border whitespace-nowrap ${
                         activity.type === "logbook"
                           ? activity.completion_status === "Completed"
                             ? "bg-green-100 text-green-700 border-green-200"
