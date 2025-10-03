@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { useNavigate } from "react-router-dom";
 import {
   MapPin,
   Building,
@@ -7,6 +8,8 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  Home,
+  ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import "../../carousel.css";
@@ -31,9 +34,10 @@ const InfoLine = ({ icon: Icon, text }) => {
 };
 
 const PropertySummary = ({ properties }) => {
+  const navigate = useNavigate();
   const [emblaRef, emblaApi] = useEmblaCarousel();
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   // Check if navigation should be shown (only when there are multiple properties)
   const showNavigation = properties && properties.length > 1;
 
@@ -90,14 +94,39 @@ const PropertySummary = ({ properties }) => {
 
   if (!properties || properties.length === 0) {
     return (
-      <div className="bg-white p-4 rounded-lg shadow">
-        <p className="text-gray-500">No property data available.</p>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white p-8 rounded-xl border border-gray-100"
+      >
+        <div className="flex flex-col items-center justify-center text-center py-6">
+          <div className="w-16 h-16 mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <Home className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            No Properties Yet
+          </h3>
+          <p className="text-sm text-gray-600 mb-6 max-w-md">
+            You don't have any properties assigned to you yet. Add your first
+            property to get started with managing your real estate portfolio.
+          </p>
+          <motion.button
+            onClick={() => navigate("/properties")}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-orange text-white rounded-lg font-medium text-sm hover:bg-primary-orange/90 transition-colors shadow-sm"
+          >
+            Go to Properties
+            <ArrowRight className="w-4 h-4" />
+          </motion.button>
+        </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm relative">
+    <div className="bg-white p-4 rounded-xl relative">
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {properties.map((property) => {

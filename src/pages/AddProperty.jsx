@@ -125,7 +125,9 @@ const AddProperty = () => {
         !formData.address?.street ||
         !formData.property_type
       ) {
-        toast.error("Please fill in all required fields: Name, Address (City, State, Street), and Property Type.");
+        toast.error(
+          "Please fill in all required fields: Name, Address (City, State, Street), and Property Type."
+        );
         setIsSubmitting(false);
         return;
       }
@@ -568,7 +570,7 @@ const AddProperty = () => {
                     }))
                   }
                   placeholder="Enter fire strategy details"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  className="w-full min-h-[100px] p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   rows={3}
                 />
               </div>
@@ -586,7 +588,7 @@ const AddProperty = () => {
                     }))
                   }
                   placeholder="Enter evacuation policy details"
-                  className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                  className="w-full min-h-[100px] p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   rows={3}
                 />
               </div>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Download, Upload, Plus, Building2 } from "lucide-react";
+import { Download, Upload, Plus, Building2, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TableHeader from "../components/properties/TableHeader";
@@ -199,37 +199,73 @@ const Properties = () => {
             </>
           ) : (
             <>
-              <TableHeader
-                onSearch={setSearchTerm}
-                onSort={handleSort}
-                onFilter={handleFilter}
-                currentSort={currentSort}
-                currentFilters={currentFilters}
-                onViewChange={setViewMode}
-                viewMode={viewMode}
-              />
-              <div className="overflow-y-auto">
-                {viewMode === "table" ? (
-                  <PropertyTable
-                    properties={currentProperties}
-                    selectedProperties={selectedProperties}
-                    onSelectProperty={setSelectedProperties}
+              {filteredProperties.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col items-center justify-center py-16 px-6"
+                >
+                  <div className="w-20 h-20 mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Home className="w-10 h-10 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {searchTerm || Object.keys(currentFilters).length > 0
+                      ? "No Properties Found"
+                      : "No Properties Yet"}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-6 max-w-md text-center">
+                    {searchTerm || Object.keys(currentFilters).length > 0
+                      ? "Try adjusting your search or filters to find what you're looking for."
+                      : "Get started by adding your first property to manage your real estate portfolio."}
+                  </p>
+                  {!searchTerm && Object.keys(currentFilters).length === 0 && (
+                    <motion.button
+                      onClick={() => navigate("/properties/add")}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-black text-white rounded-lg font-medium text-sm hover:bg-secondary-black/90 transition-colors shadow-sm"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Your First Property
+                    </motion.button>
+                  )}
+                </motion.div>
+              ) : (
+                <>
+                  <TableHeader
+                    onSearch={setSearchTerm}
+                    onSort={handleSort}
+                    onFilter={handleFilter}
+                    currentSort={currentSort}
+                    currentFilters={currentFilters}
+                    onViewChange={setViewMode}
+                    viewMode={viewMode}
                   />
-                ) : (
-                  <PropertyListView
-                    properties={currentProperties}
-                    selectedProperties={selectedProperties}
-                    onSelectProperty={setSelectedProperties}
+                  <div className="overflow-y-auto">
+                    {viewMode === "table" ? (
+                      <PropertyTable
+                        properties={currentProperties}
+                        selectedProperties={selectedProperties}
+                        onSelectProperty={setSelectedProperties}
+                      />
+                    ) : (
+                      <PropertyListView
+                        properties={currentProperties}
+                        selectedProperties={selectedProperties}
+                        onSelectProperty={setSelectedProperties}
+                      />
+                    )}
+                  </div>
+                  <TableFooter
+                    totalItems={filteredProperties.length}
+                    itemsPerPage={itemsPerPage}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    onItemsPerPageChange={setItemsPerPage}
                   />
-                )}
-              </div>
-              <TableFooter
-                totalItems={filteredProperties.length}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-                onItemsPerPageChange={setItemsPerPage}
-              />
+                </>
+              )}
             </>
           )}
         </div>

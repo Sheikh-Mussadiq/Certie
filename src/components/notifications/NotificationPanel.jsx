@@ -36,49 +36,49 @@ function getTypeMeta(type) {
     case "booking_created":
       return {
         icon: CalendarCheck2,
-        color: "from-blue-500 to-blue-600",
+        color: "text-blue-600",
         label: "Booking",
       };
     case "booking_status_changed":
       return {
         icon: RefreshCw,
-        color: "from-indigo-500 to-indigo-600",
+        color: "text-indigo-600",
         label: "Status",
       };
     case "invoice_created":
       return {
         icon: FileText,
-        color: "from-amber-500 to-amber-600",
+        color: "text-amber-600",
         label: "Invoice",
       };
     case "document_uploaded":
       return {
         icon: UploadCloud,
-        color: "from-emerald-500 to-emerald-600",
+        color: "text-emerald-600",
         label: "Document",
       };
     case "property_assigned":
       return {
         icon: UserPlus,
-        color: "from-teal-500 to-teal-600",
+        color: "text-teal-600",
         label: "Assignment",
       };
     case "service_due":
       return {
         icon: AlertTriangle,
-        color: "from-orange-500 to-orange-600",
+        color: "text-orange-600",
         label: "Service Due",
       };
     case "logbook_due":
       return {
         icon: AlertTriangle,
-        color: "from-rose-500 to-rose-600",
+        color: "text-rose-600",
         label: "Logbook Due",
       };
     default:
       return {
         icon: BellRing,
-        color: "from-gray-500 to-gray-600",
+        color: "text-gray-600",
         label: "Notice",
       };
   }
@@ -88,125 +88,101 @@ function highlightBody(n) {
   const meta = n.meta || {};
   if (n.type === "service_due" && meta.service_name && meta.property_name) {
     return (
-      <span className="text-xs text-gray-600 leading-relaxed">
-        Your <strong className="text-gray-800">{meta.service_name}</strong> for{" "}
-        <strong className="text-gray-800">{meta.property_name}</strong> is due
-        in{" "}
-        <strong className="text-gray-800">
+      <p className="text-sm text-gray-600 leading-relaxed">
+        Your{" "}
+        <span className="font-medium text-gray-900">{meta.service_name}</span>{" "}
+        for{" "}
+        <span className="font-medium text-gray-900">{meta.property_name}</span>{" "}
+        is due in{" "}
+        <span className="font-semibold text-gray-900">
           {meta.days_remaining} day{meta.days_remaining === 1 ? "" : "s"}
-        </strong>
+        </span>
         .
-      </span>
+      </p>
     );
   }
   if (n.type === "logbook_due" && meta.property_name) {
     return (
-      <span className="text-xs text-gray-600 leading-relaxed">
-        <strong className="text-gray-800">
+      <p className="text-sm text-gray-600 leading-relaxed">
+        <span className="font-medium text-gray-900">
           {meta.logbook_type || "Logbook"}
-        </strong>{" "}
+        </span>{" "}
         (<span className="text-gray-700">{meta.frequency}</span>) for{" "}
-        <strong className="text-gray-800">{meta.property_name}</strong> is due{" "}
-        <strong className="text-gray-800">tomorrow</strong>.
-      </span>
+        <span className="font-medium text-gray-900">{meta.property_name}</span>{" "}
+        is due <span className="font-semibold text-gray-900">tomorrow</span>.
+      </p>
     );
   }
   return n.body ? (
-    <span className="text-xs text-gray-600 leading-relaxed">{n.body}</span>
+    <p className="text-sm text-gray-600 leading-relaxed">{n.body}</p>
   ) : null;
 }
 
 function NotificationItem({ n, onToggle, index, onNavigate }) {
-  const { icon: Icon, color, label } = getTypeMeta(n.type);
+  const { icon: Icon, color } = getTypeMeta(n.type);
   const unread = !n.read_at;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        ...(unread && {
-          boxShadow:
-            "0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.04)",
-        }),
-      }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       transition={{
-        duration: 0.3,
-        delay: index * 0.05,
-        ease: "easeOut",
-      }}
-      whileHover={{
-        scale: 1.02,
-        y: -2,
-        transition: { duration: 0.2 },
+        duration: 0.2,
+        delay: index * 0.03,
+        ease: [0.4, 0, 0.2, 1],
       }}
       onClick={() => onNavigate(n)}
       className={clsx(
-        "group relative flex gap-4 rounded-xl p-4 transition-all duration-200 cursor-pointer",
+        "group relative flex gap-3 p-4 transition-all duration-200 cursor-pointer border-b border-gray-100 last:border-b-0",
         unread
-          ? "bg-grey-fill shadow-card border-2 border-primary-orange hover:shadow-lg hover:border-primary-orange/80"
-          : "bg-grey-fill hover:bg-grey-outline border border-grey-outline"
+          ? "bg-blue-50/30 hover:bg-blue-50/50"
+          : "bg-white hover:bg-gray-50/50"
       )}
     >
-      <div className="flex flex-col items-center flex-shrink-0">
-        <motion.div
-          className={clsx(
-            "h-10 w-10 rounded-xl flex items-center justify-center text-white shadow-lg",
-            `bg-gradient-to-br ${color}`
-          )}
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Icon className="w-5 h-5" />
-        </motion.div>
-        <span className="mt-2 text-[10px] font-medium uppercase tracking-wider text-gray-400 text-center">
-          {label}
-        </span>
+      {/* Unread indicator dot */}
+      {unread && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-orange rounded-r-full" />
+      )}
+
+      {/* Icon */}
+      <div className="flex-shrink-0 mt-0.5">
+        <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-gray-100">
+          <Icon className={clsx("w-4 h-4", color)} />
+        </div>
       </div>
 
+      {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start justify-between gap-2 mb-1">
           <h4
             className={clsx(
-              "text-sm font-semibold tracking-tight leading-tight",
+              "text-sm font-medium leading-snug",
               unread ? "text-gray-900" : "text-gray-700"
             )}
           >
             {n.title}
           </h4>
-          {unread && (
-            <motion.button
-              onClick={() => onToggle(n)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-xs font-medium text-primary-orange hover:text-primary-orange/80 hover:bg-primary-orange/10 px-2 py-1 rounded-md transition-colors duration-200"
-            >
-              Mark read
-            </motion.button>
-          )}
-        </div>
-        <div className="mt-2">{highlightBody(n)}</div>
-
-        {/* Date positioned at bottom right */}
-        <div className="mt-3 flex justify-end">
-          <time className="text-[10px] font-medium text-gray-400">
+          <time className="text-xs text-gray-400 flex-shrink-0">
             {formatTime(n.created_at)}
           </time>
         </div>
-      </div>
 
-      <motion.div
-        className={clsx(
-          "absolute left-0 top-0 h-full rounded-l-xl transition-all duration-200",
-          unread
-            ? "w-1.5 bg-primary-orange"
-            : "w-0 bg-transparent group-hover:bg-grey-outline"
+        <div className="">{highlightBody(n)}</div>
+
+        {/* Action button */}
+        {unread && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle(n);
+            }}
+            className="text-xs text-primary-orange hover:text-primary-orange/80 font-medium transition-colors"
+          >
+            Mark as read
+          </button>
         )}
-        whileHover={{ width: unread ? 6 : 4 }}
-      />
+      </div>
     </motion.div>
   );
 }
@@ -429,72 +405,58 @@ export default function NotificationPanel({ onClose }) {
   return (
     <motion.div
       ref={panelRef}
-      initial={{ opacity: 0, scale: 0.95, y: -20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: -20 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="absolute right-24 top-16 w-[420px] h-[75vh] max-h-[600px] min-h-[400px] z-[60]"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      className="absolute right-24 top-16 w-[440px] h-[75vh] max-h-[640px] min-h-[400px] z-[60]"
     >
-      <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card ring-1 ring-grey-outline/20">
+      <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-200/50">
         {/* Header */}
-        <motion.div
-          className="flex items-center justify-between border-b border-grey-outline px-6 py-4 bg-white"
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-primary-orange flex items-center justify-center">
-              <BellRing className="w-4 h-4 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold tracking-tight text-gray-900">
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 bg-white">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base font-semibold text-gray-900">
               Notifications
             </h3>
           </div>
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={handleMarkAll}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-primary-orange hover:bg-primary-orange/10 transition-colors duration-200"
-            >
-              <CheckCheck className="w-4 h-4" /> Mark all read
-            </motion.button>
-          </div>
-        </motion.div>
+          <button
+            onClick={handleMarkAll}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-primary-orange transition-colors"
+          >
+            <CheckCheck className="w-3.5 h-3.5" />
+            Mark all read
+          </button>
+        </div>
 
         {/* Content */}
         {loading ? (
-          <motion.div
-            className="flex flex-1 items-center justify-center p-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
+          <div className="flex flex-1 items-center justify-center">
             <div className="flex flex-col items-center gap-3">
-              <Loader2 className="w-8 h-8 animate-spin text-primary-orange" />
-              <p className="text-sm text-gray-500">Loading notifications...</p>
+              <Loader2 className="w-7 h-7 animate-spin text-primary-orange" />
+              <p className="text-sm text-gray-500">Loading...</p>
             </div>
-          </motion.div>
+          </div>
         ) : (
           <div
             ref={containerRef}
-            className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 min-h-0"
+            className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 hover:scrollbar-thumb-gray-300 scrollbar-track-transparent min-h-0"
           >
             <AnimatePresence mode="popLayout">
               {items.length === 0 && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="text-center py-12"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center py-16 px-6"
                 >
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                    <BellRing className="w-8 h-8 text-gray-400" />
+                  <div className="w-14 h-14 mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+                    <BellRing className="w-6 h-6 text-gray-400" />
                   </div>
-                  <p className="text-sm text-gray-500">No notifications yet</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    We'll notify you when something important happens
+                  <p className="text-sm font-medium text-gray-900 mb-1">
+                    No notifications
+                  </p>
+                  <p className="text-xs text-gray-500 text-center">
+                    You're all caught up!
                   </p>
                 </motion.div>
               )}
@@ -511,26 +473,18 @@ export default function NotificationPanel({ onClose }) {
             </AnimatePresence>
 
             {loadingMore && (
-              <motion.div
-                className="text-center py-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <Loader2 className="w-5 h-5 animate-spin text-gray-400 mx-auto mb-2" />
-                <p className="text-xs text-gray-400">Loading more...</p>
-              </motion.div>
+              <div className="flex items-center justify-center py-4 border-t border-gray-100">
+                <Loader2 className="w-4 h-4 animate-spin text-gray-400 mr-2" />
+                <p className="text-xs text-gray-500">Loading more...</p>
+              </div>
             )}
 
             {end && items.length > 0 && (
-              <motion.div
-                className="text-center py-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
+              <div className="text-center py-4 border-t border-gray-100">
                 <p className="text-xs text-gray-400">
                   You're all caught up! 🎉
                 </p>
-              </motion.div>
+              </div>
             )}
           </div>
         )}

@@ -8,6 +8,7 @@ const Tooltip = ({
   delay = 200, // Faster default delay for better UX
   className = "",
   theme = "dark", // Added theme prop for styling flexibility
+  wrapperClassName = "inline-block relative",
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
@@ -137,7 +138,7 @@ const Tooltip = ({
 
   return (
     <div
-      className="inline-block relative"
+      className={wrapperClassName}
       ref={targetRef}
       onMouseEnter={showTooltip}
       onMouseLeave={hideTooltip}
@@ -200,6 +201,7 @@ Tooltip.propTypes = {
   delay: PropTypes.number,
   className: PropTypes.string,
   theme: PropTypes.oneOf(["dark", "light", "primary", "success", "info"]),
+  wrapperClassName: PropTypes.string,
 };
 
 export default Tooltip;
