@@ -268,7 +268,7 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                  focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                  focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80
                   transition-all duration-200 group-hover:border-primary-orange"
                   required
                 />
@@ -294,7 +294,7 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
                 value={formData.email}
                 onChange={handleInputChange}
                 className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80
                 transition-all duration-200 group-hover:border-primary-orange"
                 required
               />
@@ -319,7 +319,7 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="pl-10 pr-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80 backdrop-blur-sm 
+                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80
                 transition-all duration-200 group-hover:border-primary-orange"
                 required
               />
@@ -385,19 +385,19 @@ export default function AuthForm({ onAuthenticated, initialMode = "login" }) {
                 Confirm Password
               </label>
               <div className="mt-1 relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" />
+                {/* <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-500 h-5 w-5 transition-colors group-hover:text-primary-600" /> */}
                 <input
                   type={showPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="pl-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
-                  focus:border-primary-500 focus:ring-primary-500 bg-white bg-opacity-80 backdrop-blur-sm 
-                  transition-all duration-200 group-hover:border-primary-300"
+                  className="pl-10 pr-10 block w-full rounded-lg border border-primary-200 py-3 px-4 shadow-sm 
+                focus:border-primary-orange focus:ring-primary-orange bg-white bg-opacity-80
+                transition-all duration-200 group-hover:border-primary-orange"
                   required
                 />
                 <motion.span
-                  className="absolute bottom-0 left-0 h-0.5 bg-primary-500"
+                  className="absolute bottom-0 left-0 h-0.5 bg-primary-orange"
                   initial={{ width: 0 }}
                   whileHover={{ width: "100%" }}
                   transition={{ duration: 0.3 }}
