@@ -56,7 +56,7 @@ export function AuthProvider({ children }) {
       }
     } catch (error) {
       console.error('Error in getSession:', error);
-      toast.error('Session expired, please sign in again');
+      // toast.error('Session expired, please sign in again');
     } finally {
       setIsLoading(false);
     }
