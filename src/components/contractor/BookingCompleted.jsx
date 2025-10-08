@@ -33,16 +33,24 @@ const BookingCompleted = ({ propertyId, onBookAnother }) => {
         Booking Completed
       </motion.h2>
 
-      <motion.p
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="text-gray-600 mb-8"
+        className="text-gray-600 text-center mb-8 space-y-2 max-w-xl mx-auto leading-relaxed"
       >
-        Enable plane backwards needle optimize synergy. Shelf-ware or hill want
-        on land bandwagon opportunity great team. Stand existing skulls hammer
-        winning unlock I loss.
-      </motion.p>
+        <p className="text-lg font-semibold text-primary-black">
+          Your booking is confirmed!
+        </p>
+        <p>We’ve matched your booking with one of our trusted assessors.</p>
+        <p>
+          You’ll receive a confirmation soon with their visit date and contact
+          details.
+        </p>
+        <p>
+          You can view everything in your Certie dashboard.
+        </p>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
