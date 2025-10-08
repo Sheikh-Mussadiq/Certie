@@ -56,10 +56,10 @@ const ContractorWorkflow = () => {
             const newProperty = await createProperty(
               {
                 name: pendingWorkflow.propertyName,
-                address: { 
+                address: {
                   street: pendingWorkflow.street,
                   city: pendingWorkflow.city,
-                  postcode: pendingWorkflow.postcode 
+                  postcode: pendingWorkflow.postcode,
                 },
                 property_type: pendingWorkflow.buildingType,
                 floors: parseInt(pendingWorkflow.floors) || null,
@@ -92,9 +92,8 @@ const ContractorWorkflow = () => {
           const bookingTimestamp =
             pendingWorkflow.dateTime.timestampz || new Date().toISOString();
 
-          const status = propertyOwnerId === currentUser.id ? "approved" : "pending";
-          const creationPromises = servicesToBook.map((service) =>
-            createBooking({
+          const creationPromises = servicesToBook.map((service) => {
+            const bookingData = {
               property_id: propertyIdForBooking,
               property_name:
                 propertyForBooking?.name || pendingWorkflow.propertyName,
@@ -103,8 +102,34 @@ const ContractorWorkflow = () => {
               type: service,
               building_type: pendingWorkflow.buildingType,
               status: "approved",
-            })
-          );
+            };
+
+            // Add service-specific meta data
+            if (
+              service === "PAT Testing" &&
+              pendingWorkflow.additionalServices.meta?.devices
+            ) {
+              bookingData.meta = {
+                devices: pendingWorkflow.additionalServices.meta.devices,
+              };
+            } else if (
+              service === "Fire Door Inspection" &&
+              pendingWorkflow.additionalServices.meta?.doors
+            ) {
+              bookingData.meta = {
+                doors: pendingWorkflow.additionalServices.meta.doors,
+              };
+            } else if (
+              service === "Fire Risk Assessment" &&
+              pendingWorkflow.additionalServices.meta?.option
+            ) {
+              const selectedOption =
+                pendingWorkflow.additionalServices.meta.option;
+              bookingData.meta = { fraMeta: selectedOption };
+            }
+
+            return createBooking(bookingData);
+          });
 
           const createdBookings = await Promise.all(creationPromises);
 
@@ -186,7 +211,16 @@ const ContractorWorkflow = () => {
     setCurrentStep("property-details");
   };
 
-  const handleBuildingTypeSubmit = (type, name, streetValue, cityValue, postcodeValue, floorsValue, sizeValue, tenantsValue) => {
+  const handleBuildingTypeSubmit = (
+    type,
+    name,
+    streetValue,
+    cityValue,
+    postcodeValue,
+    floorsValue,
+    sizeValue,
+    tenantsValue
+  ) => {
     setBuildingType(type);
     if (name) {
       setPropertyName(name);
@@ -241,9 +275,9 @@ const ContractorWorkflow = () => {
     setBuildingType(newBuildingType);
     // Update property state if it exists
     if (property) {
-      setProperty(prev => ({
+      setProperty((prev) => ({
         ...prev,
-        property_type: newBuildingType
+        property_type: newBuildingType,
       }));
     }
   };
@@ -253,14 +287,26 @@ const ContractorWorkflow = () => {
     const createdBookings = await handleFinalizeBooking(contactData);
 
     // Only create an invoice immediately if the current user is the property owner.
-    if (createdBookings && createdBookings.length > 0 && property && currentUser && property.owner_id === currentUser.id) {
+    if (
+      createdBookings &&
+      createdBookings.length > 0 &&
+      property &&
+      currentUser &&
+      property.owner_id === currentUser.id
+    ) {
       const bookingIds = createdBookings.map((b) => b.id);
-      console.log("Property owner creating invoice for booking IDs:", bookingIds);
+      console.log(
+        "Property owner creating invoice for booking IDs:",
+        bookingIds
+      );
 
       try {
-        const { data, error } = await supabase.functions.invoke("create-invoice", {
-          body: { bookingIds },
-        });
+        const { data, error } = await supabase.functions.invoke(
+          "create-invoice",
+          {
+            body: { bookingIds },
+          }
+        );
 
         if (error) throw error;
 
@@ -322,7 +368,8 @@ const ContractorWorkflow = () => {
       // Use the timestampz directly from dateTime object instead of recalculating
       const bookingTimestamp = dateTime.timestampz;
 
-      const status = property?.owner_id === currentUser?.id ? "approved" : "pending";
+      const status =
+        property?.owner_id === currentUser?.id ? "approved" : "pending";
 
       const creationPromises = servicesToBook.map((service) => {
         const bookingData = {
@@ -338,9 +385,15 @@ const ContractorWorkflow = () => {
         // Add service-specific meta data
         if (service === "PAT Testing" && additionalServices.meta?.devices) {
           bookingData.meta = { devices: additionalServices.meta.devices };
-        } else if (service === "Fire Door Inspection" && additionalServices.meta?.doors) {
+        } else if (
+          service === "Fire Door Inspection" &&
+          additionalServices.meta?.doors
+        ) {
           bookingData.meta = { doors: additionalServices.meta.doors };
-        } else if (service === "Fire Risk Assessment" && additionalServices.meta?.option) {
+        } else if (
+          service === "Fire Risk Assessment" &&
+          additionalServices.meta?.option
+        ) {
           const selectedOption = additionalServices.meta.option;
           bookingData.meta = { fraMeta: selectedOption };
         }
@@ -388,7 +441,7 @@ const ContractorWorkflow = () => {
       setCurrentStep("service-details");
     } else if (currentStep === "service-details") {
       setCurrentStep("property-details");
-    } 
+    }
     // else if (currentStep === "property-details") {
     //   setCurrentStep("location");
     // } else {

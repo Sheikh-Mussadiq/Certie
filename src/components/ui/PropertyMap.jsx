@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -6,6 +6,7 @@ import {
   Popup,
   useMap,
   ZoomControl,
+  Circle,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -40,10 +41,10 @@ const SearchControl = ({
   return (
     <div className="leaflet-control-container">
       <div className="leaflet-top leaflet-left">
-        <div className="leaflet-control bg-transparent w-80">
+        <div className="leaflet-control bg-transparent w-72 md:w-80">
           <form
             onSubmit={handleSearch}
-            className="relative shadow-sm rounded-lg"
+            className="relative rounded-2xl shadow-[0_20px_45px_-28px_rgba(15,23,42,0.45)] backdrop-blur-sm"
             onDoubleClickCapture={(e) => e.stopPropagation()}
             onWheelCapture={(e) => e.stopPropagation()}
           >
@@ -55,7 +56,7 @@ const SearchControl = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search address..."
-              className="block w-full rounded-lg border-0 bg-white py-2.5 pl-10 text-primary-black ring-1 ring-inset ring-grey-outline placeholder:text-primary-grey focus:ring-2 focus:ring-inset focus:ring-primary-orange sm:text-sm"
+              className="block w-full rounded-2xl border border-white/70 bg-white/90 py-2.5 pl-11 pr-12 text-sm text-primary-black shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] placeholder:text-primary-grey focus:border-primary-orange focus:outline-none focus:ring-2 focus:ring-primary-orange"
               onDoubleClickCapture={(e) => e.stopPropagation()}
             />
             {isSearching && (
@@ -66,7 +67,7 @@ const SearchControl = ({
           </form>
           {searchResults.length > 0 && (
             <div
-              className="mt-1 rounded-xl border border-grey-outline/80 bg-white shadow-lg max-h-64 overflow-hidden"
+              className="mt-2 rounded-2xl border border-white/60 bg-white/95 shadow-[0_18px_38px_-28px_rgba(15,23,42,0.55)] max-h-64 overflow-hidden backdrop-blur-sm"
               onWheelCapture={(e) => e.stopPropagation()}
               onMouseDownCapture={(e) => e.stopPropagation()}
               onDoubleClickCapture={(e) => e.stopPropagation()}
@@ -75,7 +76,7 @@ const SearchControl = ({
                 {searchResults.map((result) => (
                   <li
                     key={result.place_id}
-                    className="px-2 py-2 rounded-lg text-sm text-primary-black hover:bg-grey-fill transition-colors cursor-pointer"
+                    className="px-3 py-2.5 rounded-xl text-sm text-primary-black hover:bg-grey-fill/70 transition-colors cursor-pointer"
                     onClick={() => selectResult(result)}
                   >
                     <p className=" text-primary-black truncate">
@@ -101,24 +102,24 @@ const CustomControls = ({ center }) => {
 
   return (
     <div className="leaflet-bottom leaflet-right">
-      <div className="leaflet-control leaflet-bar bg-white shadow-sm rounded-lg flex flex-col p-0 m-0">
+      <div className="leaflet-control leaflet-bar bg-white/90 shadow-[0_18px_38px_-30px_rgba(15,23,42,0.65)] rounded-2xl flex flex-col overflow-hidden backdrop-blur-sm border border-white/70">
         <button
           onClick={() => map.zoomIn()}
-          className="w-9 h-9 flex items-center justify-center transition-colors hover:bg-grey-fill rounded-t-lg border-b border-grey-outline"
+          className="w-10 h-10 flex items-center justify-center transition-colors hover:bg-grey-fill/70 border-b border-grey-outline/70"
           title="Zoom in"
         >
           <span className="text-xl text-primary-grey">+</span>
         </button>
         <button
           onClick={() => map.zoomOut()}
-          className="w-9 h-9 flex items-center justify-center transition-colors hover:bg-grey-fill border-b border-grey-outline"
+          className="w-10 h-10 flex items-center justify-center transition-colors hover:bg-grey-fill/70 border-b border-grey-outline/70"
           title="Zoom out"
         >
           <span className="text-2xl text-primary-grey">-</span>
         </button>
         <button
           onClick={() => map.setView(center, map.getZoom())}
-          className="w-9 h-9 flex items-center justify-center transition-colors hover:bg-grey-fill rounded-b-lg"
+          className="w-10 h-10 flex items-center justify-center transition-colors hover:bg-grey-fill/70"
           title="Center on marker"
         >
           <LocateFixed className="h-4 w-4 text-primary-grey" />
@@ -218,10 +219,59 @@ const PropertyMap = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const markerIcon = useMemo(
+    () =>
+      L.divIcon({
+        className: "property-map-marker",
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -28],
+        html: `
+          <div style="
+              width: 32px;
+              height: 32px;
+              border-radius: 9999px;
+              background: rgba(255, 114, 47, 0.18);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              backdrop-filter: blur(4px);
+              box-shadow: 0 18px 40px -24px rgba(255, 114, 47, 0.55);
+          ">
+            <span style="
+                width: 12px;
+                height: 12px;
+                border-radius: 9999px;
+                background: #ff722f;
+                box-shadow: 0 8px 24px rgba(255, 114, 47, 0.55);
+            "></span>
+          </div>
+        `,
+      }),
+    []
+  );
+
+  const londonOperatingArea = useMemo(
+    () => ({
+      center: [51.5072, -0.1276],
+      radius: 22000,
+      pathOptions: {
+        color: "#ff722f",
+        weight: 1.4,
+        opacity: 0.65,
+        dashArray: "10 12",
+        fillColor: "#ff722f",
+        fillOpacity: 0.08,
+      },
+    }),
+    []
+  );
+
   return (
     <div
       style={{ height }}
-      className="relative z-0 w-full rounded-lg overflow-hidden border border-grey-outline"
+      className="relative z-0 w-full rounded-2xl overflow-hidden border border-white/70"
+      //  bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-[0_24px_68px_-36px_rgba(15,23,42,0.45)]
     >
       <MapContainer
         center={coordinates}
@@ -229,10 +279,16 @@ const PropertyMap = ({
         style={{ height: "100%", width: "100%" }}
         ref={mapRef}
         zoomControl={false}
+        className="contrast-[1.02] saturate-[0.95]"
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
+        <Circle
+          center={londonOperatingArea.center}
+          radius={londonOperatingArea.radius}
+          pathOptions={londonOperatingArea.pathOptions}
         />
         <CustomControls center={coordinates} />
         <Marker
@@ -240,6 +296,7 @@ const PropertyMap = ({
           draggable={true}
           ref={markerRef}
           eventHandlers={{ dragend: handleDragEnd }}
+          icon={markerIcon}
         >
           <Popup>
             Property location
