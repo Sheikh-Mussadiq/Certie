@@ -15,7 +15,7 @@ const Bookings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useState("booked_time_desc");
+  const [sortOption, setSortOption] = useState("created_at_desc");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);

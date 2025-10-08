@@ -21,10 +21,10 @@ const BookingFilters = ({
   const filterRef = useRef(null);
 
   const sortOptions = {
-    booked_time_desc: "Booking Date (Newest)",
-    booked_time_asc: "Booking Date (Oldest)",
     created_at_desc: "Creation Date (Newest)",
     created_at_asc: "Creation Date (Oldest)",
+    booked_time_desc: "Booking Date (Newest)",
+    booked_time_asc: "Booking Date (Oldest)",
     property_name_asc: "Property Name (A-Z)",
     property_name_desc: "Property Name (Z-A)",
     status: "Status",
@@ -77,6 +77,18 @@ const BookingFilters = ({
   return (
     <div className="flex flex-wrap justify-end items-center mb-6 gap-4">
       <div className="flex space-x-4">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-secondary-black" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search bookings"
+            onChange={(e) => onSearch && onSearch(e.target.value)}
+            className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-primary-orange"
+          />
+        </div>
+
         <div className="relative inline-block" ref={sortRef}>
           <button
             onClick={handleSortClick}
@@ -87,13 +99,13 @@ const BookingFilters = ({
             <ChevronDown className="w-5 h-5 ml-2" />
           </button>
           {isSortOpen && (
-            <div className="absolute z-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div className="py-1">
+            <div className="absolute z-10 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div className="p-2">
                 {Object.entries(sortOptions).map(([key, value]) => (
                   <button
                     key={key}
                     onClick={() => handleSortSelect(key)}
-                    className={`flex w-full items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
+                    className={`flex w-full items-center justify-between my-1 px-4 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 ${
                       sortOption === key ? "bg-gray-100 font-semibold" : ""
                     }`}
                   >
@@ -106,18 +118,6 @@ const BookingFilters = ({
               </div>
             </div>
           )}
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-secondary-black" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search bookings"
-            onChange={(e) => onSearch && onSearch(e.target.value)}
-            className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-primary-orange focus:border-primary-orange"
-          />
         </div>
 
         <div className="relative inline-block" ref={filterRef}>
