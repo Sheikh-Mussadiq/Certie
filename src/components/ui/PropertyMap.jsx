@@ -6,7 +6,8 @@ import {
   Popup,
   useMap,
   ZoomControl,
-  Circle,
+  Polygon,
+  Tooltip,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -251,17 +252,39 @@ const PropertyMap = ({
     []
   );
 
-  const londonOperatingArea = useMemo(
+  const londonBoundary = useMemo(
     () => ({
-      center: [51.5072, -0.1276],
-      radius: 22000,
+      positions: [
+        [51.709, -0.533],
+        [51.682, -0.447],
+        [51.702, -0.341],
+        [51.706, -0.196],
+        [51.689, -0.041],
+        [51.676, 0.075],
+        [51.649, 0.176],
+        [51.602, 0.228],
+        [51.533, 0.245],
+        [51.465, 0.198],
+        [51.405, 0.075],
+        [51.357, -0.02],
+        [51.308, -0.12],
+        [51.287, -0.225],
+        [51.274, -0.352],
+        [51.285, -0.47],
+        [51.322, -0.533],
+        [51.378, -0.565],
+        [51.443, -0.563],
+        [51.51, -0.55],
+        [51.585, -0.53],
+        [51.709, -0.533],
+      ],
       pathOptions: {
         color: "#ff722f",
-        weight: 1.4,
-        opacity: 0.65,
-        dashArray: "10 12",
+        weight: 1.6,
+        opacity: 0.85,
+        dashArray: "14 10",
         fillColor: "#ff722f",
-        fillOpacity: 0.08,
+        fillOpacity: 0.06,
       },
     }),
     []
@@ -275,7 +298,7 @@ const PropertyMap = ({
     >
       <MapContainer
         center={coordinates}
-        zoom={13}
+        zoom={9}
         style={{ height: "100%", width: "100%" }}
         ref={mapRef}
         zoomControl={false}
@@ -285,11 +308,27 @@ const PropertyMap = ({
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        <Circle
-          center={londonOperatingArea.center}
-          radius={londonOperatingArea.radius}
-          pathOptions={londonOperatingArea.pathOptions}
+        <Polygon
+          positions={londonBoundary.positions}
+          pathOptions={londonBoundary.pathOptions}
         />
+        <Marker
+          position={[51.689, -0.341]}
+          interactive={false}
+          icon={L.divIcon({
+            className: "hidden",
+          })}
+        >
+          <Tooltip
+            direction="top"
+            permanent
+            opacity={1}
+            offset={[0, -12]}
+            className="rounded-full bg-primary-black/80 px-3 py-1 text-xs text-white shadow-lg"
+          >
+            Certie service area
+          </Tooltip>
+        </Marker>
         <CustomControls center={coordinates} />
         <Marker
           position={coordinates}
