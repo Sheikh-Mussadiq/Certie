@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CustomSelect from "../ui/CustomSelect";
+import PropertyMap from "../ui/PropertyMap";
 import { updatePropertyBuildingType } from "../../services/propertiesServices";
 import { toast } from "react-hot-toast";
 
-const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdate }) => {
+const BuildingForm = ({
+  property,
+  onDataChange,
+  initialData,
+  onBuildingTypeUpdate,
+}) => {
   const [buildingType, setBuildingType] = useState(
     initialData?.buildingType || ""
   );
@@ -18,6 +24,12 @@ const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdat
   const [size, setSize] = useState(initialData?.size || "");
   const [tenants, setTenants] = useState(initialData?.tenants || "");
   const [isUpdatingBuildingType, setIsUpdatingBuildingType] = useState(false);
+  const [latitude, setLatitude] = useState(
+    initialData?.latitude || property?.latitude || 51.5072
+  );
+  const [longitude, setLongitude] = useState(
+    initialData?.longitude || property?.longitude || -0.1276
+  );
 
   const property_types = [
     { value: "Residential Block", label: "Residential Block" },
@@ -47,23 +59,27 @@ const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdat
       setFloors(property.floors || "");
       setSize(property.square_ft || "");
       setTenants(property.occupants || "");
+      if (property.latitude && property.longitude) {
+        setLatitude(property.latitude);
+        setLongitude(property.longitude);
+      }
     }
   }, [property]);
 
   const handleBuildingTypeChange = async (newBuildingType) => {
     setBuildingType(newBuildingType);
-    
+
     // If property exists, update it in the database
     if (property?.id && newBuildingType !== property.property_type) {
       setIsUpdatingBuildingType(true);
       try {
         await updatePropertyBuildingType(property.id, newBuildingType);
-        
+
         // Notify parent component about the building type change
         if (onBuildingTypeUpdate) {
           onBuildingTypeUpdate(newBuildingType);
         }
-        
+
         toast.success("Building type updated successfully");
       } catch (error) {
         console.error("Error updating building type:", error);
@@ -86,6 +102,8 @@ const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdat
       floors,
       size,
       tenants,
+      latitude,
+      longitude,
     });
   }, [
     buildingType,
@@ -96,8 +114,26 @@ const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdat
     floors,
     size,
     tenants,
+    latitude,
+    longitude,
     onDataChange,
   ]);
+
+  const handleLocationChange = ({ lat, lng, address }) => {
+    setLatitude(lat);
+    setLongitude(lng);
+
+    if (address) {
+      if (address.road) setStreet(address.road);
+      if (address.city || address.town || address.village) {
+        setCity(address.city || address.town || address.village);
+      }
+      if (address.postcode) setPostcode(address.postcode);
+      if (address.house_number && !propertyName) {
+        setPropertyName(`${address.house_number} ${address.road || ""}`.trim());
+      }
+    }
+  };
 
   return (
     <motion.div
@@ -174,6 +210,18 @@ const BuildingForm = ({ property, onDataChange, initialData, onBuildingTypeUpdat
             </div>
           </div>
         </div>
+      </div>
+      <div className="mb-10">
+        <h3 className="font-bold text-lg mb-2">Pin the Property Location</h3>
+        <p className="text-sm text-primary-grey mb-4">
+          Drag the marker or search within the map to fine-tune the exact
+          location of your property in Greater London.
+        </p>
+        <PropertyMap
+          coordinates={[latitude, longitude]}
+          onLocationChange={handleLocationChange}
+          height="360px"
+        />
       </div>
       <div className="mb-8">
         <CustomSelect

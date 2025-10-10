@@ -337,9 +337,7 @@ const ContractorWorkflow = () => {
         paymentDetails,
       };
       localStorage.setItem("pendingWorkflow", JSON.stringify(workflowData));
-      navigate("/", {
-        state: { from: location.pathname, pendingWorkflow: true },
-      });
+      setShowAuthModal(true);
       return;
     }
 
@@ -449,9 +447,19 @@ const ContractorWorkflow = () => {
     // }
   };
 
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    // The useEffect will automatically process the pending workflow
+  };
+
   return (
     <>
       <ContractorNavbar />
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onAuthenticated={handleAuthSuccess}
+      />
       <main className="max-w-[1440px] w-full mx-auto px-8 py-8">
         {isBooking && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

@@ -109,6 +109,35 @@ const ProtectedLoginRoute = () => {
   return <LoginSignUpPage />;
 };
 
+// Protected route for contractor workflow
+const ProtectedContractorWorkflow = () => {
+  const { isAuthenticated, currentUser, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  // Allow access if:
+  // 1. User is not authenticated (unauthenticated users can start workflow)
+  // 2. User has pending workflow data
+  // 3. User was redirected here with a propertyId in location.state
+  const hasPendingWorkflow = localStorage.getItem("pendingWorkflow");
+  const hasPropertyInState = location.state?.propertyId;
+
+  if (
+    isAuthenticated &&
+    currentUser &&
+    !hasPendingWorkflow &&
+    !hasPropertyInState
+  ) {
+    // Authenticated user with no property context - redirect to properties page
+    return <Navigate to="/properties" replace />;
+  }
+
+  return <ContractorWorkflow />;
+};
+
 const AuthenticatedRoutes = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
@@ -256,7 +285,10 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<ProtectedLoginRoute />} />
-          <Route path="/contractor-workflow" element={<ContractorWorkflow />} />
+          <Route
+            path="/contractor-workflow"
+            element={<ProtectedContractorWorkflow />}
+          />
           <Route path="/*" element={<AuthenticatedRoutes />} />
         </Routes>
         <Toaster position="top-right">
