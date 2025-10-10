@@ -18,6 +18,7 @@ import Logo from "../../assets/Logo.png";
 import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
+import EmailConfirmation from "./EmailConfirmation";
 
 export default function AuthForm({ onAuthenticated }) {
   const [isLogin, setIsLogin] = useState(false); // Changed to false to show signup by default
@@ -27,6 +28,8 @@ export default function AuthForm({ onAuthenticated }) {
   const [success, setSuccess] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [pendingUserData, setPendingUserData] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -114,17 +117,21 @@ export default function AuthForm({ onAuthenticated }) {
               full_name: formData.fullName,
               avatar_url: defaultAvatar,
             },
+            emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
-        if (data.session) {
-          const UserData = await handleAuthUser(data.session);
-          setCurrentUser(UserData);
-          onAuthenticated();
-        } else {
-          // Email confirmation required
-          setSuccess("Please check your email to confirm your account");
-        }
+        
+        // Store user data for email confirmation
+        setPendingUserData({
+          email: formData.email,
+          fullName: formData.fullName,
+          avatar: defaultAvatar,
+        });
+        
+        // Show email confirmation screen
+        setShowEmailConfirmation(true);
+        setSuccess("Confirmation email sent successfully");
       }
     } catch (error) {
       setError(error.message);
@@ -138,6 +145,33 @@ export default function AuthForm({ onAuthenticated }) {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleResendEmail = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: pendingUserData.email,
+      });
+      
+      if (error) throw error;
+      setSuccess("Confirmation email sent successfully");
+    } catch (error) {
+      setError(error.message || "Failed to resend code. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToSignup = () => {
+    setShowEmailConfirmation(false);
+    setPendingUserData(null);
+    setError(null);
+    setSuccess(null);
   };
 
   const getPasswordStrengthColor = () => {
@@ -155,6 +189,30 @@ export default function AuthForm({ onAuthenticated }) {
     if (passwordStrength === 3) return "Good";
     return "Strong";
   };
+
+  // Show email confirmation screen if needed
+  if (showEmailConfirmation && pendingUserData) {
+    return (
+      <div className="w-full max-w-md p-8">
+        <motion.div
+          className="mb-8 text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img src={Logo} alt="Logo" className="w-16 h-16 mx-auto mb-2" />
+        </motion.div>
+        
+        <EmailConfirmation
+          email={pendingUserData.email}
+          onResend={handleResendEmail}
+          onBack={handleBackToSignup}
+          loading={loading}
+          success={success}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md p-8">

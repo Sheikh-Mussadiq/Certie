@@ -16,6 +16,7 @@ import { supabase } from "../../lib/supabase";
 import { handleAuthUser } from "../../services/userServices";
 import LoadingSpinner from "../LoadingSpinner";
 import Logo from "../../assets/Logo.png";
+import EmailConfirmation from "../auth/EmailConfirmation";
 
 const AuthModal = ({ isOpen, onClose, onAuthenticated }) => {
   const [isLogin, setIsLogin] = useState(false);
@@ -28,6 +29,8 @@ const AuthModal = ({ isOpen, onClose, onAuthenticated }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [pendingUserData, setPendingUserData] = useState(null);
   const { isAuthenticated, setCurrentUser } = useAuth();
 
   // Password strength checker
@@ -107,23 +110,54 @@ const AuthModal = ({ isOpen, onClose, onAuthenticated }) => {
               full_name: fullName,
               avatar_url: defaultAvatar,
             },
+            emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
-        if (data.session) {
-          const userData = await handleAuthUser(data.session);
-          setCurrentUser(userData);
-          onAuthenticated();
-          onClose();
-        } else {
-          setSuccess("Please check your email to confirm your account");
-        }
+        
+        // Store user data for email confirmation
+        setPendingUserData({
+          email: email,
+          fullName: fullName,
+          avatar: defaultAvatar,
+        });
+        
+        // Show email confirmation screen
+        setShowEmailConfirmation(true);
+        setSuccess("Confirmation email sent successfully");
       }
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResendEmail = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: pendingUserData.email,
+      });
+      
+      if (error) throw error;
+      setSuccess("Confirmation email sent successfully");
+    } catch (error) {
+      setError(error.message || "Failed to resend code. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToSignup = () => {
+    setShowEmailConfirmation(false);
+    setPendingUserData(null);
+    setError(null);
+    setSuccess(null);
   };
 
   const getPasswordStrengthColor = () => {
@@ -164,24 +198,42 @@ const AuthModal = ({ isOpen, onClose, onAuthenticated }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {!showEmailConfirmation && (
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
 
-            <div className="flex flex-col items-center mb-6">
-              <img src={Logo} alt="Certie Logo" className="w-16 h-16 mb-4" />
-              <h2 className="text-2xl font-bold text-primary-black mb-2">
-                {isLogin ? "Welcome Back" : "Create Account"}
-              </h2>
-              <p className="text-sm text-center text-primary-grey">
-                {isLogin
-                  ? "Sign in to complete your booking"
-                  : "Create an account to complete your booking"}
-              </p>
-            </div>
+            {/* Show Email Confirmation or Regular Auth Form */}
+            {showEmailConfirmation && pendingUserData ? (
+              <>
+                <div className="flex flex-col items-center mb-6">
+                  <img src={Logo} alt="Certie Logo" className="w-16 h-16 mb-4" />
+                </div>
+                <EmailConfirmation
+                  email={pendingUserData.email}
+                  onResend={handleResendEmail}
+                  onBack={handleBackToSignup}
+                  loading={loading}
+                  success={success}
+                />
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col items-center mb-6">
+                  <img src={Logo} alt="Certie Logo" className="w-16 h-16 mb-4" />
+                  <h2 className="text-2xl font-bold text-primary-black mb-2">
+                    {isLogin ? "Welcome Back" : "Create Account"}
+                  </h2>
+                  <p className="text-sm text-center text-primary-grey">
+                    {isLogin
+                      ? "Sign in to complete your booking"
+                      : "Create an account to complete your booking"}
+                  </p>
+                </div>
 
             {/* Google Sign In */}
             <motion.button
@@ -392,6 +444,8 @@ const AuthModal = ({ isOpen, onClose, onAuthenticated }) => {
                 </p>
               </div>
             </form>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
