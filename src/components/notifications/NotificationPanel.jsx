@@ -75,6 +75,30 @@ function getTypeMeta(type) {
         color: "text-rose-600",
         label: "Logbook Due",
       };
+    case "property_onboarding_logbooks":
+      return {
+        icon: FileText,
+        color: "text-purple-600",
+        label: "Property Onboarding",
+      };
+    case "property_onboarding_team":
+      return {
+        icon: UserPlus,
+        color: "text-green-600",
+        label: "Team Setup",
+      };
+    case "property_onboarding_docs":
+      return {
+        icon: UploadCloud,
+        color: "text-blue-600",
+        label: "Documents Setup",
+      };
+    case "property_onboarding_assessments":
+      return {
+        icon: CalendarCheck2,
+        color: "text-cyan-600",
+        label: "Assessments Setup",
+      };
     default:
       return {
         icon: BellRing,
@@ -373,6 +397,42 @@ export default function NotificationPanel({ onClose }) {
         // Navigate to properties page
         if (meta.property_id) {
           navigate(`/properties/${meta.property_id}`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      case "property_onboarding_logbooks":
+        // Navigate to property logbooks tab
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/logbooks`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      case "property_onboarding_team":
+        // Navigate to property team tab
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      case "property_onboarding_docs":
+        // Navigate to property documents tab
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/documents`);
+        } else {
+          navigate("/properties");
+        }
+        break;
+
+      case "property_onboarding_assessments":
+        // Navigate to property assessments tab
+        if (meta.property_id) {
+          navigate(`/properties/${meta.property_id}/assessments`);
         } else {
           navigate("/properties");
         }
