@@ -219,7 +219,7 @@ const AddProperty = () => {
               </div>
               <div className="mt-6">
                 <label className="block text-sm font-medium mb-2">
-                  Property Name
+                  Property Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -237,13 +237,12 @@ const AddProperty = () => {
             <div className="border border-grey-outline rounded-xl p-4">
               <h3 className="text-lg font-medium">Address Details</h3>
               <p className="text-xs text-primary-grey">
-                These fields are automatically updated from the map. You can
-                also edit them manually.
+                Move the map marker to auto-fill these fields, or enter them manually.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Street
+                    Street <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -251,25 +250,27 @@ const AddProperty = () => {
                     onChange={(e) =>
                       handleAddressChange("street", e.target.value)
                     }
-                    placeholder="Enter street address"
+                    placeholder="Move map marker or enter street address"
                     className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">City</label>
+                  <label className="block text-sm font-medium mb-2">
+                    City <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.address.city}
                     onChange={(e) =>
                       handleAddressChange("city", e.target.value)
                     }
-                    placeholder="Enter city"
+                    placeholder="Move map marker or enter city"
                     className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    State
+                    State <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -277,7 +278,7 @@ const AddProperty = () => {
                     onChange={(e) =>
                       handleAddressChange("state", e.target.value)
                     }
-                    placeholder="Enter state"
+                    placeholder="Move map marker or enter state"
                     className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   />
                 </div>
@@ -291,7 +292,7 @@ const AddProperty = () => {
                     onChange={(e) =>
                       handleAddressChange("postcode", e.target.value)
                     }
-                    placeholder="Enter postcode"
+                    placeholder="Move map marker or enter postcode"
                     className="w-full p-3 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                   />
                 </div>
@@ -329,7 +330,7 @@ const AddProperty = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Property Type
+                  Property Type <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={formData.property_type}

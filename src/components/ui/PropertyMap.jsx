@@ -212,13 +212,15 @@ const PropertyMap = ({
     }
   }, [coordinates]);
 
-  useEffect(() => {
-    if (coordinates[0] && coordinates[1]) {
-      reverseGeocode(coordinates[0], coordinates[1], false);
-    }
-    // We only want this to run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Removed auto-fill on mount to avoid confusing users
+  // Address fields will only be filled when user interacts with the map
+  // useEffect(() => {
+  //   if (coordinates[0] && coordinates[1]) {
+  //     reverseGeocode(coordinates[0], coordinates[1], false);
+  //   }
+  //   // We only want this to run once on mount
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const markerIcon = useMemo(
     () =>
