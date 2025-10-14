@@ -83,31 +83,31 @@ const YearView = ({
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-primary-grey">Loading calendar events...</div>
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="text-primary-grey text-sm">Loading calendar events...</div>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 overflow-auto h-full">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 p-2 sm:p-4 overflow-auto h-full">
       {months.map((monthName, monthIndex) => (
         <div
           key={monthName}
-          className="border border-grey-outline rounded-lg overflow-hidden"
+          className="border border-grey-outline rounded-lg overflow-hidden min-w-0"
         >
-          <div className="bg-grey-fill px-3 py-2 border-b border-grey-outline">
-            <h3 className="text-sm font-semibold text-secondary-black">
+          <div className="bg-grey-fill px-2 sm:px-3 py-1.5 sm:py-2 border-b border-grey-outline">
+            <h3 className="text-xs sm:text-sm font-semibold text-secondary-black truncate">
               {monthName}
             </h3>
           </div>
-          <div className="p-2">
-            <div className="grid grid-cols-7 gap-1">
+          <div className="p-1.5 sm:p-2">
+            <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
               {/* Day Headers */}
               {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
                 <div
                   key={i}
-                  className="text-[10px] text-primary-grey font-semibold h-5 w-5 flex items-center justify-center"
+                  className="text-[9px] sm:text-[10px] text-primary-grey font-semibold h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center"
                 >
                   {day}
                 </div>
@@ -123,7 +123,7 @@ const YearView = ({
                     theme="primary"
                   >
                     <div
-                      className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
+                      className={`text-[9px] sm:text-[10px] h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center relative ${
                         day === null
                           ? ""
                           : isToday(day, monthIndex)
@@ -134,14 +134,14 @@ const YearView = ({
                     >
                       {day}
                       {day && hasEvents(day, monthIndex) && (
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
                       )}
                     </div>
                   </Tooltip>
                 ) : (
                   <div
                     key={dayIndex}
-                    className={`text-[10px] h-5 w-5 flex items-center justify-center relative ${
+                    className={`text-[9px] sm:text-[10px] h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center relative ${
                       day === null
                         ? ""
                         : isToday(day, monthIndex)
@@ -151,7 +151,7 @@ const YearView = ({
                   >
                     {day}
                     {day && hasEvents(day, monthIndex) && (
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
                     )}
                   </div>
                 );

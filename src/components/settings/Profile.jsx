@@ -105,16 +105,16 @@ const Profile = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="space-y-8"
+      className="space-y-6 sm:space-y-8"
     >
       {/* User Details Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-primary-black">
+        <h3 className="text-base sm:text-lg font-semibold text-primary-black">
           User Details
         </h3>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <div className="w-20 h-20 rounded-full overflow-hidden bg-grey-fill border-2 border-grey-outline">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="relative flex-shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-grey-fill border-2 border-grey-outline">
               {currentUser?.avatar_url ? (
                 <img
                   src={currentUser.avatar_url}
@@ -123,27 +123,27 @@ const Profile = () => {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-primary-orange">
-                  <User className="w-8 h-8 text-white" />
+                  <User className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               )}
             </div>
             <button
               onClick={triggerFileInput}
               disabled={isUploading}
-              className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary-black rounded-full flex items-center justify-center hover:bg-secondary-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-primary-black rounded-full flex items-center justify-center hover:bg-secondary-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isUploading ? (
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <Camera className="w-3 h-3 text-white" />
+                <Camera className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
               )}
             </button>
           </div>
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-2 text-center sm:text-left">
             <button
               onClick={triggerFileInput}
               disabled={isUploading}
-              className="px-4 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-outline transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+              className="px-3 sm:px-4 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-outline transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm"
             >
               {/* <Upload className="w-4 h-4" /> */}
               <span>{isUploading ? "Uploading..." : "Change Picture"}</span>
@@ -166,12 +166,12 @@ const Profile = () => {
 
       {/* Account Details Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-primary-black">
+        <h3 className="text-base sm:text-lg font-semibold text-primary-black">
           Account Details
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-primary-grey">
+            <label className="text-xs sm:text-sm font-medium text-primary-grey">
               Profile Name
             </label>
             <input
@@ -179,18 +179,18 @@ const Profile = () => {
               value={formData.profileName}
               onChange={(e) => handleInputChange("profileName", e.target.value)}
               disabled={!isEditing}
-              className="w-full px-3 py-2 border border-grey-outline rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-orange disabled:bg-grey-fill"
+              className="w-full px-3 py-2 text-sm border border-grey-outline rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-orange disabled:bg-grey-fill"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-primary-grey">
+            <label className="text-xs sm:text-sm font-medium text-primary-grey">
               Email
             </label>
             <input
               type="email"
               value={formData.email}
               disabled
-              className="w-full px-3 py-2 border border-grey-outline rounded-lg bg-grey-fill text-primary-grey cursor-not-allowed"
+              className="w-full px-3 py-2 text-sm border border-grey-outline rounded-lg bg-grey-fill text-primary-grey cursor-not-allowed"
             />
           </div>
         </div>
@@ -199,16 +199,16 @@ const Profile = () => {
       {/* Action Button */}
       <div className="pt-4">
         {isEditing ? (
-          <div className="flex space-x-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleSave}
-              className="px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-secondary-black transition-colors"
+              className="px-4 sm:px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-secondary-black transition-colors text-sm font-medium"
             >
               Save Changes
             </button>
             <button
               onClick={() => setIsEditing(false)}
-              className="px-6 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-outline transition-colors"
+              className="px-4 sm:px-6 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-outline transition-colors text-sm font-medium"
             >
               Cancel
             </button>
@@ -216,7 +216,7 @@ const Profile = () => {
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-secondary-black transition-colors flex items-center space-x-2"
+            className="px-4 sm:px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-secondary-black transition-colors flex items-center justify-center space-x-2 text-sm font-medium w-full sm:w-auto"
           >
             <Edit3 className="w-4 h-4" />
             <span>Edit Details</span>

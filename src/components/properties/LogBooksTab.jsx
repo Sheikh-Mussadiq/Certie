@@ -219,7 +219,7 @@ const LogBooksTab = () => {
   // Auto-select logbook if logbookId is provided in URL
   useEffect(() => {
     if (logbookId && logbooks.length > 0) {
-      const logbook = logbooks.find(lb => lb.id === logbookId);
+      const logbook = logbooks.find((lb) => lb.id === logbookId);
       if (logbook) {
         // Map the logbook data to the expected format
         const mappedLogbook = {
@@ -270,34 +270,37 @@ const LogBooksTab = () => {
   }
 
   return (
-    <div className="space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 sm:space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-3 sm:p-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div>
-          <h2 className="text-xl font-semibold text-primary-black">LogBooks</h2>
-          <p className="text-sm text-primary-grey">
+          <h2 className="text-lg sm:text-xl font-semibold text-primary-black">
+            LogBooks
+          </h2>
+          <p className="text-xs sm:text-sm text-primary-grey">
             Easily manage, track, and organize all your property logbooks in one
             place.
           </p>
         </div>
-  {currentUser.id === property.owner_id && (
+        {currentUser.id === property.owner_id && (
           <button
-            className="flex items-center gap-2 px-4 py-2 bg-secondary-black text-white rounded-xl hover:bg-secondary-black/90 transition-colors"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-secondary-black text-white rounded-xl hover:bg-secondary-black/90 transition-colors text-sm whitespace-nowrap"
             onClick={() => setShowModal(true)}
           >
             <Plus className="w-4 h-4" />
-            Create Custom LogBook
+            <span className="hidden sm:inline">Create Custom LogBook</span>
+            <span className="sm:hidden">Create LogBook</span>
           </button>
         )}
       </div>
 
-      <div className="flex mb-4 bg-gray-100  rounded-lg w-fit">
+      <div className="flex mb-3 sm:mb-4 bg-gray-100 rounded-lg w-fit">
         {["Active", "In Active"].map((tab) => (
           <motion.button
             key={tab}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
               activeTab === tab
                 ? "bg-white text-secondary-black border border-grey-outline"
                 : "text-primary-grey hover:text-secondary-black"
@@ -308,13 +311,13 @@ const LogBooksTab = () => {
         ))}
       </div>
 
-      <div className="relative w-1/2">
+      <div className="relative w-full sm:w-1/2">
         <input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-1/2 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+          className="w-full sm:w-1/2 px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
         />
       </div>
       {loading ? (
@@ -322,7 +325,7 @@ const LogBooksTab = () => {
       ) : error ? (
         <div className="text-center text-red-500 py-8">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredLogbooks.map((logbook) => (
             <div
               key={logbook.id}
@@ -332,42 +335,42 @@ const LogBooksTab = () => {
                 if (e.target.type !== "checkbox") setSelectedLogbook(logbook);
               }}
             >
-              <div className="flex flex-col items-start justify-between p-4">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col items-start justify-between p-3 sm:p-4">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: logbook.color + "20" }} // Add 20 for 12.5% opacity
                   >
                     <div
-                      className="flex items-center justify-center w-8 h-8 rounded-md text-white font-medium"
+                      className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-md text-white font-medium text-sm"
                       style={{ backgroundColor: logbook.color }}
                     >
                       {logbook.initials}
                     </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-primary-black">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-medium text-sm sm:text-base text-primary-black truncate">
                       {logbook.name}
                     </h3>
-                    <p className="text-sm text-primary-grey">
+                    <p className="text-xs sm:text-sm text-primary-grey">
                       {logbook.frequency}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-primary-grey mb-4">
+                  <p className="text-xs text-primary-grey mb-2 sm:mb-4">
                     {logbook.regulation}
                   </p>
-                  <p className="text-sm text-primary-grey mb-4">
+                  <p className="text-xs sm:text-sm text-primary-grey mb-3 sm:mb-4 line-clamp-2">
                     {logbook.description}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mt-4 bg-grey-fill p-4 rounded-b-xl">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between mt-3 sm:mt-4 bg-grey-fill p-3 sm:p-4 rounded-b-xl">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <button
-                    className="text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-4 py-2 rounded-lg"
+                    className="text-xs sm:text-sm bg-white border border-grey-outline shadow-sm text-primary-black transition-colors px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg whitespace-nowrap"
                     type="button"
                   >
                     View detail
@@ -375,10 +378,10 @@ const LogBooksTab = () => {
                   {currentUser.id === property.owner_id && (
                     <button
                       onClick={(e) => handleDeleteClick(logbook, e)}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-1.5 sm:p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete logbook"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
                   )}
                   {currentUser.id === property.owner_id && (
@@ -388,48 +391,48 @@ const LogBooksTab = () => {
                         setEditingLogbook(logbook);
                         setShowModal(true);
                       }}
-                      className="p-2 text-primary-black hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-1.5 sm:p-2 text-primary-black hover:bg-gray-100 rounded-lg transition-colors"
                       title="Edit logbook"
                     >
-                      <Pencil className="w-4 h-4" />
+                      <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
                   )}
                 </div>
-                  {currentUser.id === property.owner_id && (
-                <label
-                  className="relative inline-flex items-center cursor-pointer"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={logbook.isActive}
-                    onChange={() => handleToggleActive(logbook)}
-                    disabled={toggleLoadingId === logbook.id}
-                  />
-                  <div
-                    className={`w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-black ${
-                      toggleLoadingId === logbook.id ? "opacity-50" : ""
-                    }`}
-                  ></div>
-                </label>
-                  )}
+                {currentUser.id === property.owner_id && (
+                  <label
+                    className="relative inline-flex items-center cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={logbook.isActive}
+                      onChange={() => handleToggleActive(logbook)}
+                      disabled={toggleLoadingId === logbook.id}
+                    />
+                    <div
+                      className={`w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-black ${
+                        toggleLoadingId === logbook.id ? "opacity-50" : ""
+                      }`}
+                    ></div>
+                  </label>
+                )}
               </div>
             </div>
           ))}
 
           {activeTab === "Active" && currentUser.id === property.owner_id && (
-            <div 
-              className="border-2 border-dashed border-grey-outline rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-primary-black hover:bg-grey-fill/30 transition-all duration-200"
+            <div
+              className="border-2 border-dashed border-grey-outline rounded-lg p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-primary-black hover:bg-grey-fill/30 transition-all duration-200"
               onClick={() => setShowModal(true)}
             >
-              <div className="w-12 h-12 rounded-lg bg-grey-fill flex items-center justify-center mb-4">
-                <Plus className="w-6 h-6 text-primary-grey" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-grey-fill flex items-center justify-center mb-3 sm:mb-4">
+                <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-primary-grey" />
               </div>
-              <h3 className="font-medium text-primary-black mb-1">
+              <h3 className="text-sm sm:text-base font-medium text-primary-black mb-1">
                 Create Custom LogBook
               </h3>
-              <p className="text-sm text-primary-grey mb-4">
+              <p className="text-xs sm:text-sm text-primary-grey mb-3 sm:mb-4">
                 Add a New logbook tailored to your specific needs
               </p>
             </div>

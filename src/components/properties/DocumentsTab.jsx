@@ -292,47 +292,53 @@ const DocumentsTab = () => {
   }
 
   return (
-    <div className="space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
-      <div className="flex items-center justify-between mb-8">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary-black" />
+    <div className="space-y-4 sm:space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-3 sm:p-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
+        <div className="relative flex-1 max-w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-secondary-black" />
           <input
             type="text"
             placeholder="Search documents..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-secondary-black"
+            className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-sm border border-grey-outline rounded-lg focus:outline-none focus:border-secondary-black"
           />
         </div>
         {(currentUser.id === property.owner_id ||
-          currentUser.role === "super_admin" || 
-          property.managers?.some(manager => manager.user_id === currentUser.id)) && (
-            <div className="flex gap-3">
-              <button
-                onClick={() => setIsCreateFolderModalOpen(true)}
-                className="px-4 py-2 text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Create folder
-              </button>
-              <button
-                onClick={() => setIsUploadModalOpen(true)}
-                className="px-4 py-2 text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Upload Document
-              </button>
-            </div>
-          )}
+          currentUser.role === "super_admin" ||
+          property.managers?.some(
+            (manager) => manager.user_id === currentUser.id
+          )) && (
+          <div className="flex gap-2 sm:gap-3">
+            <button
+              onClick={() => setIsCreateFolderModalOpen(true)}
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-primary-black border border-grey-outline rounded-lg hover:bg-grey-fill transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Create folder</span>
+              <span className="sm:hidden">Folder</span>
+            </button>
+            <button
+              onClick={() => setIsUploadModalOpen(true)}
+              className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-primary-black rounded-lg hover:bg-primary-black/90 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Upload Document</span>
+              <span className="sm:hidden">Upload</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Search Results */}
       {searchTerm.trim() && (
         <div className="space-y-2">
-          <h3 className="text-lg font-medium">
+          <h3 className="text-base sm:text-lg font-medium">
             Search Results{" "}
             {isSearching && (
-              <span className="text-sm text-gray-500">(searching...)</span>
+              <span className="text-xs sm:text-sm text-gray-500">
+                (searching...)
+              </span>
             )}
           </h3>
           {searchResults.length > 0 ? (
@@ -340,20 +346,24 @@ const DocumentsTab = () => {
               {searchResults.map((document) => (
                 <div
                   key={document.id}
-                  className="flex items-center justify-between p-3 hover:bg-grey-fill rounded-lg"
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-3 hover:bg-grey-fill rounded-lg"
                 >
-                  <div className="flex items-center gap-3">
-                    {getFileIcon(document.file_type)}
-                    <div>
-                      <p className="font-medium">{document.name}</p>
-                      <p className="text-sm text-primary-grey">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <div className="flex-shrink-0">
+                      {getFileIcon(document.file_type)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm sm:text-base truncate">
+                        {document.name}
+                      </p>
+                      <p className="text-xs sm:text-sm text-primary-grey truncate">
                         Folder: {document.document_folders?.name || "Unknown"}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => handleDownloadDocument(document)}
-                    className="text-sm text-primary-orange hover:underline"
+                    className="text-xs sm:text-sm text-primary-orange hover:underline self-end sm:self-auto whitespace-nowrap"
                   >
                     Download
                   </button>
@@ -362,7 +372,7 @@ const DocumentsTab = () => {
             </div>
           ) : (
             !isSearching && (
-              <p className="text-gray-500 text-center py-8">
+              <p className="text-gray-500 text-center py-6 sm:py-8 text-sm">
                 No documents found matching your search.
               </p>
             )
@@ -385,7 +395,7 @@ const DocumentsTab = () => {
               >
                 <button
                   onClick={() => toggleFolder(folder.id)}
-                  className="w-full flex items-center gap-3 p-3 hover:bg-grey-fill rounded-xl"
+                  className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 hover:bg-grey-fill rounded-xl"
                 >
                   <motion.div
                     initial={false}
@@ -393,16 +403,23 @@ const DocumentsTab = () => {
                       rotate: expandedFolders.includes(folder.id) ? 90 : 0,
                     }}
                     transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
                   >
-                    <ChevronRight className="w-5 h-5 text-primary-black" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-primary-black" />
                   </motion.div>
-                  <div className="flex justify-between items-center gap-3 w-full">
-                    <div className="flex items-center gap-3">
-                      <img src={FolderIcon} alt="Folder" className="w-8 h-8" />
-                      <span className="font-medium flex-1">{folder.name}</span>
+                  <div className="flex justify-between items-center gap-2 sm:gap-3 w-full min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <img
+                        src={FolderIcon}
+                        alt="Folder"
+                        className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+                      />
+                      <span className="font-medium text-sm sm:text-base truncate">
+                        {folder.name}
+                      </span>
                     </div>
 
-                    <span className="text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-3 py-1 text-primary-black font-medium">
+                    <span className="text-xs sm:text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-primary-black font-medium whitespace-nowrap flex-shrink-0">
                       {documents[folder.id]?.length || 0} files
                     </span>
                   </div>
@@ -417,7 +434,7 @@ const DocumentsTab = () => {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="ml-8 overflow-hidden"
+                        className="ml-4 sm:ml-8 overflow-hidden"
                       >
                         {documents[folder.id].length > 0 ? (
                           documents[folder.id].map((document) => (
@@ -426,34 +443,42 @@ const DocumentsTab = () => {
                               initial={{ scale: 1 }}
                               whileHover={{ scale: 1.01 }}
                               transition={{ duration: 0.2 }}
-                              className={`flex items-center justify-between p-3 m-2 bg-grey-fill/50 border border-grey-outline rounded-lg shadow-sm ${
+                              className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-2 sm:p-3 m-2 bg-grey-fill/50 border border-grey-outline rounded-lg shadow-sm ${
                                 recentlyAdded.includes(document.id)
                                   ? "animate-pulse bg-green-50/50 border-green-200"
                                   : ""
                               }`}
                             >
-                              <div className="flex items-center gap-3">
-                                {getFileIcon(document.file_type)}
-                                <div>
-                                  <p className="font-medium">{document.name}</p>
-                                  <p className="text-sm text-primary-grey flex items-center gap-2">
-                                    {new Date(
-                                      document.created_at
-                                    ).toLocaleDateString()}
-                                    <span className="w-1 h-1 bg-primary-grey rounded-full"></span>
-                                    {document.size
-                                      ? formatFileSize(document.size)
-                                      : document.file_size
-                                      ? formatFileSize(document.file_size)
-                                      : "File size unavailable"}
+                              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 w-full">
+                                <div className="flex-shrink-0">
+                                  {getFileIcon(document.file_type)}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-medium text-sm sm:text-base truncate">
+                                    {document.name}
+                                  </p>
+                                  <p className="text-xs sm:text-sm text-primary-grey flex items-center gap-1 sm:gap-2">
+                                    <span className="whitespace-nowrap">
+                                      {new Date(
+                                        document.created_at
+                                      ).toLocaleDateString()}
+                                    </span>
+                                    <span className="w-1 h-1 bg-primary-grey rounded-full hidden sm:inline-block"></span>
+                                    <span className="truncate">
+                                      {document.size
+                                        ? formatFileSize(document.size)
+                                        : document.file_size
+                                        ? formatFileSize(document.file_size)
+                                        : "File size unavailable"}
+                                    </span>
                                   </p>
                                 </div>
                               </div>
                               <button
                                 onClick={() => handleDownloadDocument(document)}
-                                className="bg-white border border-grey-outline rounded-lg p-2 hover:bg-grey-fill shadow-sm"
+                                className="bg-white border border-grey-outline rounded-lg p-1.5 sm:p-2 hover:bg-grey-fill shadow-sm self-end sm:self-auto flex-shrink-0"
                               >
-                                <ArrowDownToLine className="w-5 h-5" />
+                                <ArrowDownToLine className="w-4 h-4 sm:w-5 sm:h-5" />
                               </button>
                             </motion.div>
                           ))
@@ -462,7 +487,7 @@ const DocumentsTab = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="p-3 text-center text-gray-500"
+                            className="p-3 text-center text-gray-500 text-sm"
                           >
                             No documents in this folder
                           </motion.div>
@@ -477,25 +502,25 @@ const DocumentsTab = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-center py-12"
+              className="text-center py-8 sm:py-12"
             >
-              <div className="w-16 h-16 bg-grey-fill rounded-full flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-8 h-8 text-gray-400" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-grey-fill rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                 No folders yet
               </h3>
               {(currentUser.id === property.owner_id ||
                 currentUser.role === "super_admin") && (
                 <>
-                  <p className="text-gray-500 mb-4">
+                  <p className="text-sm sm:text-base text-gray-500 mb-4 px-4">
                     Create your first folder to organize documents
                   </p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsCreateFolderModalOpen(true)}
-                    className="px-4 py-2 bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
+                    className="px-4 py-2 text-sm bg-primary-orange text-white rounded-lg hover:bg-primary-orange/90 transition-colors"
                   >
                     Create Folder
                   </motion.button>

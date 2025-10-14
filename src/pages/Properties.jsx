@@ -199,6 +199,15 @@ const Properties = () => {
             </>
           ) : (
             <>
+              <TableHeader
+                onSearch={setSearchTerm}
+                onSort={handleSort}
+                onFilter={handleFilter}
+                currentSort={currentSort}
+                currentFilters={currentFilters}
+                onViewChange={setViewMode}
+                viewMode={viewMode}
+              />
               {filteredProperties.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -233,15 +242,6 @@ const Properties = () => {
                 </motion.div>
               ) : (
                 <>
-                  <TableHeader
-                    onSearch={setSearchTerm}
-                    onSort={handleSort}
-                    onFilter={handleFilter}
-                    currentSort={currentSort}
-                    currentFilters={currentFilters}
-                    onViewChange={setViewMode}
-                    viewMode={viewMode}
-                  />
                   <div className="overflow-y-auto">
                     {viewMode === "table" ? (
                       <PropertyTable

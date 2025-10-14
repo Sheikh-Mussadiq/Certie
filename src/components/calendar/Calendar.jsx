@@ -132,12 +132,12 @@ const Calendar = () => {
           onNext={handleNext}
           onToday={handleToday}
         />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center">
-            <div className="text-red-600 font-medium mb-2">
+            <div className="text-red-600 font-medium mb-2 text-sm sm:text-base">
               Error loading calendar events
             </div>
-            <div className="text-sm text-primary-grey">{error.message}</div>
+            <div className="text-xs sm:text-sm text-primary-grey">{error.message}</div>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@ const Calendar = () => {
         onToday={handleToday}
       />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-hidden">
         {view === "month" && (
           <MonthView
             currentDate={currentDate}

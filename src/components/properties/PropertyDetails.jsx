@@ -89,9 +89,9 @@ const PropertyDetails = ({ property, setProperty }) => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-primary-black">
+          <h1 className="text-xl sm:text-2xl font-semibold text-primary-black">
             Property Details
           </h1>
         </div>
@@ -103,22 +103,23 @@ const PropertyDetails = ({ property, setProperty }) => {
             )) && (
             <button
               onClick={() => setIsEditModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-white shadow-sm border border-grey-outline text-primary-black hover:bg-grey-fill rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white shadow-sm border border-grey-outline text-primary-black hover:bg-grey-fill rounded-lg transition-colors text-sm"
             >
               <Edit2 className="w-4 h-4" />
-              Edit Property
+              <span className="hidden sm:inline">Edit Property</span>
+              <span className="sm:hidden">Edit</span>
             </button>
           )}
       </div>
 
-      <div className="flex space-x-2 mb-6">
+      <div className="flex overflow-x-auto gap-2 mb-4 sm:mb-6 pb-2 scrollbar-thin">
         {tabs.map((tab) => (
           <NavLink
             key={tab.id}
             to={tab.path}
             end={tab.path.endsWith(`/properties/${id}`)}
             className={({ isActive }) =>
-              `px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+              `px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
                 isActive
                   ? "bg-white text-secondary-black border border-grey-outline shadow-sm"
                   : "bg-grey-fill text-primary-grey hover:text-primary-black"

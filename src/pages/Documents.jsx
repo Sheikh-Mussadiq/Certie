@@ -199,34 +199,23 @@ const Documents = () => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-2">All Documents</h1>
-      <p className="text-gray-500 mb-6">
+      <h1 className="text-xl sm:text-2xl font-bold mb-2">All Documents</h1>
+      <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
         Browse and manage documents across all your properties.
       </p>
 
-      <div className="bg-white rounded-xl p-4 border border-grey-outline shadow-sm">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search documents..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
+      <div className="bg-white rounded-xl p-3 sm:p-4 border border-grey-outline shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-8">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1">
             <div ref={sortRef} className="relative">
               <button
                 onClick={() => setSortOpen((o) => !o)}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black hover:bg-grey-fill rounded-lg border border-grey-outline"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm text-primary-black hover:bg-grey-fill rounded-lg border border-grey-outline whitespace-nowrap"
               >
                 <SortAsc className="w-4 h-4" />
-                <span>Sort by: {sortOptions[sortBy]}</span>
-                <ChevronDown className="w-4 h-4" />
+                <span className="hidden sm:inline">Sort by: {sortOptions[sortBy]}</span>
+                <span className="sm:hidden">Sort</span>
+                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
               <AnimatePresence>
                 {sortOpen && (
@@ -234,7 +223,7 @@ const Documents = () => {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="absolute z-10 right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-grey-outline"
+                    className="absolute z-10 left-0 sm:right-0 sm:left-auto mt-2 w-48 bg-white rounded-lg shadow-lg border border-grey-outline"
                   >
                     {Object.entries(sortOptions).map(([value, label]) => (
                       <button
@@ -243,7 +232,7 @@ const Documents = () => {
                           setSortBy(value);
                           setSortOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-primary-black hover:bg-grey-fill"
+                        className="block w-full text-left px-4 py-2 text-sm text-primary-black hover:bg-grey-fill first:rounded-t-lg last:rounded-b-lg"
                       >
                         {label}
                       </button>
@@ -255,11 +244,12 @@ const Documents = () => {
             <div ref={filterRef} className="relative">
               <button
                 onClick={() => setFilterOpen((o) => !o)}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black hover:bg-grey-fill rounded-lg border border-grey-outline"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm text-primary-black hover:bg-grey-fill rounded-lg border border-grey-outline whitespace-nowrap"
               >
                 <Filter className="w-4 h-4" />
-                <span>Filter: {filterOptions[filterByType]}</span>
-                <ChevronDown className="w-4 h-4" />
+                <span className="hidden sm:inline">Filter: {filterOptions[filterByType]}</span>
+                <span className="sm:hidden">Filter</span>
+                <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
               <AnimatePresence>
                 {filterOpen && (
@@ -276,7 +266,7 @@ const Documents = () => {
                           setFilterByType(value);
                           setFilterOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-primary-black hover:bg-grey-fill"
+                        className="block w-full text-left px-4 py-2 text-sm text-primary-black hover:bg-grey-fill first:rounded-t-lg last:rounded-b-lg"
                       >
                         {label}
                       </button>
@@ -284,6 +274,17 @@ const Documents = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+            
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 text-sm border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+              />
             </div>
           </div>
         </div>
@@ -293,31 +294,32 @@ const Documents = () => {
             filteredData.map((property) => (
               <motion.div
                 key={property.id}
-                className="border border-grey-outline p-2 rounded-xl shadow-sm overflow-hidden"
+                className="border border-grey-outline p-1.5 sm:p-2 rounded-xl shadow-sm overflow-hidden"
               >
                 <button
                   onClick={() => toggleProperty(property.id)}
-                  className="w-full flex items-center gap-3 p-3 hover:bg-grey-fill rounded-xl"
+                  className="w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 hover:bg-grey-fill rounded-xl"
                 >
                   <motion.div
                     animate={{
                       rotate: expandedProperties.includes(property.id) ? 90 : 0,
                     }}
+                    className="flex-shrink-0"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.div>
-                  <FolderOpen className="w-6 h-6 text-primary-orange" />
+                  <FolderOpen className="w-5 h-5 sm:w-6 sm:h-6 text-primary-orange flex-shrink-0" />
                   <Link
                     to={`/properties/${property.id}`}
-                    className="font-medium text-lg hover:underline"
+                    className="font-medium text-sm sm:text-base md:text-lg hover:underline truncate flex-1 min-w-0 text-left"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {property.name}
                   </Link>
                   {property.folders && property.folders.length > 0 && (
-                    <span className="text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-3 py-1 ml-auto">
+                    <span className="text-xs sm:text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-2 sm:px-3 py-0.5 sm:py-1 ml-auto flex-shrink-0">
                       {property.folders.length}{" "}
-                      {property.folders.length === 1 ? "folder" : "folders"}
+                      <span className="hidden sm:inline">{property.folders.length === 1 ? "folder" : "folders"}</span>
                     </span>
                   )}
                 </button>
@@ -327,7 +329,7 @@ const Documents = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="ml-8 relative"
+                      className="ml-4 sm:ml-8 relative"
                     >
                       {property.folders.map((folder, index) => (
                         <div key={folder.id} className="py-2 relative">
@@ -352,7 +354,7 @@ const Documents = () => {
                           </div>
                           <button
                             onClick={() => toggleFolder(property.id, folder.id)}
-                            className="w-[98%] flex items-center gap-3 p-2 hover:bg-grey-fill rounded-lg ml-4"
+                            className="w-[98%] flex items-center gap-2 sm:gap-3 p-2 hover:bg-grey-fill rounded-lg ml-2 sm:ml-4"
                           >
                             <motion.div
                               animate={{
@@ -362,17 +364,18 @@ const Documents = () => {
                                   ? 90
                                   : 0,
                               }}
+                              className="flex-shrink-0"
                             >
-                              <ChevronRight className="w-5 h-5" />
+                              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                             </motion.div>
                             <img
                               src={FolderIcon}
                               alt="Folder"
-                              className="w-8 h-8"
+                              className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
                             />
-                            <span className="font-medium">{folder.name}</span>
-                            <span className="text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-3 py-1 ml-auto">
-                              {folder.documents.length} files
+                            <span className="font-medium text-sm sm:text-base truncate flex-1 min-w-0 text-left">{folder.name}</span>
+                            <span className="text-xs sm:text-sm bg-grey-fill/50 border border-grey-outline shadow-sm rounded-full px-2 sm:px-3 py-0.5 sm:py-1 ml-auto flex-shrink-0">
+                              {folder.documents.length} <span className="hidden sm:inline">files</span>
                             </span>
                           </button>
                           <AnimatePresence>
@@ -383,27 +386,33 @@ const Documents = () => {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                className="ml-10 mt-2 space-y-2"
+                                className="ml-4 sm:ml-10 mt-2 space-y-2"
                               >
                                 {folder.documents.map((doc) => (
                                   <div
                                     key={doc.id}
-                                    className="flex items-center justify-between p-3 bg-grey-fill/50 border border-grey-outline rounded-lg"
+                                    className="flex items-center justify-between gap-2 sm:gap-3 p-2 sm:p-3 bg-grey-fill/50 border border-grey-outline rounded-lg"
                                   >
-                                    <div className="flex items-center gap-3">
-                                      {getFileIcon(doc.file_type)}
-                                      <div>
-                                        <p className="font-medium">
+                                    <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                                      <div className="flex-shrink-0">
+                                        {getFileIcon(doc.file_type)}
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-sm sm:text-base truncate">
                                           {doc.name}
                                         </p>
-                                        <p className="text-sm text-primary-grey flex items-center gap-2">
-                                          {new Date(
-                                            doc.created_at
-                                          ).toLocaleDateString("en-GB")}
-                                          <span className="w-1 h-1 bg-primary-grey rounded-full"></span>
-                                          {formatFileSize(
-                                            doc.size || doc.file_size
-                                          )}
+                                        <p className="text-xs sm:text-sm text-primary-grey flex items-center gap-1 sm:gap-2">
+                                          <span className="truncate">
+                                            {new Date(
+                                              doc.created_at
+                                            ).toLocaleDateString("en-GB")}
+                                          </span>
+                                          <span className="w-1 h-1 bg-primary-grey rounded-full flex-shrink-0"></span>
+                                          <span className="flex-shrink-0">
+                                            {formatFileSize(
+                                              doc.size || doc.file_size
+                                            )}
+                                          </span>
                                         </p>
                                       </div>
                                     </div>
@@ -411,9 +420,9 @@ const Documents = () => {
                                       onClick={() =>
                                         handleDownloadDocument(doc)
                                       }
-                                      className="p-2 bg-white border border-grey-outline rounded-lg shadow-sm"
+                                      className="p-1.5 sm:p-2 bg-white border border-grey-outline rounded-lg shadow-sm flex-shrink-0 hover:bg-grey-fill transition-colors"
                                     >
-                                      <ArrowDownToLine className="w-5 h-5" />
+                                      <ArrowDownToLine className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </button>
                                   </div>
                                 ))}
@@ -428,8 +437,8 @@ const Documents = () => {
               </motion.div>
             ))
           ) : (
-            <div className="text-center py-16">
-              <p className="text-gray-500">No documents found.</p>
+            <div className="text-center py-12 sm:py-16">
+              <p className="text-sm sm:text-base text-gray-500">No documents found.</p>
             </div>
           )}
         </div>

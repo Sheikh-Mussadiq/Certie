@@ -48,18 +48,18 @@ const PropertyOverview = () => {
 
   return (
     <>
-      <div className="space-y-8 bg-white rounded-xl border border-grey-outline overflow-hidden p-4">
+      <div className="space-y-4 sm:space-y-8 bg-white rounded-xl border border-grey-outline overflow-hidden p-3 sm:p-4">
         <div>
-          <h2 className="text-lg font-semibold mb-4 flex flex-col gap-2">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex flex-col gap-2">
             Property Name: {property?.name || "No Property Name"}
-            <p className="text-sm text-primary-grey">
+            <p className="text-xs sm:text-sm text-primary-grey">
               {property?.address?.street}, {property?.address?.city},{" "}
               {property?.address?.postcode}
             </p>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {/* Image Column */}
-            <div className="h-[400px] rounded-xl overflow-hidden shadow-sm">
+            <div className="h-[250px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden shadow-sm">
               {property?.image ? (
                 <img
                   src={property.image}
@@ -94,7 +94,7 @@ const PropertyOverview = () => {
             </div>
 
             {/* Map Column */}
-            <div className="h-[400px] rounded-xl overflow-hidden shadow-sm">
+            <div className="h-[250px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden shadow-sm">
               {property?.latitude && property?.longitude ? (
                 <StaticMap
                   latitude={property.latitude}
@@ -136,109 +136,109 @@ const PropertyOverview = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-0">
           <div className="border border-grey-outline rounded-2xl md:rounded-r-none">
-            <h3 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline">
+            <h3 className="text-xs sm:text-sm font-medium text-primary-grey p-3 sm:p-4 border-b border-grey-outline">
               Property Information
             </h3>
             <div className="divide-y divide-grey-outline">
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Home className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Property ID</span>
-                  <p className="text-sm font-medium">{property?.id}</p>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Property ID</span>
+                  <p className="text-xs sm:text-sm font-medium truncate">{property?.id}</p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Shield className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Compliance Score
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.compliance_score || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Square className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Square className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Square Ft</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Square Ft</span>
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.square_ft || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Layers className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Floors</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Floors</span>
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.floors || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Building className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Building className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Property Type
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.property_type || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Calendar className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Construction Year
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.construction_year || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Key className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Key className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Tenure</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Tenure</span>
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.tenure || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Shield className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Insurance Provider
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.insurance_provider || "Not Specified"}
                   </p>
                 </div>
@@ -247,111 +247,111 @@ const PropertyOverview = () => {
           </div>
 
           <div className="border border-grey-outline rounded-2xl md:rounded-l-none md:border-l-0">
-            <h3 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline">
+            <h3 className="text-xs sm:text-sm font-medium text-primary-grey p-3 sm:p-4 border-b border-grey-outline">
               Contact Information
             </h3>
             <div className="divide-y divide-grey-outline">
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Phone className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Contact</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Contact</span>
+                  <p className="text-xs sm:text-sm font-medium break-all">
                     {property?.contact_phone || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Mail className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Email</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Email</span>
+                  <p className="text-xs sm:text-sm font-medium break-all">
                     {property?.email || "flat2@acre.com"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Users className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">Occupants</span>
-                  <p className="text-sm font-medium">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">Occupants</span>
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.occupants || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <FireExtinguisher className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <FireExtinguisher className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Local Fire Brigade
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.local_fire_brigade || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Flag className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Flag className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Fire Strategy
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.fire_strategy || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <AlertTriangle className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Evacuation Policy
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.evacuation_policy || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Phone className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Emergency Contact
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium break-all">
                     {property?.emergency_contact || "Not Specified"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center px-4 py-3">
-                <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                  <Clock className="w-5 h-5" />
+              <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm text-primary-grey">
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs sm:text-sm text-primary-grey">
                     Contractor Hours
                   </span>
-                  <p className="text-sm font-medium">
+                  <p className="text-xs sm:text-sm font-medium">
                     {property?.contactor_hours || "Not Specified"}
                   </p>
                 </div>
@@ -362,36 +362,36 @@ const PropertyOverview = () => {
       </div>
 
       {/* Property Team Section */}
-      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-4 mt-4">
-        <h3 className="text-lg font-semibold mb-4">Property Team</h3>
-        <p className="text-sm text-primary-grey">
+      <div className="bg-white rounded-xl border border-grey-outline overflow-hidden p-3 sm:p-4 mt-3 sm:mt-4">
+        <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Property Team</h3>
+        <p className="text-xs sm:text-sm text-primary-grey">
           Property Managers are responsible for the overall management of the
           property. Site Users are responsible for the day to day operations of
           the property.
         </p>
-        <p className="text-sm text-primary-grey mb-4">
+        <p className="text-xs sm:text-sm text-primary-grey mb-3 sm:mb-4">
           <strong>Manage your team in the edit property button above.</strong>
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-0">
           {/* Property Managers */}
           <div className="border border-grey-outline rounded-2xl md:rounded-r-none">
-            <h4 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline flex items-center">
-              <UserCog className="w-4 h-4 mr-2" />
+            <h4 className="text-xs sm:text-sm font-medium text-primary-grey p-3 sm:p-4 border-b border-grey-outline flex items-center">
+              <UserCog className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
               Property Managers ({property?.managers?.length || 0})
             </h4>
             <div className="divide-y divide-grey-outline">
               {property?.managers && property.managers.length > 0 ? (
                 property.managers.map((manager, index) => (
-                  <div key={index} className="flex items-center px-4 py-3">
-                    <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                      <UserCog className="w-5 h-5" />
+                  <div key={index} className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                      <UserCog className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-medium truncate">
                         {manager.name || manager.email || "Unknown Manager"}
                       </p>
                       {manager.email && (
-                        <p className="text-xs text-primary-grey">
+                        <p className="text-xs text-primary-grey break-all">
                           {manager.email}
                         </p>
                       )}
@@ -399,12 +399,12 @@ const PropertyOverview = () => {
                   </div>
                 ))
               ) : (
-                <div className="flex items-center px-4 py-3">
-                  <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                    <UserCog className="w-5 h-5" />
+                <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                    <UserCog className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-primary-grey">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm text-primary-grey">
                       No managers assigned
                     </p>
                   </div>
@@ -415,23 +415,23 @@ const PropertyOverview = () => {
 
           {/* Site Users */}
           <div className="border border-grey-outline rounded-2xl md:rounded-l-none md:border-l-0">
-            <h4 className="text-sm font-medium text-primary-grey p-4 border-b border-grey-outline flex items-center">
-              <UserCheck className="w-4 h-4 mr-2" />
+            <h4 className="text-xs sm:text-sm font-medium text-primary-grey p-3 sm:p-4 border-b border-grey-outline flex items-center">
+              <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
               Site Users ({property?.site_users?.length || 0})
             </h4>
             <div className="divide-y divide-grey-outline">
               {property?.site_users && property.site_users.length > 0 ? (
                 property.site_users.map((siteUser, index) => (
-                  <div key={index} className="flex items-center px-4 py-3">
-                    <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                      <UserCheck className="w-5 h-5" />
+                  <div key={index} className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                      <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-medium truncate">
                         {siteUser.name || siteUser.email || "Unknown User"}
                       </p>
                       {siteUser.email && (
-                        <p className="text-xs text-primary-grey">
+                        <p className="text-xs text-primary-grey break-all">
                           {siteUser.email}
                         </p>
                       )}
@@ -439,12 +439,12 @@ const PropertyOverview = () => {
                   </div>
                 ))
               ) : (
-                <div className="flex items-center px-4 py-3">
-                  <div className="w-8 h-8 flex items-center justify-center text-primary-grey mr-3">
-                    <UserCheck className="w-5 h-5" />
+                <div className="flex items-center px-3 sm:px-4 py-2 sm:py-3">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-primary-grey mr-2 sm:mr-3 flex-shrink-0">
+                    <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-primary-grey">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm text-primary-grey">
                       No site users assigned
                     </p>
                   </div>

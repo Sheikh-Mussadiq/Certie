@@ -8,7 +8,7 @@ import { SiOverleaf } from "react-icons/si";
 import NotificationBell from "./notifications/NotificationBell";
 import NotificationPanel from "./notifications/NotificationPanel";
 
-const Navbar = () => {
+const Navbar = ({ onToggleSidebar }) => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -51,8 +51,17 @@ const Navbar = () => {
           : "bg-white/80 backdrop-blur-sm"
       } sticky top-0 z-50 transition-all duration-300`}
     >
-      <div className="w-full px-4 mx-auto">
-        <div className="flex justify-end h-16">
+      <div className="w-full flex items-center justify-between px-2 sm:px-4 mx-auto">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={onToggleSidebar}
+          className="lg:hidden text-gray-700 hover:text-primary-orange transition-colors p-2"
+          aria-label="Toggle menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        
+        <div className="flex justify-end flex-1 h-14 sm:h-16">
           <div className="flex items-center">
             {/* <Link
               to="/home"
@@ -100,7 +109,7 @@ const Navbar = () => {
             </div> */}
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <NotificationBell
               onClick={() => setShowNotifications((v) => !v)}
               isOpen={showNotifications}

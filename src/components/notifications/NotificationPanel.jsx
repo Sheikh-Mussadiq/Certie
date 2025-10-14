@@ -112,7 +112,7 @@ function highlightBody(n) {
   const meta = n.meta || {};
   if (n.type === "service_due" && meta.service_name && meta.property_name) {
     return (
-      <p className="text-sm text-gray-600 leading-relaxed">
+      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
         Your{" "}
         <span className="font-medium text-gray-900">{meta.service_name}</span>{" "}
         for{" "}
@@ -127,7 +127,7 @@ function highlightBody(n) {
   }
   if (n.type === "logbook_due" && meta.property_name) {
     return (
-      <p className="text-sm text-gray-600 leading-relaxed">
+      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
         <span className="font-medium text-gray-900">
           {meta.logbook_type || "Logbook"}
         </span>{" "}
@@ -138,7 +138,7 @@ function highlightBody(n) {
     );
   }
   return n.body ? (
-    <p className="text-sm text-gray-600 leading-relaxed">{n.body}</p>
+    <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{n.body}</p>
   ) : null;
 }
 
@@ -158,7 +158,7 @@ function NotificationItem({ n, onToggle, index, onNavigate }) {
       }}
       onClick={() => onNavigate(n)}
       className={clsx(
-        "group relative flex gap-3 p-4 transition-all duration-200 cursor-pointer border-b border-gray-100 last:border-b-0",
+        "group relative flex gap-2 sm:gap-3 p-3 sm:p-4 transition-all duration-200 cursor-pointer border-b border-gray-100 last:border-b-0",
         unread
           ? "bg-blue-50/30 hover:bg-blue-50/50"
           : "bg-white hover:bg-gray-50/50"
@@ -166,33 +166,33 @@ function NotificationItem({ n, onToggle, index, onNavigate }) {
     >
       {/* Unread indicator dot */}
       {unread && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-orange rounded-r-full" />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 sm:w-1 h-6 sm:h-8 bg-primary-orange rounded-r-full" />
       )}
 
       {/* Icon */}
       <div className="flex-shrink-0 mt-0.5">
-        <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-gray-100">
-          <Icon className={clsx("w-4 h-4", color)} />
+        <div className="h-7 w-7 sm:h-9 sm:w-9 rounded-lg flex items-center justify-center bg-gray-100">
+          <Icon className={clsx("w-3.5 h-3.5 sm:w-4 sm:h-4", color)} />
         </div>
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 mb-1">
+        <div className="flex items-start justify-between gap-1 sm:gap-2 mb-1">
           <h4
             className={clsx(
-              "text-sm font-medium leading-snug",
+              "text-xs sm:text-sm font-medium leading-snug truncate",
               unread ? "text-gray-900" : "text-gray-700"
             )}
           >
             {n.title}
           </h4>
-          <time className="text-xs text-gray-400 flex-shrink-0">
+          <time className="text-[10px] sm:text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">
             {formatTime(n.created_at)}
           </time>
         </div>
 
-        <div className="">{highlightBody(n)}</div>
+        <div className="mb-1">{highlightBody(n)}</div>
 
         {/* Action button */}
         {unread && (
@@ -201,7 +201,7 @@ function NotificationItem({ n, onToggle, index, onNavigate }) {
               e.stopPropagation();
               onToggle(n);
             }}
-            className="text-xs text-primary-orange hover:text-primary-orange/80 font-medium transition-colors"
+            className="text-[10px] sm:text-xs text-primary-orange hover:text-primary-orange/80 font-medium transition-colors"
           >
             Mark as read
           </button>
@@ -469,31 +469,32 @@ export default function NotificationPanel({ onClose }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="absolute right-24 top-16 w-[440px] h-[75vh] max-h-[640px] min-h-[400px] z-[60]"
+      className="fixed sm:absolute right-2 sm:right-24 top-16 sm:top-16 left-2 sm:left-auto w-auto sm:w-[440px] h-[80vh] sm:h-[75vh] max-h-[600px] sm:max-h-[640px] min-h-[350px] sm:min-h-[400px] z-[60]"
     >
-      <div className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl border border-gray-200/50">
+      <div className="relative flex h-full flex-col overflow-hidden rounded-xl sm:rounded-2xl bg-white shadow-2xl border border-gray-200/50">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 bg-white">
-          <div className="flex items-center gap-2.5">
-            <h3 className="text-base font-semibold text-gray-900">
+        <div className="flex items-center justify-between border-b border-gray-100 px-3 sm:px-5 py-3 sm:py-4 bg-white">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-900">
               Notifications
             </h3>
           </div>
           <button
             onClick={handleMarkAll}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-primary-orange transition-colors"
+            className="inline-flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-medium text-gray-600 hover:text-primary-orange transition-colors"
           >
-            <CheckCheck className="w-3.5 h-3.5" />
-            Mark all read
+            <CheckCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <span className="hidden sm:inline">Mark all read</span>
+            <span className="sm:hidden">Mark all</span>
           </button>
         </div>
 
         {/* Content */}
         {loading ? (
-          <div className="flex flex-1 items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="w-7 h-7 animate-spin text-primary-orange" />
-              <p className="text-sm text-gray-500">Loading...</p>
+          <div className="flex flex-1 items-center justify-center p-4">
+            <div className="flex flex-col items-center gap-2 sm:gap-3">
+              <Loader2 className="w-5 h-5 sm:w-7 sm:h-7 animate-spin text-primary-orange" />
+              <p className="text-xs sm:text-sm text-gray-500">Loading...</p>
             </div>
           </div>
         ) : (
@@ -507,15 +508,15 @@ export default function NotificationPanel({ onClose }) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-16 px-6"
+                  className="flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6"
                 >
-                  <div className="w-14 h-14 mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                    <BellRing className="w-6 h-6 text-gray-400" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 mb-2 sm:mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+                    <BellRing className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 mb-1">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1">
                     No notifications
                   </p>
-                  <p className="text-xs text-gray-500 text-center">
+                  <p className="text-[10px] sm:text-xs text-gray-500 text-center">
                     You're all caught up!
                   </p>
                 </motion.div>
@@ -533,15 +534,15 @@ export default function NotificationPanel({ onClose }) {
             </AnimatePresence>
 
             {loadingMore && (
-              <div className="flex items-center justify-center py-4 border-t border-gray-100">
-                <Loader2 className="w-4 h-4 animate-spin text-gray-400 mr-2" />
-                <p className="text-xs text-gray-500">Loading more...</p>
+              <div className="flex items-center justify-center py-3 sm:py-4 border-t border-gray-100">
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-gray-400 mr-1.5 sm:mr-2" />
+                <p className="text-[10px] sm:text-xs text-gray-500">Loading more...</p>
               </div>
             )}
 
             {end && items.length > 0 && (
-              <div className="text-center py-4 border-t border-gray-100">
-                <p className="text-xs text-gray-400">
+              <div className="text-center py-3 sm:py-4 border-t border-gray-100">
+                <p className="text-[10px] sm:text-xs text-gray-400">
                   You're all caught up! 🎉
                 </p>
               </div>

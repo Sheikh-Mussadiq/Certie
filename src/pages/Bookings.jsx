@@ -18,7 +18,7 @@ const Bookings = () => {
   const [sortOption, setSortOption] = useState("created_at_desc");
   const [filterStatus, setFilterStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
 
   useEffect(() => {
@@ -119,11 +119,11 @@ const Bookings = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="">
-      <div className="mb-6 flex justify-between items-start">
-        <div>
-          <h1 className="text-2xl font-bold text-primary-black">Bookings</h1>
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+        <div className="flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-primary-black mb-2">Bookings</h1>
           {currentUser?.role === "super_admin" ? (
-            <p className="text-sm text-primary-grey">
+            <p className="text-xs sm:text-sm text-primary-grey">
               Manage all the bookings for Certie customers.
               <span className="font-bold text-primary-black">
                 {" "}
@@ -132,17 +132,17 @@ const Bookings = () => {
               </span>
             </p>
           ) : (
-            <p className="text-sm text-primary-grey">
+            <p className="text-xs sm:text-sm text-primary-grey">
               View and manage your property assessments. Book new assessments, track their status, and access completed reports all in one place.
             </p>
           )}
         </div>
         {currentUser?.role !== "super_admin" && <button 
           onClick={() => setShowPropertyModal(true)}
-          className="bg-primary-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-opacity-90 transition-colors"
+          className="bg-primary-black text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center space-x-2 hover:bg-opacity-90 transition-colors whitespace-nowrap flex-shrink-0"
         >
-          <Plus className="h-5 w-5 mr-1" />
-          <span>Book Assessment</span>
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="text-sm sm:text-base">Book Assessment</span>
         </button>}
       </div>
 

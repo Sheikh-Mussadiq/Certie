@@ -290,38 +290,38 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 "
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4"
       >
-        <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-          <div className="sticky top-0 z-10 bg-white p-6 border-b border-grey-outline flex justify-between items-center shadow-sm">
-            <h2 className="text-xl font-semibold text-primary-black">
+        <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="sticky top-0 z-10 bg-white p-4 sm:p-6 border-b border-grey-outline flex justify-between items-center shadow-sm">
+            <h2 className="text-lg sm:text-xl font-semibold text-primary-black">
               Edit Property
             </h2>
             <button
               onClick={onClose}
-              className="text-primary-grey hover:text-primary-black transition-colors"
+              className="text-primary-grey hover:text-primary-black transition-colors p-1"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="overflow-y-auto flex-1 pr-6">
-            <form onSubmit={handleSubmit} className="p-6 space-y-8 pb-24">
+          <div className="overflow-y-auto flex-1 px-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="py-4 sm:py-6 space-y-6 sm:space-y-8 pb-24">
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
                   {error}
                 </div>
               )}
 
-              <div className="space-y-6">
-                <h3 className="text-lg font-medium text-primary-black">
+              <div className="space-y-4 sm:space-y-6">
+                <h3 className="text-base sm:text-lg font-medium text-primary-black">
                   Basic Information
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Property Name*
                     </label>
@@ -332,14 +332,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="property_type"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Property Type*
                     </label>
@@ -349,7 +349,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       value={formData.property_type}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     >
                       {property_types.map((type) => (
                         <option key={type} value={type}>
@@ -397,7 +397,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div>
                     <label
                       htmlFor="address.street"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Street Address
                     </label>
@@ -407,14 +407,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="address.street"
                       value={formData.address?.street || ""}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="address.city"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       City
                     </label>
@@ -424,14 +424,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="address.city"
                       value={formData.address?.city || ""}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="address.postcode"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Postal Code
                     </label>
@@ -441,7 +441,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="address.postcode"
                       value={formData.address?.postcode || ""}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
@@ -465,7 +465,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div>
                     <label
                       htmlFor="square_ft"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Square Feet
                     </label>
@@ -475,14 +475,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="square_ft"
                       value={formData.square_ft}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="construction_year"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Construction Year
                     </label>
@@ -492,14 +492,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="construction_year"
                       value={formData.construction_year}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="tenure"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Tenure
                     </label>
@@ -508,7 +508,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="tenure"
                       value={formData.tenure}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     >
                       <option value="">Select tenure</option>
                       <option value="Leasehold">Leasehold</option>
@@ -518,35 +518,34 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-medium text-primary-black">
+                  <h3 className="text-base sm:text-lg font-medium text-primary-black">
                     Management & Contact Information
                   </h3>
-                  <p className="text-sm text-primary-grey">
-                    {" "}
+                  <p className="text-xs sm:text-sm text-primary-grey">
                     Users must have signed up to the platform to be added to the
-                    property team.{" "}
+                    property team.
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="md:col-span-2">
-                    <h3 className="text-lg font-medium mb-4">Managers</h3>
+                <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">Managers</h3>
                     <div className="space-y-4">
                       {currentUser.id === property.owner_id && (
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <input
                             type="email"
                             value={newManagerEmail}
                             onChange={(e) => setNewManagerEmail(e.target.value)}
                             placeholder="Enter manager's email"
-                            className="flex-1 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                            className="flex-1 px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                           />
                           <button
                             type="button"
                             onClick={handleAddManager}
                             disabled={!newManagerEmail}
-                            className="px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50"
+                            className="px-3 sm:px-4 py-2 text-sm bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50 whitespace-nowrap"
                           >
                             Add Manager
                           </button>
@@ -556,11 +555,11 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                         {formData.managers.map((manager, index) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between p-3 bg-grey-fill rounded-lg"
+                            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-3 bg-grey-fill rounded-lg"
                           >
-                            <div>
-                              <p className="font-medium">{manager.full_name}</p>
-                              <p className="text-sm text-primary-grey">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-sm sm:text-base truncate">{manager.full_name}</p>
+                              <p className="text-xs sm:text-sm text-primary-grey truncate">
                                 {manager.email}
                               </p>
                             </div>
@@ -570,9 +569,9 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 onClick={() =>
                                   handleRemoveManager(manager.user_id)
                                 }
-                                className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                className="p-1.5 sm:p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors flex-shrink-0 self-end sm:self-auto"
                               >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4 sm:w-5 sm:h-5" />
                               </button>
                             )}
                           </div>
@@ -581,11 +580,11 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                     </div>
                   </div>
 
-                  <div className="md:col-span-2">
-                    <h3 className="text-lg font-medium mb-4">Site Users</h3>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">Site Users</h3>
                     <div className="space-y-4">
                       {currentUser.id === property.owner_id && (
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <input
                             type="email"
                             value={newSiteUserEmail}
@@ -593,13 +592,13 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                               setNewSiteUserEmail(e.target.value)
                             }
                             placeholder="Enter site user's email"
-                            className="flex-1 px-4 py-2 border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
+                            className="flex-1 px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:outline-none focus:border-primary-orange"
                           />
                           <button
                             type="button"
                             onClick={handleAddSiteUser}
                             disabled={!newSiteUserEmail}
-                            className="px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50"
+                            className="px-3 sm:px-4 py-2 text-sm bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-50 whitespace-nowrap"
                           >
                             Add Site User
                           </button>
@@ -609,11 +608,11 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                         {formData.site_users.map((user) => (
                           <div
                             key={user.user_id}
-                            className="flex items-center justify-between p-3 bg-grey-fill rounded-lg"
+                            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-3 bg-grey-fill rounded-lg"
                           >
-                            <div>
-                              <p className="font-medium">{user.full_name}</p>
-                              <p className="text-sm text-primary-grey">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-sm sm:text-base truncate">{user.full_name}</p>
+                              <p className="text-xs sm:text-sm text-primary-grey truncate">
                                 {user.email}
                               </p>
                             </div>
@@ -623,9 +622,9 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                                 onClick={() =>
                                   handleRemoveSiteUser(user.user_id)
                                 }
-                                className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                className="p-1.5 sm:p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors flex-shrink-0 self-end sm:self-auto"
                               >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4 sm:w-5 sm:h-5" />
                               </button>
                             )}
                           </div>
@@ -634,8 +633,8 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                     </div>
                   </div>
 
-                  <div className="md:col-span-2">
-                    <h3 className="text-lg font-medium mb-4">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-medium mb-3 sm:mb-4">
                       Safety & Emergency Details
                     </h3>
                   </div>
@@ -643,7 +642,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   <div>
                     <label
                       htmlFor="contact_phone"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Contact Phone
                     </label>
@@ -653,14 +652,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="contact_phone"
                       value={formData.contact_phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Email
                     </label>
@@ -670,14 +669,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="emergency_contact"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Emergency Contact
                     </label>
@@ -687,14 +686,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="emergency_contact"
                       value={formData.emergency_contact}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="contactor_hours"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Contractor Hours
                     </label>
@@ -704,21 +703,21 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="contactor_hours"
                       value={formData.contactor_hours}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <h3 className="text-lg font-medium text-primary-black">
+              <div className="space-y-4 sm:space-y-6">
+                <h3 className="text-base sm:text-lg font-medium text-primary-black">
                   Building Details
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label
                       htmlFor="floors"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Number of Floors
                     </label>
@@ -728,14 +727,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="floors"
                       value={formData.floors}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="occupants"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Number of Occupants
                     </label>
@@ -745,14 +744,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="occupants"
                       value={formData.occupants}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="local_fire_brigade"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Local Fire Brigade
                     </label>
@@ -762,14 +761,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="local_fire_brigade"
                       value={formData.local_fire_brigade}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="fire_strategy"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Fire Strategy
                     </label>
@@ -779,14 +778,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="fire_strategy"
                       value={formData.fire_strategy}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="evacuation_policy"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Evacuation Policy
                     </label>
@@ -796,14 +795,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="evacuation_policy"
                       value={formData.evacuation_policy}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
 
                   <div>
                     <label
                       htmlFor="insurance_provider"
-                      className="block text-sm font-medium text-primary-grey mb-1"
+                      className="block text-xs sm:text-sm font-medium text-primary-grey mb-1"
                     >
                       Insurance Provider
                     </label>
@@ -813,14 +812,14 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                       name="insurance_provider"
                       value={formData.insurance_provider}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 text-sm border border-grey-outline rounded-lg focus:ring-primary-orange focus:border-primary-orange"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <h3 className="text-lg font-medium text-primary-black">
+              <div className="space-y-4 sm:space-y-6">
+                <h3 className="text-base sm:text-lg font-medium text-primary-black">
                   Property Image
                 </h3>
                 <div>
@@ -836,7 +835,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
 
                   {/* Image preview section */}
                   {formData.image ? (
-                    <div className="relative rounded-lg overflow-hidden border border-grey-outline bg-grey-fill/30 h-48 group">
+                    <div className="relative rounded-lg overflow-hidden border border-grey-outline bg-grey-fill/30 h-32 sm:h-48 group">
                       {typeof formData.image === "string" ? (
                         <img
                           src={formData.image}
@@ -845,40 +844,41 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <p className="text-sm text-primary-grey">
+                          <p className="text-xs sm:text-sm text-primary-grey text-center px-4">
                             Preview not available for new file uploads
                           </p>
                         </div>
                       )}
 
                       {/* Overlay controls */}
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 sm:gap-4">
                         <button
                           type="button"
                           onClick={triggerFileInput}
-                          className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                          className="p-1.5 sm:p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
                         >
-                          <Upload className="w-5 h-5 text-primary-black" />
+                          <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-primary-black" />
                         </button>
                         <button
                           type="button"
                           onClick={removeImage}
-                          className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                          className="p-1.5 sm:p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
                         >
-                          <Trash2 className="w-5 h-5 text-red-500" />
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
                         </button>
                       </div>
                     </div>
                   ) : (
                     <div
                       onClick={triggerFileInput}
-                      className="border-2 border-dashed border-grey-outline rounded-lg p-8 flex flex-col items-center justify-center h-48 cursor-pointer hover:bg-grey-fill/30 transition-colors"
+                      className="border-2 border-dashed border-grey-outline rounded-lg p-4 sm:p-8 flex flex-col items-center justify-center h-32 sm:h-48 cursor-pointer hover:bg-grey-fill/30 transition-colors"
                     >
-                      <Image className="w-10 h-10 text-primary-grey mb-3" />
-                      <p className="text-primary-grey font-medium mb-1">
-                        Drag and drop or click to upload
+                      <Image className="w-8 h-8 sm:w-10 sm:h-10 text-primary-grey mb-2 sm:mb-3" />
+                      <p className="text-primary-grey font-medium mb-1 text-sm sm:text-base text-center">
+                        <span className="hidden sm:inline">Drag and drop or click to upload</span>
+                        <span className="sm:hidden">Tap to upload</span>
                       </p>
-                      <p className="text-xs text-primary-grey">
+                      <p className="text-xs text-primary-grey text-center">
                         Recommended size: 1200 x 800 pixels
                       </p>
                     </div>
@@ -888,11 +888,11 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
             </form>
           </div>
 
-          <div className="sticky bottom-0 bg-white flex justify-end gap-4 p-6 border-t border-grey-outline shadow-md z-10">
+          <div className="sticky bottom-0 bg-white flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 p-4 sm:p-6 border-t border-grey-outline shadow-md z-10">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors"
+              className="px-4 sm:px-6 py-2 text-sm border border-grey-outline rounded-lg text-primary-black hover:bg-grey-fill transition-colors order-2 sm:order-1"
             >
               Cancel
             </button>
@@ -906,7 +906,7 @@ const EditPropertyForm = ({ property, onClose, onSuccess, setProperty }) => {
                   );
               }}
               disabled={loading}
-              className="px-6 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-70"
+              className="px-4 sm:px-6 py-2 text-sm bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-colors disabled:opacity-70 order-1 sm:order-2"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>

@@ -40,20 +40,21 @@ const TableHeader = ({
   }, []);
 
   return (
-    <div className="flex justify-between items-center p-4">
-      <div className="flex items-center gap-4">
+    <div className="flex justify-between items-center p-2 sm:p-4 gap-2">
+      <div className="flex items-center gap-2 sm:gap-3">
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setIsSortOpen(!isSortOpen)}
-            className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm ${
+            className={`flex items-center justify-center gap-2 text-sm border border-grey-outline rounded-lg p-2 md:px-4 shadow-sm transition-colors ${
               currentSort
-                ? "text-primary-orange"
-                : "text-primary-black hover:text-primary-orange"
+                ? "text-primary-orange bg-orange-50"
+                : "text-primary-black hover:text-primary-orange hover:bg-orange-50"
             }`}
+            title="Sort by"
+            aria-label="Sort by"
           >
             <img src={Sort} alt="sort" className="w-5 h-5" />
-            Sort by
-            <ChevronDown className="w-4 h-4" />
+            <span className="hidden md:inline">Sort by</span>
           </button>
           <SortMenu
             isOpen={isSortOpen}
@@ -65,16 +66,18 @@ const TableHeader = ({
         <div ref={filterRef} className="relative">
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm ${
+            className={`flex items-center justify-center gap-2 text-sm border border-grey-outline rounded-lg p-2 md:px-4 shadow-sm transition-colors relative ${
               currentFilters && Object.keys(currentFilters).length > 0
-                ? "text-primary-orange"
-                : "text-primary-black hover:text-primary-orange"
+                ? "text-primary-orange bg-orange-50"
+                : "text-primary-black hover:text-primary-orange hover:bg-orange-50"
             }`}
+            title="Filter"
+            aria-label="Filter"
           >
             <img src={Filter} alt="filter" className="w-5 h-5" />
-            Filter
+            <span className="hidden md:inline">Filter</span>
             {currentFilters && Object.keys(currentFilters).length > 0 && (
-              <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-primary-orange text-white rounded-full">
+              <span className="absolute -top-1 -right-1 md:relative md:top-0 md:right-0 inline-flex items-center justify-center w-4 h-4 md:w-5 md:h-5 text-xs font-medium bg-primary-orange text-white rounded-full md:ml-1">
                 {Object.keys(currentFilters).length}
               </span>
             )}
@@ -88,24 +91,25 @@ const TableHeader = ({
         </div>
         <button
           onClick={() => onViewChange(viewMode === "table" ? "list" : "table")}
-          className={`flex items-center gap-2 text-sm border border-grey-outline rounded-lg px-4 py-2 shadow-sm transition-colors ${
+          className={`flex items-center justify-center gap-2 text-sm border border-grey-outline rounded-lg p-2 md:px-4 shadow-sm transition-colors ${
             viewMode === "list"
-              ? "text-primary-orange"
-              : "text-primary-black hover:text-primary-orange"
+              ? "text-primary-orange bg-orange-50"
+              : "text-primary-black hover:text-primary-orange hover:bg-orange-50"
           }`}
+          title={viewMode === "list" ? "Table view" : "List view"}
+          aria-label={viewMode === "list" ? "Switch to table view" : "Switch to list view"}
         >
           <List className="w-5 h-5" />
-          {viewMode === "list" ? "Table view" : "List view"}
-          <ChevronDown className="w-4 h-4" />
+          <span className="hidden md:inline">{viewMode === "list" ? "Table view" : "List view"}</span>
         </button>
       </div>
 
-      <div className="relative">
+      <div className="relative flex-shrink-0">
         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
-          placeholder="Search properties..."
-          className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg text-sm focus:outline-none focus:border-primary-orange"
+          placeholder="Search..."
+          className="pl-10 pr-4 py-2 border border-grey-outline rounded-lg text-sm focus:outline-none focus:border-primary-orange w-32 sm:w-48 md:w-64"
           onChange={(e) => onSearch(e.target.value)}
         />
       </div>

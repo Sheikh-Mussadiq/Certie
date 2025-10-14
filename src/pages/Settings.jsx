@@ -52,9 +52,35 @@ const Settings = () => {
   };
 
   return (
-    <div className="flex h-full bg-white rounded-2xl">
-      {/* Left Sidebar */}
-      <div className="w-64 border-r border-grey-outline p-6">
+    <div className="flex flex-col lg:flex-row h-full bg-white rounded-2xl overflow-hidden">
+      {/* Mobile Header - Only visible on small screens */}
+      <div className="lg:hidden border-b border-grey-outline p-4">
+        <h2 className="text-lg font-bold text-primary-black mb-3">
+          Manage User
+        </h2>
+        <div className="flex gap-2 overflow-x-auto">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-left transition-colors whitespace-nowrap ${
+                  activeTab === item.id
+                    ? "bg-grey-fill text-secondary-black"
+                    : "text-primary-grey hover:text-secondary-black"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Left Sidebar - Hidden on mobile */}
+      <div className="hidden lg:block w-64 border-r border-grey-outline p-6">
         <h2 className="text-xl font-bold text-primary-black mb-6">
           Manage User
         </h2>
@@ -83,13 +109,13 @@ const Settings = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
         <div className="max-w-4xl">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-primary-black">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-black">
               {navigationItems.find((item) => item.id === activeTab)?.label}
             </h1>
-            <p className="text-primary-grey mt-1">
+            <p className="text-primary-grey mt-1 text-sm sm:text-base">
               Manage and optimize your business
             </p>
           </div>

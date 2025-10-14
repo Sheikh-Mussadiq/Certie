@@ -39,7 +39,7 @@ const AssessmentsTab = () => {
   const [sortBy, setSortBy] = useState("assessment_time");
   const [sortDirection, setSortDirection] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [assessments, setAssessments] = useState([]);
   const [filteredAssessments, setFilteredAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -592,24 +592,24 @@ const AssessmentsTab = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8">
       {/* Stats Section */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {statsData.map((stat, index) => (
           <div
             key={index}
-            className="flex justify-between bg-white rounded-xl shadow-sm p-6 relative"
+            className="flex justify-between bg-white rounded-xl shadow-sm p-4 sm:p-6 relative"
           >
-            <div className="flex flex-col justify-between items-start gap-4">
-              <span className="text-lg font-semibold text-secondary-black">
+            <div className="flex flex-col justify-between items-start gap-2 sm:gap-4">
+              <span className="text-sm sm:text-lg font-semibold text-secondary-black">
                 {stat.label}
               </span>
               {/* <button clavssName="text-gray-400 hover:text-gray-600 absolute top-6 right-6 shadow-sm p-2 rounded-lg border border-grey-outline">
                 <MoreVertical className="w-5 h-5" />
               </button> */}
-              <div className="mt-4">
+              <div className="mt-2 sm:mt-4">
                 <div className="flex items-baseline">
-                  <span className="text-4xl font-bold">{stat.value}</span>
+                  <span className="text-2xl sm:text-4xl font-bold">{stat.value}</span>
                 </div>
               </div>
             </div>
@@ -635,14 +635,14 @@ const AssessmentsTab = () => {
 
       {/* Actions Bar */}
       <div className="space-y-4 bg-white rounded-xl shadow-sm overflow-hidden">
-        <div className="flex justify-between items-center p-4">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 p-3 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
             {/* Sort Dropdown */}
             <div className="relative">
               <Listbox value={sortBy} onChange={handleSortChange}>
                 <div className="relative">
-                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
-                    <img src={Sort} alt="sort" className="w-5 h-5" />
+                  <Listbox.Button className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm whitespace-nowrap">
+                    <img src={Sort} alt="sort" className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>Sort</span>
                     {/* Only show badge if not using default sort option (assessment_time) */}
                     {sortBy !== "assessment_time" && (
@@ -716,8 +716,8 @@ const AssessmentsTab = () => {
             <div className="relative">
               <Listbox value={filterStatus} onChange={handleStatusFilterChange}>
                 <div className="relative">
-                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
-                    <img src={Filter} alt="filter" className="w-5 h-5" />
+                  <Listbox.Button className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm whitespace-nowrap">
+                    <img src={Filter} alt="filter" className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>Status</span>
                     {/* Only show badge if a status filter is applied (not the default empty string) */}
                     {filterStatus && filterStatus !== "" && (
@@ -778,8 +778,8 @@ const AssessmentsTab = () => {
             <div className="relative">
               <Listbox value={filterType} onChange={handleTypeFilterChange}>
                 <div className="relative">
-                  <Listbox.Button className="flex items-center gap-2 px-4 py-2 text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm">
-                    <img src={Filter} alt="filter" className="w-5 h-5" />
+                  <Listbox.Button className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 text-xs sm:text-sm text-primary-black rounded-lg border border-grey-outline shadow-sm whitespace-nowrap">
+                    <img src={Filter} alt="filter" className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>Type</span>
                     {/* Only show badge if a type filter is applied (not the default empty string) */}
                     {filterType && filterType !== "" && (
@@ -847,41 +847,42 @@ const AssessmentsTab = () => {
               )) && (
               <button
                 onClick={handleBookAssessment}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-primary-black rounded-lg hover:bg-primary-black/90 whitespace-nowrap"
               >
                 <Plus className="w-4 h-4" />
-                Book Assessment
+                <span className="hidden sm:inline">Book Assessment</span>
+                <span className="sm:hidden">Book</span>
               </button>
             )}
           </div>
         </div>
 
         {/* Table */}
-        <div className="bg-white shadow-sm overflow-hidden">
-          <table className="w-full border-collapse">
+        <div className="bg-white shadow-sm overflow-x-auto">
+          <table className="w-full border-collapse min-w-[800px]">
             <thead className="bg-grey-fill">
               <tr className="border-b border-grey-outline">
-                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                   Assessment Type
                 </th>
-                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                   Date Completed
                 </th>
-                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                   Next Due
                 </th>
-                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                   Assignee
                 </th>
                 {currentUser?.id === property.owner_id && (
-                  <th className="px-6 py-4 text-left text-sm text-primary-grey border-r border-grey-outline">
+                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey border-r border-grey-outline">
                     Invoice
                   </th>
                 )}
-                <th className="px-6 py-4 text-left text-sm text-primary-grey">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm text-primary-grey">
                   Assessment Time
                 </th>
               </tr>
@@ -895,10 +896,10 @@ const AssessmentsTab = () => {
 
                   return (
                     <tr key={assessment.id} className="hover:bg-grey-fill/50">
-                      <td className="px-6 py-4 border-r border-grey-outline text-sm text-secondary-black font-medium">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline text-xs sm:text-sm text-secondary-black font-medium">
                         {assessment.type || "Assessment"}
                       </td>
-                      <td className="px-6 py-4 border-r border-grey-outline text-sm">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline text-xs sm:text-sm">
                         {assessment.completed_at
                           ? new Date(
                               assessment.completed_at
@@ -909,10 +910,10 @@ const AssessmentsTab = () => {
                             })
                           : "Not completed"}
                       </td>
-                      <td className="px-6 py-4 border-r border-grey-outline text-sm">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline text-xs sm:text-sm">
                         {getNextDueDate(assessment.completed_at)}
                       </td>
-                      <td className="px-6 py-4 border-r border-grey-outline">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline">
                         {currentUser?.id === property.owner_id &&
                         (status === "pending" ||
                           (status === "approved" &&
@@ -945,7 +946,7 @@ const AssessmentsTab = () => {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 border-r border-grey-outline text-left">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline text-left">
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
@@ -966,7 +967,7 @@ const AssessmentsTab = () => {
                         </div>
                       </td>
                       {currentUser?.id === property.owner_id && (
-                        <td className="px-6 py-4 border-r border-grey-outline">
+                        <td className="px-3 sm:px-6 py-3 sm:py-4 border-r border-grey-outline">
                           {assessment.invoice_bookings &&
                           assessment.invoice_bookings.length > 0 ? (
                             <div>
@@ -1011,7 +1012,7 @@ const AssessmentsTab = () => {
                           )}
                         </td>
                       )}
-                      <td className="px-6 py-4 text-sm">
+                      <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
                         {formatAssessmentTime(assessment.assessment_time)}
                       </td>
                     </tr>
@@ -1052,26 +1053,27 @@ const AssessmentsTab = () => {
 
           {/* Pagination */}
           {assessments.length > itemsPerPage && (
-            <div className="flex justify-between items-center p-4 border-t border-grey-outline">
+            <div className="flex flex-wrap justify-between items-center gap-3 p-3 sm:p-4 border-t border-grey-outline">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-secondary-black">
-                  Show entries
+                <span className="text-xs sm:text-sm text-secondary-black">
+                  Show
                 </span>
                 <select
-                  className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
+                  className="px-2 py-1 border border-grey-outline rounded-md text-xs sm:text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
                   value={itemsPerPage}
                   onChange={(e) => {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
                 >
+                  <option value={5}>5</option>
                   <option value={10}>10</option>
                   <option value={25}>25</option>
                   <option value={50}>50</option>
                   <option value={100}>100</option>
                 </select>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))

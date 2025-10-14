@@ -16,23 +16,23 @@ const TableFooter = ({
   };
 
   return (
-    <div className="flex justify-between items-center p-4 border-t border-grey-outline">
+    <div className="flex flex-wrap justify-between items-center gap-3 p-3 sm:p-4 border-t border-grey-outline">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-secondary-black">Show entries</span>
+        <span className="text-xs sm:text-sm text-secondary-black">Show</span>
         <select
-          className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
+          className="px-2 py-1 border border-grey-outline rounded-md text-xs sm:text-sm focus:outline-none focus:ring-primary-black focus:border-primary-black"
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
         >
+          <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={25}>25</option>
           <option value={50}>50</option>
           <option value={100}>100</option>
         </select>
-        {/* <span className="text-sm text-primary-grey">entries</span> */}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}

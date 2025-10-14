@@ -153,54 +153,62 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-6 shadow-sm"
+      className="space-y-4 sm:space-y-6 bg-white rounded-xl border border-grey-outline overflow-hidden p-3 sm:p-6 shadow-sm"
     >
-      <div className="flex justify-between items-center">
+      <div className="flex flex-row justify-between items-center gap-2">
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 px-4 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-fill/80 transition-all"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 bg-grey-fill text-primary-black rounded-lg hover:bg-grey-fill/80 transition-all text-xs sm:text-sm whitespace-nowrap"
           onClick={onBack}
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Logbooks</span>
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Back to Logbooks</span>
+          <span className="sm:hidden">Back</span>
         </motion.button>
 
         <motion.button
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-all"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 bg-primary-black text-white rounded-lg hover:bg-primary-black/90 transition-all text-xs sm:text-sm whitespace-nowrap"
           onClick={() => setShowModal(true)}
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Entry</span>
+          <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Add Entry</span>
+          <span className="sm:hidden">Add</span>
         </motion.button>
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div>
-        <h2 className="text-2xl font-semibold text-primary-black flex items-center gap-2">
-          <ClipboardList className="w-6 h-6 text-primary-orange" />
-          {logbook.name || logbook.logbook_type}
-        </h2>
-        <p className="mt-1 text-primary-grey">{logbook.description}</p>
-        <div className="flex items-center gap-2 mt-2 text-primary-grey">
-          <Clock className="w-4 h-4" />
-          <span className="text-sm">{logbook.frequency}</span>
-        </div>
-        <div className="flex items-center gap-2 mt-2 bg-grey-fill p-3 rounded-lg">
-          <Calendar className="w-5 h-5 text-primary-orange" />
-          <div>
-            <span className="text-xs text-primary-grey">Next Due</span>
-            <p className="font-medium text-primary-black">{nextDue}</p>
+      <div className="mt-4 sm:mt-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div className="w-full lg:w-auto">
+          <h2 className="text-lg sm:text-2xl font-semibold text-primary-black flex items-center gap-2">
+            <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6 text-primary-orange" />
+            <span className="truncate">
+              {logbook.name || logbook.logbook_type}
+            </span>
+          </h2>
+          <p className="mt-1 text-xs sm:text-sm text-primary-grey line-clamp-2">
+            {logbook.description}
+          </p>
+          <div className="flex items-center gap-2 mt-2 text-primary-grey">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="text-xs sm:text-sm">{logbook.frequency}</span>
           </div>
+          <div className="flex items-center gap-2 mt-2 bg-grey-fill p-2 sm:p-3 rounded-lg">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary-orange" />
+            <div>
+              <span className="text-xs text-primary-grey">Next Due</span>
+              <p className="text-sm sm:text-base font-medium text-primary-black">
+                {nextDue}
+              </p>
+            </div>
           </div>
         </div>
-        <div className="flex-1 flex justify-end items-start">
-          <div className="bg-grey-fill p-4 rounded-xl border border-grey-outline/50">
-            <h2 className="text-2xl font-bold text-primary-black flex items-center gap-2">
-              <Building className="w-6 h-6 text-primary-orange" />
-              <span>{property.name}</span>
+        <div className="w-full lg:w-auto lg:flex-1 lg:flex lg:justify-end lg:items-start">
+          <div className="bg-grey-fill p-3 sm:p-4 rounded-xl border border-grey-outline/50">
+            <h2 className="text-lg sm:text-2xl font-bold text-primary-black flex items-center gap-2">
+              <Building className="w-5 h-5 sm:w-6 sm:h-6 text-primary-orange" />
+              <span className="truncate">{property.name}</span>
             </h2>
           </div>
         </div>
@@ -293,19 +301,19 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
           </div> */}
 
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full border-separate border-spacing-y-2 table-fixed">
+            <table className="w-full border-separate border-spacing-y-2 table-fixed min-w-[600px]">
               <thead>
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-primary-grey w-[120px]">
+                  <th className="px-2 sm:px-4 py-2 text-left text-xs font-medium text-primary-grey w-[100px] sm:w-[120px]">
                     Date
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-primary-grey w-[30%]">
+                  <th className="px-2 sm:px-4 py-2 text-left text-xs font-medium text-primary-grey w-[30%]">
                     Performed By
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-primary-grey w-[25%]">
+                  <th className="px-2 sm:px-4 py-2 text-left text-xs font-medium text-primary-grey w-[25%]">
                     Status
                   </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-primary-grey w-[15%]">
+                  <th className="px-2 sm:px-4 py-2 text-left text-xs font-medium text-primary-grey w-[15%]">
                     Details
                   </th>
                 </tr>
@@ -325,10 +333,10 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                         }`}
                         onClick={() => toggleRowExpand(entry.id)}
                       >
-                        <td className="px-4 py-3 text-sm rounded-l-lg border-l border-t border-b border-grey-outline">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-primary-grey flex-shrink-0" />
-                            <span>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-l-lg border-l border-t border-b border-grey-outline">
+                          <div className="flex items-center gap-1 sm:gap-2">
+                            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-grey flex-shrink-0" />
+                            <span className="whitespace-nowrap">
                               {entry.performed_at
                                 ? new Date(
                                     entry.performed_at
@@ -337,9 +345,9 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                             </span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm border-t border-b border-grey-outline">
-                          <div className="flex items-center gap-2 max-w-full">
-                            <User className="w-4 h-4 text-primary-grey flex-shrink-0" />
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-t border-b border-grey-outline">
+                          <div className="flex items-center gap-1 sm:gap-2 max-w-full">
+                            <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-grey flex-shrink-0" />
                             <span
                               className="font-medium truncate"
                               title={entry.performed_by}
@@ -348,33 +356,32 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                             </span>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm border-t border-b border-grey-outline">
-                          <div className="flex items-center gap-2">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border-t border-b border-grey-outline">
+                          <div className="flex items-center gap-1 sm:gap-2">
                             {entry.completion_status === "Working Correctly" ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-800 text-xs">
-                                <CheckCircle className="w-3 h-3 flex-shrink-0" />
-                                <span className="truncate">
-                                  Working Correctly
-                                </span>
+                              <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-green-100 text-green-800 text-[10px] sm:text-xs">
+                                <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
+                                <span className="truncate">Working</span>
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-xs">
-                                <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-                                <span className="truncate">
-                                  Issue Identified
-                                </span>
+                              <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] sm:text-xs">
+                                <AlertTriangle className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
+                                <span className="truncate">Issue</span>
                               </span>
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm rounded-r-lg border-t border-b border-r border-grey-outline">
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-r-lg border-t border-b border-r border-grey-outline">
                           {entry.issue_comment ? (
                             <span className="inline-flex items-center gap-1 text-primary-orange hover:text-primary-orange/80">
-                              <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
-                              <span className="truncate">View details</span>
+                              <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
+                              <span className="truncate hidden sm:inline">
+                                View details
+                              </span>
+                              <span className="truncate sm:hidden">View</span>
                             </span>
                           ) : (
-                            <span className="text-primary-grey truncate">
+                            <span className="text-primary-grey truncate text-[10px] sm:text-xs">
                               No issues
                             </span>
                           )}
@@ -394,11 +401,11 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                             <motion.div
                               initial={{ opacity: 0, y: -10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="mx-4 mb-4 overflow-hidden"
+                              className="mx-2 sm:mx-4 mb-3 sm:mb-4 overflow-hidden"
                             >
-                              <div className="bg-grey-fill p-4 rounded-lg text-sm border border-grey-outline/50">
+                              <div className="bg-grey-fill p-3 sm:p-4 rounded-lg text-xs sm:text-sm border border-grey-outline/50">
                                 <h4 className="font-medium text-primary-black mb-2 flex items-center gap-1.5">
-                                  <MessageSquare className="w-4 h-4 text-primary-orange flex-shrink-0" />
+                                  <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-orange flex-shrink-0" />
                                   Issue Details
                                 </h4>
                                 <div className="text-primary-grey whitespace-pre-wrap break-words overflow-x-hidden">
@@ -417,7 +424,7 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
           </div>
 
           {entries.length > 0 && (
-            <div className="flex justify-between items-center mt-4 text-xs text-primary-grey">
+            <div className="flex justify-between items-center mt-3 sm:mt-4 text-xs text-primary-grey">
               <span>Showing {entries.length} entries</span>
             </div>
           )}
@@ -437,10 +444,10 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg relative"
+              className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md mx-3 sm:mx-0 shadow-lg relative"
             >
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-primary-black">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-primary-black">
                   Add Logbook Entry
                 </h2>
                 <motion.button
@@ -453,20 +460,23 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                 </motion.button>
               </div>
 
-              <form onSubmit={handleAddEntry} className="space-y-5">
+              <form
+                onSubmit={handleAddEntry}
+                className="space-y-4 sm:space-y-5"
+              >
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-primary-black">
+                  <label className="block text-xs sm:text-sm font-medium mb-2 text-primary-black">
                     Date of Check
                   </label>
                   <input
                     type="date"
                     value={selectedDate.toISOString().split("T")[0]}
                     onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                    className="w-full px-4 py-3 border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange"
                     required
                   />
                   <div className="flex items-start gap-2 mt-2 text-xs text-primary-grey">
-                    <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary-orange" />
+                    <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4 mt-0.5 flex-shrink-0 text-primary-orange" />
                     <span>
                       Select the date the check was performed. You can backdate
                       this if you&apos;re catching up on logs.
@@ -474,7 +484,7 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-primary-black">
+                  <label className="block text-xs sm:text-sm font-medium mb-2 text-primary-black">
                     Completion Status
                   </label>
                   <div className="relative">
@@ -482,7 +492,7 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                       name="completion_status"
                       value={form.completion_status}
                       onChange={handleModalChange}
-                      className="w-full px-4 py-3 border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange appearance-none bg-white pr-10 transition-all"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange appearance-none bg-white pr-10 transition-all"
                       required
                     >
                       {COMPLETION_STATUS_OPTIONS.map((status) => (
@@ -518,14 +528,14 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <label className="block text-sm font-medium mb-2 text-primary-black">
+                      <label className="block text-xs sm:text-sm font-medium mb-2 text-primary-black">
                         Issue Description
                       </label>
                       <textarea
                         name="issue_comment"
                         value={form.issue_comment}
                         onChange={handleModalChange}
-                        className="w-full px-4 py-3 border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange resize-none min-h-[100px]"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange resize-none min-h-[80px] sm:min-h-[100px]"
                         placeholder="Describe the issue..."
                         required
                       />
@@ -534,7 +544,7 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                 </AnimatePresence>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-primary-black">
+                  <label className="block text-xs sm:text-sm font-medium mb-2 text-primary-black">
                     Performed By
                   </label>
                   <div className="relative">
@@ -543,12 +553,12 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                       name="performed_by"
                       value={form.performed_by}
                       onChange={handleModalChange}
-                      className="w-full px-4 py-3 pl-10 border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 pl-9 sm:pl-10 text-sm border border-grey-outline rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-orange/20 focus:border-primary-orange"
                       placeholder="Enter your name"
                       required
                     />
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <User className="w-5 h-5 text-primary-grey" />
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-primary-grey" />
                     </div>
                   </div>
                 </div>
@@ -568,7 +578,7 @@ const LogbookEntriesView = ({ logbook, property, onBack }) => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-primary-black text-white py-3 rounded-lg hover:bg-primary-black/90 transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-primary-black text-white py-2.5 sm:py-3 rounded-lg hover:bg-primary-black/90 transition-all flex items-center justify-center gap-2 text-sm"
                   disabled={modalLoading}
                 >
                   {modalLoading ? (

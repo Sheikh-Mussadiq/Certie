@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutGrid,
   Building2,
@@ -10,12 +10,13 @@ import {
   Calendar,
   Settings,
   Folder,
+  X,
 } from "lucide-react";
 import { SiOverleaf } from "react-icons/si";
 import Logo from "../assets/Logo.png";
 import { useAuth } from "../context/AuthContext";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { currentUser } = useAuth();
 
@@ -37,11 +38,39 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-primary-black h-screen p-4 flex flex-col fixed overflow-y-auto">
-      <Link to="/" className="flex items-center gap-2 px-2 mb-8">
-        <img src={Logo} alt="Certie Logo" className="h-8 w-8" />
-        <span className="text-2xl font-bold text-white">Certie.co</span>
-      </Link>
+    <>
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar */}
+      <div
+        className={`w-64 bg-primary-black h-screen p-4 flex flex-col fixed overflow-y-auto z-50 lg:z-auto transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0`}
+      >
+      <div className="flex items-center justify-between mb-8">
+        <Link to="/" className="flex items-center gap-2 px-2">
+          <img src={Logo} alt="Certie Logo" className="h-8 w-8" />
+          <span className="text-2xl font-bold text-white">Certie.co</span>
+        </Link>
+        <button
+          onClick={onClose}
+          className="lg:hidden text-gray-400 hover:text-white p-2"
+          aria-label="Close menu"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      </div>
 
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-2">
@@ -51,6 +80,7 @@ const Sidebar = () => {
               <li key={item.path}>
                 <Link
                   to={item.path}
+                  onClick={onClose}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors relative ${
                     isPathActive(item.path)
                       ? "bg-primary-orange text-white"
@@ -97,7 +127,8 @@ const Sidebar = () => {
           </button>
         </div>
       </div> */}
-    </div>
+      </div>
+    </>
   );
 };
 

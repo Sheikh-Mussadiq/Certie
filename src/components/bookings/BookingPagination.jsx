@@ -22,20 +22,21 @@ const BookingPagination = ({
   }
 
   return (
-    <div className="flex items-center justify-between mt-6">
-      <div className="flex items-center">
-        <span className="text-sm text-primary-grey">Show items</span>
+    <div className="flex flex-wrap items-center justify-between gap-3 mt-6">
+      <div className="flex items-center gap-2">
+        <span className="text-xs sm:text-sm text-primary-grey">Show</span>
         <select
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-          className="mx-2 px-2 py-1 border border-grey-outline rounded-md text-sm focus:outline-none focus:ring-primary-orange focus:border-primary-orange"
+          className="px-2 py-1 border border-grey-outline rounded-md text-xs sm:text-sm focus:outline-none focus:ring-primary-orange focus:border-primary-orange"
         >
+          <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={25}>25</option>
           <option value={50}>50</option>
         </select>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
